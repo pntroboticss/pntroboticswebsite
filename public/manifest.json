@@ -1,0 +1,17 @@
+{
+  "name": "PNT Academy",
+  "short_name": "PNT Academy",
+  "description": "Robotics Training for Kids & Innovators",
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/icon",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

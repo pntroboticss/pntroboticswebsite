@@ -1,0 +1,337 @@
+RESEARCH-
+ENABLED
+INDUSTRIAL
+AUTOMATION LAB
+PRESENTS:
+----------------Page (0) Break----------------
+A study by NASSCOM reveals only 10% of Indian engineering
+graduates are employable in robotics-related fields.
+Theoretical-heavy curriculum fail to provide hands-on
+experience and industry-ready skills.
+India highly lags behind countries like China and Japan in the
+adoption of AMR,AGVs and robotic arms.
+Here are the problems in summary:
+PROBLEM
+STATEMENT
+China’s "Made in China 2025"
+initiative heavily promotes industrial
+automation.
+Result: China produces 150,000+
+robotics graduates annually, who
+seamlessly integrate into the
+workforce.
+Colleges partner with robotics
+manufacturers to offer students live
+project experience and internships.
+----------------Page (1) Break----------------
+PNT Academy proposes the establishment of a
+permanently deployed, industry-aligned Robotics &
+Autonomous Systems Lab within the institution,
+designed to bridge curriculum gaps, enhance
+employability, and support innovation, research,
+and entrepreneursh
+T H  E  O  P P O  R T U N  IT Y
+Permanent Industrial
+Robotics Lab Setup
+Curriculum-
+Integrated Learning
+Model
+Faculty Enablement
+& Ownership
+Student Skill
+Development &
+Industry Exposure
+Innovation, Research
+& IIC Enablement
+----------------Page (2) Break----------------
+O  U R  S O  L U T IO  N
+That’s where we come in— with an industry-aligned
+Robotics & Autonomous Systems Lab within the institution,
+designed to bridge curriculum gaps, enhance
+employability, and support innovation, research, and
+entrepreneurship.
+R o b o tic  A rm
+In d u s tria l R o b o tic  A rm
+In d u s tria l G ra d e d  A G V
+R o b o tic  H a n d  
+D ro n e
+A u to n o m o u s  M o b ile  R o b o t (A M R )
+----------------Page (3) Break----------------
+H  O  W   IT  W  O  R K S
+Deploy any of the package permanently at your institution.
+Free hands-on 30 hours training for students and faculty 
+Industrial exposure to real-world applications in logistics,
+smart warehouses, and supply chain automation.
+Internship to students on Indian Navy, Indian Army projects
+with PNT Robotics 
+LOR to selected students 
+Entry in the Robotics Competition
+----------------Page (4) Break----------------
+V A L U E  P R O  P O  S IT IO  N
+M odular Design:
+3D  Printed & 
+C ustom izable 
+Structure:
+Add or replace
+microcontrollers / SBCs
+Integrate additional
+sensors, drivers, and
+communication modules
+Increase degrees of
+freedom in robotic arms
+Redesign power
+distribution, control
+logic, and feedback
+loops
+Robotic Arm  +
+AM R integration
+AG V + Robotic
+Hand coordination
+C ustom  hybrid
+robotic system s
+for research
+projects
+Encourages:
+Reverse engineering
+System -level thinking
+Innovation beyond
+predefined
+experim ent
+Open-Source 
+Software & Coding
+Flexibility:
+Research & IIC
+ Enablem ent
+Som e part of the
+robotic arm  , AGV O R
+AM R will be 3D printed,
+enabling students to
+redesign and m odify its
+structure.
+CAD files and tutorials
+will be provided so
+students can
+experim ent with
+different designs and
+print their own parts.
+----------------Page (5) Break----------------
+
+----------------Page (6) Break----------------
+EDUCATIONAL ROBOTIC ARM
+4 DOF robotic arm , custom izable
+com ponents, 3D printed
+replaceable parts.
+Demonstration of pick and place Automation
+Unlike plug-and-play labs, our robots are fully open— enabling circuit-level custom ization,
+D O F expansion, and m ulti-robot integration
+Demonstration of gesture-controlled robotic arm
+Sensor Feedback Integration with robot Arm
+Path Planning and Motion Control
+Object Detection using OpenCV
+Object Sorting by Colour & by Size
+Programming for Industrial Applications
+Integration with IoT for Remote Control
+AI integration with robot Arm
+----------------Page (7) Break----------------
+IN D U S T R IA L  R O B O T IC  A R M
+4 –6  A x is  a rtic u la te d  ro b o tic  a rm ,
+P a y lo a d  c a p a c ity : 1 – 2  k g  (e d u c a tio n  &
+la b  g ra d e ),R e p e a ta b ility  a c c u ra c y  u p  to
+± 0 .1 m m
+F o rw a rd  &  in v e rs e  k in e m a tic s  p ro g ra m m in g
+P ic k-a n d -p la c e  ta s k  e x e c u tio n
+T o o l p a th  p la n n in g  fo r re p e titiv e  ta s k s
+P a y lo a d  te s tin g  a n d  a c c u ra c y  c a lib ra tio n
+Unlike plug-and-play labs, our robots are fully open— enabling circuit-level custom ization,
+D O F expansion, and m ulti-robot integration
+----------------Page (8) Break----------------
+INDUSTRIAL AGV
+Industrial-grade AGV, custom -design
+capabilities, integration with sm art
+factories.
+Demonstration of line following AGV
+Demonstration of obstacle avoidance in AGV
+Demonstration of RFID-based navigation system in AGV
+Demonstration of automated goods transportation in AGV
+Speed and acceleration control in AGV
+W ireless Control of AGV
+IoT-based Control of AGV
+Path Planning based on custom designed algorithms
+Battery and Power Optimization in AGV
+Integration of external sensors in AGV 
+Unlike plug-and-play labs, our robots are fully open— enabling circuit-level custom ization,
+D O F expansion, and m ulti-robot integration
+----------------Page (9) Break----------------
+ROBOTIC HAND
+M ulti-finger robotic hand, custom izable
+parts, gesture-controlled interface.
+Demonstration of finger movement coordination
+Demonstration of feedback mechanism
+EMG-based hand control 
+Gesture-based hand control
+Prosthetic Hand Demonstration
+Haptic Feedback System
+AI-Based control of hand 
+AI based gesture control of hand
+Integration with Wearable Tech
+Remote-controlled hand movement
+Unlike plug-and-play labs, our robots are fully open— enabling circuit-level custom ization,
+D O F expansion, and m ulti-robot integration
+----------------Page (10) Break----------------
+IN  D  U  S T R IA L  D  R O  N  E
+Programmable drones with custom
+control options.
+API usage and calibration
+Sensor data collection and usage in drone
+Drone take off and landing automation
+Obstacle avoidance using object detection
+Warehouse automation using barcodes/QR codes
+Aerial Photography and Surveillance
+Face tracking with drone flight
+AI-Based Object Detection from Aerial View
+AI Surveillance drone with Intruder detection
+Development of PC application to control drone
+Unlike plug-and-play labs, our robots are fully open— enabling circuit-level custom ization,
+D O F expansion, and m ulti-robot integration
+----------------Page (11) Break----------------
+A d d re ssin g  re a l-w o rld  c h a lle n g e s in  lo g istic s
+a n d  d e fe n se  d e p lo ym e n t sc e n a rio s.
+D iffe re n tia l / M e c a n u m  w h e e l d riv e  s y s te m ,O n -
+b o a rd  m ic ro c o n tro lle r / S B C  (R a s p b e rry  P i /
+e q u iv a le n t),L i-io n  b a tte ry  w ith  2 –3  h o u rs
+o p e ra tio n a l tim e
+S e n s o rs : U ltra s o n ic , IR , IM U , o p tio n a l L iD A R
+S u p p o rts  R O S -b a s e d  &  b lo c k -b a s e d
+p ro g ra m m in g
+IN  D  U  S T R IA L  A M  R
+H a rd w a re  in te rfa c in g  a n d  in te g ra tio n  o f se n so rs a n d
+a c tu a to rs w ith  th e  R o b o t O p e ra tin g  S yste m  (R O S ).
+U tilizin g  o d o m e try se n so r d a ta  a n d  im p le m e n tin g
+te le o p e ra tio n  c o n tro l fo r A u to n o m o u s M o b ile  R o b o ts
+(A M R s).
+M a p p in g  a  d e fin e d  in d o o r e n viro n m e n t u sin g  L iD A R  se n so rs.
+Im p le m e n tin g  a u to n o m o u s n a vig a tio n  w ith  p a ra m e te r tu n in g
+to  o p tim ize  n a vig a tio n  p e rfo rm a n c e .
+Unlike plug-and-play labs, our robots are fully open— enabling circuit-level custom ization,
+D O F expansion, and m ulti-robot integration
+----------------Page (12) Break----------------
+C  O  L L E G  E  B E N  IF IT S
+Supports NEP
+2020 experiential
+& skill-based
+learning
+Innovation
+challenges
+Prototype
+development
+Hackathons
+Student startups
+F D P s  fo r fa c u lty
+(p a id  /
+s p o n s o re d )
+C e rtific a tio n
+p ro g ra m s  fo r
+e x te rn a l s tu d e n ts
+In d u s try
+w o rk s h o p s  &
+b o o tc a m p s
+S p o n s o re d  fin a l-
+y e a r p ro je c ts
+Train-the-trainer
+certification
+Faculty access to:
+ Hardware
+schematics
+Software
+repositories
+Experiment manuals
+Joint mentoring
+model (PNT +
+faculty)
+C a p s to n e  &  m in o r
+p ro je c t th e m e s
+IE E E  / S c o p u s
+p a p e r g u id a n c e
+P ro to ty p e -to -
+p a te n t p a th w a y
+S u p p o rt fo r
+in n o v a tio n  g ra n ts
+&  c o m p e titio n s
+----------------Page (13) Break----------------
+B R A N  C  H   A L IG  N  M  E N  T   &   C  U R R IC  U L U M
+Mechanical, Mechatronics, Electrical,
+E&TC, AI-ML, Robotics
+Robotics & Automation
+Control Systems
+Mechatronics
+Embedded Systems
+ROS & Autonomous systems
+----------------Page (14) Break----------------
+O  U R  C  L IE N  T S
+----------------Page (15) Break----------------
+C  O  M  P A N  IE S  H  IR IN  G   F O  R  A G  V  &  R O  B O  T IC   A R M
+1.ABB Mobile Robotics           11.PNT Robotics 
+2.Fanuc India                12.Mitsubishi Electric India
+3.Tata Elxsi                 13.Wipro Engineering
+4.Bosch India                14.Cognizant Technology Solutions
+5.Larsen & Toubro (L&T)          15.Indian Oil Corporation (IOCL)
+6.Siemens India               16.Bluebotics India
+7.GrayOrange Robotics            17.Industrial Robotics
+8.KUKA Robotics India            18.Heavy-Duty AGVs
+9.Honeywell Automation           19.Collaborative Robotics
+10.Schneider Electric India           20.General-Purpose Robotics
+----------------Page (16) Break----------------
+Indian Army
+TATA Power
+Wockhardt                    Unilever UK
+O U R  T O P  IN D U S T R Y  A S S O C IA T IO N S
+----------------Page (17) Break----------------
+S T U  D  E N  T ’S  T E S T IM  O  N  IA  L S
+Hi, I’m Gaurav Mishra!
+A Pillai College of
+Engineering graduate,
+ I completed a 6-month
+internship, contributed to
+building a robotic arm, and
+am now an AI & Robotics
+Engineer working on
+innovative projects.
+Hi, I’m Dewang Kanekar!
+An undergraduate at
+Bharati Vidyapeeth, I
+completed an Industrial
+Robotics Internship
+Program and am now an
+intern at PNT Robotics,
+working on robotic hands
+and trolley robots.
+Hi, I’m Ishanya from Manipal Academy of
+Higher Education, Dubai Campus
+I conducted filament color change tests,
+dynamic analysis, and researched braking
+mechanisms for high-RPM flywheels.
+Additionally, I assembled parts for an
+Autonomous Navigation machine,
+experimented with bearings, tested Arduino
+Nano modules, and used tools like angle
+grinders and drilling machines.
+----------------Page (18) Break----------------
+Conclusion
+PNT Academy invites your institution
+to be a part of this transformative
+journey in automation education.
+Together, let us shape the future of
+education and innovation. 
+Join hands with PNT Academy to
+revolutionize your institution’s
+approach to learning and empower the
+next generation of automation leaders.
+----------------Page (19) Break----------------
+W ebsite
+www.pntacademy.com
+Phone
++91 9326014648
+Em ail ID
+pnt-trainings@ pntacademy.com
+GET IN TOUCH
+----------------Page (20) Break----------------
