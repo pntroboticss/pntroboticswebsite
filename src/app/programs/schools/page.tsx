@@ -4,7 +4,7 @@ import SchoolsTrainingContent from "@/components/SchoolsTrainingContent";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Training Programs & Bootcamps for Schools | PNT Academy",
+  title: "Training Programs & Bootcamps for Schools | PNT Robotics",
   description: "Equip your school with the most advanced, practical robotics education. Discover our STEM robotics curriculum, hands-on workshops, and free AI bootcamps.",
   keywords: ["School Robotics Training", "STEM Curriculum", "AI Bootcamps for kids", "Robotics Workshop", "Technology Education for Schools"],
   alternates: {

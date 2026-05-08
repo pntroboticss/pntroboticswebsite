@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   authors: [{ name: "PNT Robotics" }],
   creator: "PNT Robotics",
   publisher: "PNT Robotics",
-  metadataBase: new URL("https://pntacademy.com"),
+  metadataBase: new URL("https://pntrobotics.vercel.app"),
   alternates: { canonical: "/" },
   manifest: "/manifest.json",
   appleWebApp: {
@@ -66,9 +66,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "lOW8rpPpoQY7J1oCXIKgLhmbPCxXvu6vrsfBmHY2Ppk",
-  },
+
 };
 
 const jsonLd = {
@@ -76,7 +74,7 @@ const jsonLd = {
   "@type": "Organization",
   "name": "PNT Robotics",
   "url": "https://pntrobotics.com",
-  "logo": "https://pntrobotics.com/PNT Robo logo.png",
+  "logo": "https://pntrobotics.vercel.app/PNT%20Robo%20logo.png",
   "description": "Innovative robotics, automation, and IoT solutions.",
   "sameAs": [
     "https://instagram.com/pntrobotics",

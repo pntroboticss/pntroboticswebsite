@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
     title: "Defense R&D Internship",
-    description: "Join the elite PNT Academy Defense R&D Internship. Work on real-world military-grade robotics, drone technology, and defense automation.",
+    description: "Join the elite PNT Robotics Defense R&D Internship. Work on real-world military-grade robotics, drone technology, and defense automation.",
 };
 
 import Footer from "@/components/Footer";
@@ -16,7 +16,7 @@ export default function DefenseInternshipPage() {
             <PageHeader
                 title="Defense R&D Internship"
                 subtitle="INDIAN NAVY'S PROJECT 'KAVACH'"
-                description="A 1-month guided online internship where students solve real-world defense challenges alongside PNT Academy engineers."
+                description="A 1-month guided online internship where students solve real-world defense challenges alongside PNT Robotics engineers."
                 colorFrom="from-slate-700"
                 colorTo="to-slate-900"
             />

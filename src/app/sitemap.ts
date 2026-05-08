@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://pntacademy.com';
+  const baseUrl = 'https://pntrobotics.vercel.app';
 
-  // Major routes defining the core of PNT Academy
+  // Major routes defining the core of PNT Robotics
   const routes = [
     '',
     '/championship',

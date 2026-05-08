@@ -4,8 +4,8 @@ import AdminTopbar from "@/components/admin/AdminTopbar";
 import { SidebarProvider } from "@/components/admin/SidebarContext";
 
 export const metadata = {
-    title: "Admin Dashboard | PNT Academy",
-    description: "Secure management portal for PNT Academy content.",
+    title: "Admin Dashboard | PNT Robotics",
+    description: "Secure management portal for PNT Robotics content.",
 };
 
 export default function AdminLayout({

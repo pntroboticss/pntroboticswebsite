@@ -1,7 +1,7 @@
 {
-  "name": "PNT Academy",
-  "short_name": "PNT Academy",
-  "description": "Robotics Training for Kids & Innovators",
+  "name": "PNT Robotics",
+  "short_name": "PNT Robotics",
+  "description": "Industrial Automation & Robotics Solutions",
   "display": "standalone",
   "start_url": "/",
   "theme_color": "#0f172a",

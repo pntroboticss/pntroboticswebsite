@@ -175,24 +175,24 @@ const SCHOOL_TESTIMONIALS = [
     {
         name: "Mrs. Deena Rawat",
         role: "Principal, CBM High School",
-        quote: "The robotics curriculum introduced by PNT Academy has been a game-changer. The blend of practical activities and conceptual learning has ignited curiosity and creativity. It is truly heartening to see such innovation become an integral part of our school's academic journey."
+        quote: "The robotics curriculum introduced by PNT Robotics has been a game-changer. The blend of practical activities and conceptual learning has ignited curiosity and creativity. It is truly heartening to see such innovation become an integral part of our school's academic journey."
     },
     {
         name: "Mrs. Suchita Singh",
         role: "Principal, SVVNS School, Pune",
-        quote: "PNT Academy has brought a refreshing wave of futuristic learning to SVVNS. The hands-on projects have helped children grasp complex concepts effortlessly. We believe this exposure will give them a strong foundation for life."
+        quote: "PNT Robotics has brought a refreshing wave of futuristic learning to SVVNS. The hands-on projects have helped children grasp complex concepts effortlessly. We believe this exposure will give them a strong foundation for life."
     },
     {
         name: "Mr. Bhushan",
         role: "Principal, Cambria International School, Kalyan",
-        quote: "Partnering with PNT Academy has been one of the most impactful decisions for our school. The sessions are interactive, engaging, and tailored to different learning levels. The feedback from parents and students has been overwhelmingly positive."
+        quote: "Partnering with PNT Robotics has been one of the most impactful decisions for our school. The sessions are interactive, engaging, and tailored to different learning levels. The feedback from parents and students has been overwhelmingly positive."
     }
 ];
 
 // ── Why Choose Us ────────────────────────────────────────────────────
 const WHY_CHOOSE = [
     { title: "NEP 2020 Aligned", desc: "Our curriculum is fully aligned with India's National Education Policy for experiential and skill-based learning.", icon: FileCheck },
-    { title: "Shark Tank Featured", desc: "PNT Academy was recognized and featured on Shark Tank India for our innovative approach to tech education.", icon: Star },
+    { title: "Shark Tank Featured", desc: "PNT Robotics was recognized and featured on Shark Tank India for our innovative approach to tech education.", icon: Star },
     { title: "Real Hardware Kits", desc: "No simulations. Students work with actual Arduino boards, sensors, drones, and 3D printers in every session.", icon: Wrench },
     { title: "End-to-End Support", desc: "From lab setup to teacher training to student assessments — we handle the entire tech education lifecycle.", icon: Users },
     { title: "Proven Track Record", desc: "With 100+ schools and 25,000+ students trained, our programs deliver measurable learning outcomes.", icon: Trophy },

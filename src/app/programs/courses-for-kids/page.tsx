@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
     title: "Robotics & Coding for Kids",
-    description: "PNT Academy training program for kids. Teach your kids hands-on robotics, drone building, Python coding, and logic design from a young age.",
+    description: "PNT Robotics training program for kids. Teach your kids hands-on robotics, drone building, Python coding, and logic design from a young age.",
 };
 
 import Footer from "@/components/Footer";

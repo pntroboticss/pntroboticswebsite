@@ -5,8 +5,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "School Robotics Lab Setup | PNT Academy",
-  description: "Bring the future of education to your school with PNT Academy's end-to-end Robotics Lab setups. Learn 3D printing, IoT, robotics, and humanoid tech.",
+  title: "School Robotics Lab Setup | PNT Robotics",
+  description: "Bring the future of education to your school with PNT Robotics' end-to-end Robotics Lab setups. Learn 3D printing, IoT, robotics, and humanoid tech.",
   alternates: {
     canonical: "/schools/robotics-lab",
   },

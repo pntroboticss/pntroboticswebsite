@@ -4,7 +4,7 @@ import PageHeader from "@/components/PageHeader";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "CBSE / ICSE / IB Robotics Syllabus Integration | PNT Academy",
+  title: "CBSE / ICSE / IB Robotics Syllabus Integration | PNT Robotics",
   description: "Supplementary robotics curriculum maps tailored to support computer science and physics syllabi for CBSE, ICSE, and IB boards.",
   alternates: {
     canonical: "/curriculum/cbse-icse-ib",

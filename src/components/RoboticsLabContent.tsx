@@ -1462,7 +1462,7 @@ function CollegesContent() {
                     <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-20">
                         <span className="inline-block bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold tracking-widest uppercase text-xs px-4 py-2 rounded-full mb-5 border border-blue-200 dark:border-blue-500/30">The Opportunity</span>
                         <h2 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-slate-900 via-blue-700 to-indigo-700 dark:from-white dark:via-blue-300 dark:to-indigo-400 bg-clip-text text-transparent">A Transformative Vision</h2>
-                        <p className="text-slate-600 dark:text-slate-400 text-lg max-w-3xl mx-auto leading-relaxed">PNT Academy proposes a permanently deployed, industry-aligned Robotics &amp; Autonomous Systems Lab — designed to bridge curriculum gaps, enhance employability, and fuel innovation.</p>
+                        <p className="text-slate-600 dark:text-slate-400 text-lg max-w-3xl mx-auto leading-relaxed">PNT Robotics proposes a permanently deployed, industry-aligned Robotics &amp; Autonomous Systems Lab — designed to bridge curriculum gaps, enhance employability, and fuel innovation.</p>
                     </motion.div>
 
                     {/* Animated Roadmap Steps */}
@@ -1815,8 +1815,8 @@ function CollegesContent() {
                 <div className="container mx-auto max-w-3xl relative z-10">
                     <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
                         <h2 className="text-4xl md:text-6xl font-black mb-6">Join the Automation Revolution</h2>
-                        <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-4">PNT Academy invites your institution to be a part of this transformative journey in automation education. Together, let us shape the future of education and innovation.</p>
-                        <p className="text-slate-400 dark:text-slate-500 text-sm mb-10">Join hands with PNT Academy to revolutionize your institution&apos;s approach to learning and empower the next generation of automation leaders.</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-4">PNT Robotics invites your institution to be a part of this transformative journey in automation education. Together, let us shape the future of education and innovation.</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-sm mb-10">Join hands with PNT Robotics to revolutionize your institution&apos;s approach to learning and empower the next generation of automation leaders.</p>
                         <div className="flex justify-center mt-6">
                             <a href="/contact" className="px-10 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold rounded-xl shadow-[0_4px_20px_rgba(59,130,246,0.35)] hover:shadow-[0_6px_25px_rgba(59,130,246,0.5)] hover:-translate-y-0.5 active:translate-y-0 transition-all">
                                 Contact Us Today

@@ -130,8 +130,8 @@ export default function PaymentDetailsClient({ details, amount, course, clientNa
         if (!utrNumber.trim() || utrNumber.trim().length < 2) return;
         setIsSubmitting(true);
         
-        // Generate a random ticket ID like PNT-A1B2C3
-        const newTicketId = `PNT-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+        // Generate a random ticket ID like ROBO-A1B2C3
+        const newTicketId = `ROBO-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
         setTicketId(newTicketId);
 
         try {
@@ -162,7 +162,7 @@ export default function PaymentDetailsClient({ details, amount, course, clientNa
     };
 
     // Construct UPI URL with optional amount
-    const accountName = details?.accountName || "PNT Academy";
+    const accountName = details?.accountName || "PNT Robotics";
     const upiId = details?.upiId || "";
     // Some apps break if pn is an email and the @ is URL encoded to %40
     const safeAccountNameQR = encodeURIComponent(accountName).replace(/%40/g, '@');
@@ -187,7 +187,7 @@ export default function PaymentDetailsClient({ details, amount, course, clientNa
     // WhatsApp confirmation message
     const buildWhatsAppUrl = () => {
         const parts = [
-            `Hi PNT Academy, I have a query regarding my payment.`,
+            `Hi PNT Robotics, I have a query regarding my payment.`,
             ticketId ? `Ticket ID: *${ticketId}*` : "",
             formattedAmount ? `Amount: ${formattedAmount}` : "",
             course ? `Course: ${course.replace(/\+/g, " ")}` : "",
@@ -543,7 +543,7 @@ export default function PaymentDetailsClient({ details, amount, course, clientNa
                             <Landmark className="w-16 h-16 mx-auto text-slate-300 dark:text-slate-700 mb-6" />
                             <h2 className="text-2xl font-black text-slate-800 dark:text-white mb-2">Payment Details Unavailable</h2>
                             <p className="text-slate-500 dark:text-slate-400">
-                                The academy administrator has not configured payment details yet. Please contact support.
+                                The robotics administrator has not configured payment details yet. Please contact support.
                             </p>
                         </div>
                     </AnimatedSection>
@@ -691,7 +691,7 @@ export default function PaymentDetailsClient({ details, amount, course, clientNa
                                     Contact Us
                                 </Link>
                                 <a
-                                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi PNT Academy, I have an enquiry about your courses.")}`}
+                                    href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi PNT Robotics, I have an enquiry about your courses.")}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 px-6 py-3 bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20 font-bold rounded-xl hover:bg-green-500/20 transition-all text-sm"

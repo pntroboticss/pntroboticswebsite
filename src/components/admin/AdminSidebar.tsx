@@ -101,8 +101,8 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
                 <Link href="/admin" onClick={onLinkClick} className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity">
                     <div className="relative w-28 h-8 mx-auto">
                         <Image
-                            src="/logo.png"
-                            alt="PNT Academy"
+                            src="/PNT%20Robo%20logo.png"
+                            alt="PNT Robotics"
                             fill
                             className="object-contain invert dark:invert-0 drop-shadow-sm transition-all duration-500"
                         />

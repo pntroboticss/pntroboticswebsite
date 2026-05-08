@@ -94,7 +94,7 @@ export async function sendPaymentEmail(data: PaymentPayload): Promise<{ success:
 
     <div class="footer">
       Sent from <strong>PNT Robotics</strong> payment page ·
-      <a href="https://pntacademy.com/admin">View Dashboard</a>
+      <a href="https://pntrobotics.vercel.app/admin">View Dashboard</a>
     </div>
   </div>
 </body>

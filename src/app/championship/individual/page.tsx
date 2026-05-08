@@ -9,15 +9,15 @@ const currentYear = new Date().getFullYear();
 const nextYear = currentYear + 1;
 
 export const metadata: Metadata = {
-  title: `Individual Registration | Skill Tank ${currentYear}-${nextYear} | PNT Academy`,
+  title: `Individual Registration | Skill Tank ${currentYear}-${nextYear} | PNT Robotics`,
   description: "Join Skill Tank as an individual student. The ultimate robotics and innovation championship for independent innovators to showcase STEM problem-solving skills.",
-  keywords: ["Skill Tank Individual", "Robotics Championship", "Student Registration", "STEM Innovation", "PNT Academy Event", "Solo Robotics", "Kids AI Championship"],
+  keywords: ["Skill Tank Individual", "Robotics Championship", "Student Registration", "STEM Innovation", "PNT Robotics Event", "Solo Robotics", "Kids AI Championship"],
   openGraph: {
     title: `Individual Student Registration | Skill Tank ${currentYear}-${nextYear}`,
     description: "Participate solo or with friends in the ultimate robotics and innovation championship. Showcase your STEM skills today.",
     url: "https://pntacademy.com/championship/individual",
     type: "website",
-    siteName: "PNT Academy",
+    siteName: "PNT Robotics",
   },
   twitter: {
     card: "summary_large_image",

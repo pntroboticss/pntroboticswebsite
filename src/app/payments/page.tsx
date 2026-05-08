@@ -5,8 +5,8 @@ import Footer from "@/components/Footer";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Secure Payments | PNT Academy",
-    description: "Make secure, zero-commission payments directly to PNT Academy via UPI or Bank Transfer. Supports GPay, PhonePe, Paytm, and all UPI apps.",
+    title: "Secure Payments | PNT Robotics",
+    description: "Make secure, zero-commission payments directly to PNT Robotics via UPI or Bank Transfer. Supports GPay, PhonePe, Paytm, and all UPI apps.",
     alternates: { canonical: "/payments" },
 };
 

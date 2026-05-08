@@ -52,7 +52,7 @@ export default function AdminLogin() {
 
                 <div className="text-center mt-8 mb-10">
                     <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">Admin Portal</h1>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">Sign in to manage PNT Academy content.</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">Sign in to manage PNT Robotics content.</p>
                 </div>
 
                 {error && (
@@ -70,7 +70,7 @@ export default function AdminLogin() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 font-medium"
-                            placeholder="director@pntacademy.com"
+                            placeholder="director@pntrobotics.com"
                         />
                     </div>
 

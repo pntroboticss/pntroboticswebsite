@@ -11,8 +11,8 @@
  *   3.  Create an API key under Dashboard → API Keys
  *   4.  Add to Vercel env vars (and .env.local):
  *         RESEND_API_KEY=re_xxxxxxxxxxxx
- *         ADMIN_NOTIFY_EMAIL=director@pntacademy.com
- *         RESEND_FROM_EMAIL=notifications@pntacademy.com  ← must be your verified domain
+ *         ADMIN_NOTIFY_EMAIL=contact@pntrobotics.com
+ *         RESEND_FROM_EMAIL=notifications@pntrobotics.com  ← must be your verified domain
  */
 
 interface EnquiryPayload {
@@ -26,8 +26,8 @@ interface EnquiryPayload {
 export async function sendEnquiryEmail(data: EnquiryPayload): Promise<void> {
     const apiKey = process.env.RESEND_API_KEY;
     // Hardcoded recipient — env var at project level was overriding team-level setting
-    const toEmail = "pnt-trainings@pntacademy.com";
-    const fromEmail = process.env.RESEND_FROM_EMAIL || "notifications@pntacademy.com";
+    const toEmail = "contact@pntrobotics.com";
+    const fromEmail = process.env.RESEND_FROM_EMAIL || "notifications@pntrobotics.com";
 
     // Silently skip if Resend API key not set — never break the form submission
     if (!apiKey) {
@@ -87,7 +87,7 @@ export async function sendEnquiryEmail(data: EnquiryPayload): Promise<void> {
 
     <div class="footer">
       Sent from <strong>PNT Robotics</strong> contact form · 
-      <a href="https://pntacademy.com/admin/enquiries">View in Dashboard</a>
+      <a href="https://pntrobotics.vercel.app/admin/enquiries">View in Dashboard</a>
     </div>
   </div>
 </body>

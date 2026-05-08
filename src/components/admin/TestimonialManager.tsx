@@ -70,7 +70,7 @@ export default function TestimonialManager({ onSuccess }: { onSuccess?: () => vo
 
             if (selectedFile) {
                 const cloudName = "dycht8a6s";
-                const uploadPreset = "pnt_academy_unsigned";
+                const uploadPreset = "pnt_robotics_unsigned";
                 const formData = new FormData();
                 formData.append("file", selectedFile);
                 formData.append("upload_preset", uploadPreset);

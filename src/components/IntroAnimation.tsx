@@ -80,7 +80,7 @@ export default function IntroAnimation({ onComplete }: { onComplete: () => void 
                             ))}
                         </div>
 
-                        {/* "Academy" rule line */}
+                        {/* "Robotics" rule line */}
                         <motion.div
                             className="flex items-center gap-4"
                             initial={{ opacity: 0, scaleX: 0.3 }}
