@@ -64,20 +64,20 @@ export default function Home() {
             </div>
             
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-slate-900 dark:text-white drop-shadow-sm transition-colors duration-500 max-w-5xl animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-              Advanced <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300">Robotics</span> & Automation
+              Making human life <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300">simpler & safe</span> with our robotic solutions.
             </h1>
             
-            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed mt-2 transition-colors duration-500 font-medium animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              Specializing in the research, design, and manufacturing of custom robotics, AI, and industrial automation systems for defense, healthcare, and enterprise.
+            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed mt-4 transition-colors duration-500 font-medium animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              Specializing in the research, design, and manufacturing of custom robotics, AI, and industrial automation systems for defense, healthcare, and enterprise. Proudly funded by Lenskart on Shark Tank India and appreciated by PM Shri Narendra Modi.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mt-6 w-full sm:w-auto animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <Link href="/projects" className="px-8 py-4 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-500 hover:-translate-y-1 transition-all shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-2 group">
-                Explore Our Projects
+              <Link href="/products" className="px-8 py-4 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-500 hover:-translate-y-1 transition-all shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-2 group">
+                Explore Our Products
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
               </Link>
-              <Link href="/services" className="px-8 py-4 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:-translate-y-1 transition-all flex items-center justify-center">
-                Our Services
+              <Link href="/about" className="px-8 py-4 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:-translate-y-1 transition-all flex items-center justify-center">
+                About Us
               </Link>
             </div>
           </div>
@@ -106,15 +106,15 @@ export default function Home() {
         <section className="py-24 relative z-10 bg-white/50 dark:bg-slate-900/20 backdrop-blur-md">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Our Core Capabilities</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Our Competitive Advantage</h2>
               <div className="w-16 h-1.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mx-auto mt-4" />
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {[
-                { title: "Autonomous Mobile Robots (AMR)", icon: "🤖", desc: "Intelligent navigation and material handling systems designed for complex industrial environments." },
-                { title: "Custom Robotic Arms", icon: "🦾", desc: "High-precision manipulation systems for manufacturing, assembly, and automated testing." },
-                { title: "Defense & R&D Integrations", icon: "🛡️", desc: "Specialized defense applications developed in collaboration with the Indian Navy and DRDO." }
+                { title: "AI-Driven Customization", icon: "🧠", desc: "Unlike standard robotic solutions, we deliver AI-driven customizable solutions tailored to your unique operational constraints." },
+                { title: "Continuous Learning", icon: "📈", desc: "Our systems feature continuous learning capabilities, ensuring they adapt and improve efficiency over time." },
+                { title: "Industry-Specific Software", icon: "💻", desc: "We provide tailored software integration designed specifically for your industry's workflow, maximizing ROI." }
               ].map((item, i) => (
                 <div key={i} className="p-8 rounded-3xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 shadow-lg shadow-slate-200/50 dark:shadow-none hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 dark:bg-blue-400/5 rounded-bl-full -z-10 group-hover:scale-110 transition-transform duration-500" />
@@ -167,7 +167,7 @@ export default function Home() {
                   ))}
                 </ul>
                 <div className="pt-6">
-                  <Link href="/projects" className="inline-flex items-center gap-2 text-cyan-400 font-bold hover:text-cyan-300 transition-colors group text-lg">
+                  <Link href="/products" className="inline-flex items-center gap-2 text-cyan-400 font-bold hover:text-cyan-300 transition-colors group text-lg">
                     View Hardware Specs
                     <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                   </Link>
@@ -240,8 +240,8 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
               {[
-                { title: "Our Projects", icon: "🚀", link: "/projects", color: "bg-blue-500 shadow-blue-500/20" },
-                { title: "Humanoid Services", icon: "🤖", link: "/services/humanoid-robot", color: "bg-purple-500 shadow-purple-500/20" },
+                { title: "Our Products", icon: "🚀", link: "/products", color: "bg-blue-500 shadow-blue-500/20" },
+                { title: "About Us", icon: "🏢", link: "/about", color: "bg-purple-500 shadow-purple-500/20" },
                 { title: "Careers", icon: "💼", link: "/careers", color: "bg-cyan-500 shadow-cyan-500/20" },
                 { title: "Contact Us", icon: "📧", link: "/contact", color: "bg-orange-500 shadow-orange-500/20" },
               ].map((item, i) => (

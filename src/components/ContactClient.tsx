@@ -24,34 +24,34 @@ const DETAILS = [
     {
         icon: MapPin,
         label: "Visit Our Lab",
-        lines: ["Plot no. A115, Infinity Business Park,", "MIDC, Dombivli East, Maharashtra 421203"],
+        lines: ["Dombivli,", "Maharashtra-421203"],
         color: "from-blue-500 to-cyan-500",
         textColor: "text-blue-500 dark:text-blue-400",
-        href: "https://www.google.com/maps?q=Plot+no.+A115,+Infinity+Business+Park,+MIDC,+Dombivli+East,+Dombivli,+Maharashtra+421203",
+        href: "https://www.google.com/maps?q=Dombivli,+Maharashtra+421203",
     },
     {
         icon: Mail,
         label: "Drop Us a Line",
-        lines: ["contact@pntrobotics.com", "info@pntrobotics.com"],
+        lines: ["pratik@pntsolutions.in"],
         color: "from-purple-500 to-pink-500",
         textColor: "text-purple-500 dark:text-purple-400",
-        href: "mailto:contact@pntrobotics.com?subject=Website%20Enquiry&body=Hi%20PNT%20Robotics,%0A%0AI%20am%20interested%20in%20learning%20more%20about...",
+        href: "mailto:pratik@pntsolutions.in?subject=Website%20Enquiry&body=Hi%20PNT%20Robotics,%0A%0AI%20am%20interested%20in%20learning%20more%20about...",
     },
     {
         icon: Phone,
         label: "Speak to Our Team",
-        lines: ["+91 93260 14648", "+91 81691 96916"],
+        lines: ["+91 79775 43839"],
         color: "from-teal-500 to-emerald-500",
         textColor: "text-teal-500 dark:text-teal-400",
-        href: "tel:+919326014648",
+        href: "tel:+917977543839",
     },
     {
-        icon: MessageCircle,
-        label: "Instant WhatsApp",
-        lines: ["Get a reply in minutes, not hours"],
+        icon: ExternalLink,
+        label: "Website",
+        lines: ["www.pntsolutions.in"],
         color: "from-green-500 to-lime-500",
         textColor: "text-green-500 dark:text-green-400",
-        href: "https://wa.me/919326014648?text=Hi%20PNT%20Robotics,%20I%20have%20an%20enquiry",
+        href: "https://www.pntsolutions.in",
     },
 ];
 
@@ -183,10 +183,10 @@ export default function ContactClient({ faqs, settings }: { faqs: Faq[]; setting
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.6 }}
                         >
-                            {[
-                                { label: "WhatsApp Us", href: "https://wa.me/919326014648", icon: MessageCircle, color: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 hover:bg-green-500/20" },
-                                { label: "Call Now", href: "tel:+919326014648", icon: Phone, color: "bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20 hover:bg-teal-500/20" },
-                                { label: "Email", href: "mailto:sales@pntrobotics.com", icon: Mail, color: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:bg-purple-500/20" },
+                                {[
+                                { label: "WhatsApp Us", href: "https://wa.me/917977543839", icon: MessageCircle, color: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 hover:bg-green-500/20" },
+                                { label: "Call Now", href: "tel:+917977543839", icon: Phone, color: "bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20 hover:bg-teal-500/20" },
+                                { label: "Email", href: "mailto:pratik@pntsolutions.in", icon: Mail, color: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:bg-purple-500/20" },
                             ].map((action) => (
                                 <a
                                     key={action.label}
@@ -413,10 +413,10 @@ export default function ContactClient({ faqs, settings }: { faqs: Faq[]; setting
                                             key={faq._id}
                                             variants={fadeUp}
                                             custom={i}
-                                            className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
+                                            className={`border rounded-2xl overflow-hidden transition-all duration-500 ${
                                                 openFaq === faq._id
-                                                    ? "border-blue-500/30 dark:border-blue-400/30 bg-white dark:bg-slate-800 shadow-lg shadow-blue-500/5"
-                                                    : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-600"
+                                                    ? "border-blue-400/50 dark:border-blue-400/30 bg-gradient-to-br from-white to-blue-50/50 dark:from-slate-800 dark:to-slate-800/80 shadow-xl shadow-blue-500/10 scale-[1.02] -translate-y-1 relative z-10"
+                                                    : "border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md"
                                             }`}
                                         >
                                             <button
@@ -441,8 +441,10 @@ export default function ContactClient({ faqs, settings }: { faqs: Faq[]; setting
                                                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                                         className="overflow-hidden"
                                                     >
-                                                        <div className="px-5 pb-5 text-slate-600 dark:text-slate-400 text-sm leading-relaxed whitespace-pre-wrap border-t border-slate-200 dark:border-slate-700 pt-4 mt-1">
-                                                            {faq.answer}
+                                                        <div className="px-5 pb-5 pt-2">
+                                                            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 text-sm leading-relaxed whitespace-pre-wrap border border-slate-100 dark:border-slate-800/50 shadow-inner">
+                                                                {faq.answer}
+                                                            </div>
                                                         </div>
                                                     </motion.div>
                                                 )}

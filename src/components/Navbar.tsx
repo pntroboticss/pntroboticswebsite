@@ -16,25 +16,21 @@ type NavItemType = {
     dropdown?: { label: string; href: string }[];
 };
 
-// ─── Nav items ────────────────────────────────────────────────────────────────
 const NAV_ITEMS: NavItemType[] = [
+    {
+        label: "About Us",
+        href: "/about",
+        icon: "🏢",
+    },
+    {
+        label: "Products & Solutions",
+        href: "/products",
+        icon: "🤖",
+    },
     {
         label: "Careers",
         href: "/careers",
         icon: "💼",
-    },
-    {
-        label: "Services",
-        href: "/services",
-        icon: "🛠️",
-        dropdown: [
-            { label: "Humanoid Robot", href: "/services/humanoid-robot" }
-        ]
-    },
-    {
-        label: "Our Projects",
-        href: "/projects",
-        icon: "🚀",
     },
 ];
 
