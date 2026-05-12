@@ -29,7 +29,7 @@ type Application = {
 };
 
 export default function CareersAdmin() {
-  const [activeTab, setActiveTab] = useState<"jobs" | "applications">("jobs");
+  const [activeTab, setActiveTab] = useState<"jobs" | "applications" | "internships">("jobs");
   
   const [jobs, setJobs] = useState<Job[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
@@ -307,14 +307,20 @@ export default function CareersAdmin() {
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-black text-slate-900 dark:text-white">Careers & Hiring</h1>
-        <div className="flex bg-slate-200 dark:bg-slate-800 p-1 rounded-xl">
+        <div className="flex bg-slate-200 dark:bg-slate-800 p-1 rounded-xl flex-wrap gap-1">
           <button onClick={() => setActiveTab("jobs")} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "jobs" ? "bg-white dark:bg-slate-700 shadow text-blue-600" : "text-slate-500 hover:text-slate-900 dark:hover:text-white"}`}>
             Job Postings
           </button>
           <button onClick={() => setActiveTab("applications")} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${activeTab === "applications" ? "bg-white dark:bg-slate-700 shadow text-purple-600" : "text-slate-500 hover:text-slate-900 dark:hover:text-white"}`}>
             Applications
-            {applications.filter(a => a.status === "Pending").length > 0 && (
-              <span className="bg-purple-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{applications.filter(a => a.status === "Pending").length}</span>
+            {applications.filter(a => a.status === "Pending" && a.answers?.application_type !== "internship").length > 0 && (
+              <span className="bg-purple-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{applications.filter(a => a.status === "Pending" && a.answers?.application_type !== "internship").length}</span>
+            )}
+          </button>
+          <button onClick={() => setActiveTab("internships")} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${activeTab === "internships" ? "bg-white dark:bg-slate-700 shadow text-amber-600" : "text-slate-500 hover:text-slate-900 dark:hover:text-white"}`}>
+            Internships
+            {applications.filter(a => a.status === "Pending" && a.answers?.application_type === "internship").length > 0 && (
+              <span className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{applications.filter(a => a.status === "Pending" && a.answers?.application_type === "internship").length}</span>
             )}
           </button>
         </div>
@@ -374,6 +380,7 @@ export default function CareersAdmin() {
             <table className="w-full text-left">
             <thead className="bg-slate-50 dark:bg-slate-950 text-xs uppercase font-bold text-slate-500 border-b border-slate-200 dark:border-slate-800">
               <tr>
+                <th className="p-4">App ID</th>
                 <th className="p-4">Applicant</th>
                 <th className="p-4">Applied For</th>
                 <th className="p-4">Date</th>
@@ -382,8 +389,13 @@ export default function CareersAdmin() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {applications.map(app => (
+              {applications.filter(a => a.answers?.application_type !== "internship").map(app => (
                 <tr key={app.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <td className="p-4">
+                    <span className="font-mono text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md text-slate-600 dark:text-slate-400">
+                      {app.id.slice(0, 8).toUpperCase()}
+                    </span>
+                  </td>
                   <td className="p-4">
                     <div className="font-bold text-slate-900 dark:text-white">{app.name}</div>
                     <div className="text-xs text-slate-500">{app.email}</div>
@@ -395,8 +407,8 @@ export default function CareersAdmin() {
                     {new Date(app.created_at).toLocaleDateString()}
                   </td>
                   <td className="p-4">
-                    <select 
-                      value={app.status} 
+                    <select
+                      value={app.status}
                       onChange={(e) => updateAppStatus(app.id, e.target.value)}
                       className={`text-xs font-bold px-2 py-1 rounded-md outline-none border-none
                         ${app.status === 'Pending' ? 'bg-amber-100 text-amber-700' : ''}
@@ -418,8 +430,82 @@ export default function CareersAdmin() {
                   </td>
                 </tr>
               ))}
-              {applications.length === 0 && (
-                <tr><td colSpan={5} className="p-8 text-center text-slate-500">No applications yet.</td></tr>
+              {applications.filter(a => a.answers?.application_type !== "internship").length === 0 && (
+                <tr><td colSpan={6} className="p-8 text-center text-slate-500">No job applications yet.</td></tr>
+              )}
+            </tbody>
+          </table>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "internships" && (
+        <div className="space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+            <table className="w-full text-left">
+            <thead className="bg-amber-50 dark:bg-amber-950/30 text-xs uppercase font-bold text-amber-700 dark:text-amber-400 border-b border-amber-100 dark:border-amber-900/40">
+              <tr>
+                <th className="p-4">App ID</th>
+                <th className="p-4">Applicant</th>
+                <th className="p-4">Applied For</th>
+                <th className="p-4">Interest</th>
+                <th className="p-4">Education</th>
+                <th className="p-4">Date</th>
+                <th className="p-4">Status</th>
+                <th className="p-4">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              {applications.filter(a => a.answers?.application_type === "internship").map(app => (
+                <tr key={app.id} className="hover:bg-amber-50/50 dark:hover:bg-amber-950/20 transition-colors">
+                  <td className="p-4">
+                    <span className="font-mono text-xs bg-amber-100 dark:bg-amber-900/30 px-2 py-1 rounded-md text-amber-700 dark:text-amber-400">
+                      {app.id.slice(0, 8).toUpperCase()}
+                    </span>
+                  </td>
+                  <td className="p-4">
+                    <div className="font-bold text-slate-900 dark:text-white">{app.name}</div>
+                    <div className="text-xs text-slate-500">{app.email}</div>
+                    <div className="text-xs text-slate-400">{app.phone}</div>
+                  </td>
+                  <td className="p-4">
+                    <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-bold px-2.5 py-1 rounded-full">Internship</span>
+                  </td>
+                  <td className="p-4 text-sm text-slate-600 dark:text-slate-300 max-w-[160px] truncate">
+                    {app.answers?.area_of_interest || "-"}
+                  </td>
+                  <td className="p-4 text-sm text-slate-500 capitalize">
+                    {app.answers?.education_status || "-"}
+                  </td>
+                  <td className="p-4 text-sm text-slate-500">
+                    {new Date(app.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="p-4">
+                    <select
+                      value={app.status}
+                      onChange={(e) => updateAppStatus(app.id, e.target.value)}
+                      className={`text-xs font-bold px-2 py-1 rounded-md outline-none border-none
+                        ${app.status === 'Pending' ? 'bg-amber-100 text-amber-700' : ''}
+                        ${app.status === 'Interview' ? 'bg-blue-100 text-blue-700' : ''}
+                        ${app.status === 'Rejected' ? 'bg-red-100 text-red-700' : ''}
+                        ${app.status === 'Accepted' ? 'bg-emerald-100 text-emerald-700' : ''}
+                      `}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Interview">Shortlisted</option>
+                      <option value="Accepted">Selected</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </td>
+                  <td className="p-4">
+                    <button onClick={() => setViewingApp(app)} className="text-amber-600 bg-amber-50 dark:bg-amber-900/30 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-amber-100 flex items-center gap-2">
+                      <Eye size={14} /> View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {applications.filter(a => a.answers?.application_type === "internship").length === 0 && (
+                <tr><td colSpan={8} className="p-8 text-center text-slate-500">No internship applications yet.</td></tr>
               )}
             </tbody>
           </table>
@@ -472,8 +558,24 @@ export default function CareersAdmin() {
           <div className="bg-white dark:bg-slate-900 w-full max-w-3xl rounded-3xl p-6 md:p-8 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <h2 className="text-2xl font-black text-slate-900 dark:text-white">{viewingApp.name}</h2>
-                <p className="text-slate-500 font-medium">Applied for <span className="text-blue-600 dark:text-blue-400 font-bold">{viewingApp.job?.title}</span> on {new Date(viewingApp.created_at).toLocaleDateString()}</p>
+                <div className="flex items-center gap-3 mb-2 flex-wrap">
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-white">{viewingApp.name}</h2>
+                  {viewingApp.answers?.application_type === "internship" ? (
+                    <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-bold px-2.5 py-1 rounded-full">Internship</span>
+                  ) : (
+                    <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-bold px-2.5 py-1 rounded-full">Job Application</span>
+                  )}
+                </div>
+                <p className="text-slate-500 font-medium">
+                  Applied for <span className="text-blue-600 dark:text-blue-400 font-bold">
+                    {viewingApp.answers?.application_type === "internship" ? "Internship" : (viewingApp.job?.title || "Unknown Job")}
+                  </span> on {new Date(viewingApp.created_at).toLocaleDateString()}
+                </p>
+                <p className="text-xs text-slate-400 mt-1 font-mono">
+                  App ID: <span className="font-bold text-slate-600 dark:text-slate-300">{viewingApp.id.slice(0, 8).toUpperCase()}</span>
+                  <span className="text-slate-300 dark:text-slate-600 mx-2">|</span>
+                  Full ID: {viewingApp.id}
+                </p>
               </div>
               <button onClick={() => setViewingApp(null)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-slate-200 text-slate-500"><X size={20}/></button>
             </div>

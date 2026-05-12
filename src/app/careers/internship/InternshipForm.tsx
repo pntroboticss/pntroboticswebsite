@@ -105,6 +105,7 @@ export default function InternshipForm() {
   // Personal Info
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [fatherName, setFatherName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState("");
@@ -170,6 +171,7 @@ export default function InternshipForm() {
         work_experience: experiences.length > 0 ? JSON.stringify(experiences) : "None",
         area_of_interest: areaOfInterest === "Other" ? customInterest : areaOfInterest,
         can_relocate: canRelocate,
+        father_name: fatherName,
         age,
         pincode
       };
@@ -246,6 +248,7 @@ export default function InternshipForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input label="First Name" required value={firstName} onChange={(e: any) => setFirstName(e.target.value)} />
               <Input label="Last Name / Surname" required value={lastName} onChange={(e: any) => setLastName(e.target.value)} />
+              <Input label="Father's Name" required value={fatherName} onChange={(e: any) => setFatherName(e.target.value)} />
               <Input label="Email Address" type="email" required value={email} onChange={(e: any) => setEmail(e.target.value)} />
               <Input label="Phone Number" type="tel" required value={phone} onChange={(e: any) => setPhone(e.target.value)} />
               <Input label="Age" type="number" required value={age} onChange={(e: any) => setAge(e.target.value)} />
