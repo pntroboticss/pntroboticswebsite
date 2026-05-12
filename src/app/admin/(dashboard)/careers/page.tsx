@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Plus, Trash2, Edit, Users, Briefcase, Eye, Download, X, FileText } from "lucide-react";
+import { Plus, Trash2, Edit, Users, Briefcase, Eye, Download, X, FileText, Mail, Filter, CheckSquare, Square } from "lucide-react";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 type Job = {
@@ -41,6 +41,56 @@ export default function CareersAdmin() {
 
   // App Modal State
   const [viewingApp, setViewingApp] = useState<Application | null>(null);
+
+  // Filter & Bulk Selection
+  const [appFilter, setAppFilter] = useState("All");
+  const [internFilter, setInternFilter] = useState("All");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const toggleSelect = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelectedIds(next);
+  };
+
+  const toggleSelectAll = (ids: string[]) => {
+    if (ids.every(id => selectedIds.has(id))) {
+      const next = new Set(selectedIds);
+      ids.forEach(id => next.delete(id));
+      setSelectedIds(next);
+    } else {
+      const next = new Set(selectedIds);
+      ids.forEach(id => next.add(id));
+      setSelectedIds(next);
+    }
+  };
+
+  const clearSelection = () => setSelectedIds(new Set());
+
+  // Open Gmail compose for a single applicant
+  const contactApplicant = (email: string, name: string) => {
+    const subject = encodeURIComponent(`Regarding Your Application – PNT Robotics`);
+    const body = encodeURIComponent(`Dear ${name},\n\n`);
+    window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${subject}&body=${body}`, '_blank');
+  };
+
+  // Bulk email — opens Gmail with all selected emails as BCC
+  const bulkEmail = (apps: Application[]) => {
+    const selected = apps.filter(a => selectedIds.has(a.id));
+    if (selected.length === 0) return alert("Please select at least one applicant.");
+    const bcc = selected.map(a => a.email).join(',');
+    const subject = encodeURIComponent(`Update on Your Application – PNT Robotics`);
+    window.open(`https://mail.google.com/mail/?view=cm&bcc=${encodeURIComponent(bcc)}&su=${subject}`, '_blank');
+  };
+
+  const STATUS_OPTIONS = ["All", "Pending", "Interview", "Accepted", "Rejected"];
+  const STATUS_COLORS: Record<string, string> = {
+    All: "bg-slate-100 text-slate-600",
+    Pending: "bg-amber-100 text-amber-700",
+    Interview: "bg-blue-100 text-blue-700",
+    Accepted: "bg-emerald-100 text-emerald-700",
+    Rejected: "bg-red-100 text-red-700",
+  };
 
   useEffect(() => {
     fetchData();
@@ -369,28 +419,62 @@ export default function CareersAdmin() {
         </div>
       )}
 
-      {activeTab === "applications" && (
+      {activeTab === "applications" && (() => {
+        const jobApps = applications.filter(a => a.answers?.application_type !== "internship");
+        const filtered = appFilter === "All" ? jobApps : jobApps.filter(a => a.status === appFilter);
+        const filteredIds = filtered.map(a => a.id);
+        const allChecked = filteredIds.length > 0 && filteredIds.every(id => selectedIds.has(id));
+        return (
         <div className="space-y-4">
-          <div className="flex justify-end">
-            <button onClick={exportToCSV} className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm">
-              <Download size={18} /> Export as CSV (For Google Sheets)
-            </button>
+          {/* Toolbar */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Status Filter */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <Filter size={15} className="text-slate-400" />
+              {STATUS_OPTIONS.map(s => (
+                <button key={s} onClick={() => { setAppFilter(s); clearSelection(); }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border-2 ${
+                    appFilter === s ? `${STATUS_COLORS[s]} border-current` : "border-transparent bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200"
+                  }`}>{s}</button>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              {selectedIds.size > 0 && (
+                <button onClick={() => bulkEmail(jobApps)} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm">
+                  <Mail size={15} /> Email Selected ({selectedIds.size})
+                </button>
+              )}
+              <button onClick={exportToCSV} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 shadow-sm">
+                <Download size={15} /> Export CSV
+              </button>
+            </div>
           </div>
+
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
             <table className="w-full text-left">
             <thead className="bg-slate-50 dark:bg-slate-950 text-xs uppercase font-bold text-slate-500 border-b border-slate-200 dark:border-slate-800">
               <tr>
+                <th className="p-4 w-10">
+                  <button onClick={() => toggleSelectAll(filteredIds)} className="text-slate-400 hover:text-blue-600">
+                    {allChecked ? <CheckSquare size={18} className="text-blue-600" /> : <Square size={18} />}
+                  </button>
+                </th>
                 <th className="p-4">App ID</th>
                 <th className="p-4">Applicant</th>
                 <th className="p-4">Applied For</th>
                 <th className="p-4">Date</th>
                 <th className="p-4">Status</th>
-                <th className="p-4">Action</th>
+                <th className="p-4">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {applications.filter(a => a.answers?.application_type !== "internship").map(app => (
-                <tr key={app.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              {filtered.map(app => (
+                <tr key={app.id} className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${selectedIds.has(app.id) ? 'bg-blue-50 dark:bg-blue-950/20' : ''}`}>
+                  <td className="p-4">
+                    <button onClick={() => toggleSelect(app.id)} className="text-slate-400 hover:text-blue-600">
+                      {selectedIds.has(app.id) ? <CheckSquare size={18} className="text-blue-600" /> : <Square size={18} />}
+                    </button>
+                  </td>
                   <td className="p-4">
                     <span className="font-mono text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md text-slate-600 dark:text-slate-400">
                       {app.id.slice(0, 8).toUpperCase()}
@@ -424,27 +508,61 @@ export default function CareersAdmin() {
                     </select>
                   </td>
                   <td className="p-4">
-                    <button onClick={() => setViewingApp(app)} className="text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-blue-100 flex items-center gap-2">
-                      <Eye size={14} /> Review
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => setViewingApp(app)} className="text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1.5">
+                        <Eye size={13} /> Review
+                      </button>
+                      <button onClick={() => contactApplicant(app.email, app.name)} className="text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-100 flex items-center gap-1.5">
+                        <Mail size={13} /> Contact
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
-              {applications.filter(a => a.answers?.application_type !== "internship").length === 0 && (
-                <tr><td colSpan={6} className="p-8 text-center text-slate-500">No job applications yet.</td></tr>
+              {filtered.length === 0 && (
+                <tr><td colSpan={7} className="p-8 text-center text-slate-500">No applications matching this filter.</td></tr>
               )}
             </tbody>
           </table>
           </div>
         </div>
-      )}
+        );
+      })()}
 
-      {activeTab === "internships" && (
+      {activeTab === "internships" && (() => {
+        const internApps = applications.filter(a => a.answers?.application_type === "internship");
+        const filtered = internFilter === "All" ? internApps : internApps.filter(a => a.status === internFilter);
+        const filteredIds = filtered.map(a => a.id);
+        const allChecked = filteredIds.length > 0 && filteredIds.every(id => selectedIds.has(id));
+        return (
         <div className="space-y-4">
+          {/* Toolbar */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Filter size={15} className="text-amber-400" />
+              {STATUS_OPTIONS.map(s => (
+                <button key={s} onClick={() => { setInternFilter(s); clearSelection(); }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border-2 ${
+                    internFilter === s ? `${STATUS_COLORS[s]} border-current` : "border-transparent bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200"
+                  }`}>{s}</button>
+              ))}
+            </div>
+            {selectedIds.size > 0 && (
+              <button onClick={() => bulkEmail(internApps)} className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm">
+                <Mail size={15} /> Email Selected ({selectedIds.size})
+              </button>
+            )}
+          </div>
+
           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
             <table className="w-full text-left">
             <thead className="bg-amber-50 dark:bg-amber-950/30 text-xs uppercase font-bold text-amber-700 dark:text-amber-400 border-b border-amber-100 dark:border-amber-900/40">
               <tr>
+                <th className="p-4 w-10">
+                  <button onClick={() => toggleSelectAll(filteredIds)} className="text-amber-400 hover:text-amber-600">
+                    {allChecked ? <CheckSquare size={18} className="text-amber-600" /> : <Square size={18} />}
+                  </button>
+                </th>
                 <th className="p-4">App ID</th>
                 <th className="p-4">Applicant</th>
                 <th className="p-4">Applied For</th>
@@ -452,12 +570,17 @@ export default function CareersAdmin() {
                 <th className="p-4">Education</th>
                 <th className="p-4">Date</th>
                 <th className="p-4">Status</th>
-                <th className="p-4">Action</th>
+                <th className="p-4">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {applications.filter(a => a.answers?.application_type === "internship").map(app => (
-                <tr key={app.id} className="hover:bg-amber-50/50 dark:hover:bg-amber-950/20 transition-colors">
+              {filtered.map(app => (
+                <tr key={app.id} className={`hover:bg-amber-50/50 dark:hover:bg-amber-950/20 transition-colors ${selectedIds.has(app.id) ? 'bg-amber-50 dark:bg-amber-950/30' : ''}`}>
+                  <td className="p-4">
+                    <button onClick={() => toggleSelect(app.id)} className="text-slate-400 hover:text-amber-600">
+                      {selectedIds.has(app.id) ? <CheckSquare size={18} className="text-amber-600" /> : <Square size={18} />}
+                    </button>
+                  </td>
                   <td className="p-4">
                     <span className="font-mono text-xs bg-amber-100 dark:bg-amber-900/30 px-2 py-1 rounded-md text-amber-700 dark:text-amber-400">
                       {app.id.slice(0, 8).toUpperCase()}
@@ -498,20 +621,26 @@ export default function CareersAdmin() {
                     </select>
                   </td>
                   <td className="p-4">
-                    <button onClick={() => setViewingApp(app)} className="text-amber-600 bg-amber-50 dark:bg-amber-900/30 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-amber-100 flex items-center gap-2">
-                      <Eye size={14} /> View
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => setViewingApp(app)} className="text-amber-600 bg-amber-50 dark:bg-amber-900/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-amber-100 flex items-center gap-1.5">
+                        <Eye size={13} /> View
+                      </button>
+                      <button onClick={() => contactApplicant(app.email, app.name)} className="text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-100 flex items-center gap-1.5">
+                        <Mail size={13} /> Contact
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
-              {applications.filter(a => a.answers?.application_type === "internship").length === 0 && (
-                <tr><td colSpan={8} className="p-8 text-center text-slate-500">No internship applications yet.</td></tr>
+              {filtered.length === 0 && (
+                <tr><td colSpan={9} className="p-8 text-center text-slate-500">No internship applications matching this filter.</td></tr>
               )}
             </tbody>
           </table>
           </div>
         </div>
-      )}
+        );
+      })()}
 
       {/* MODALS */}
       {isJobModalOpen && (
