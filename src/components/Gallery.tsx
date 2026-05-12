@@ -7,7 +7,7 @@ export default function Gallery() {
     const [items, setItems] = useState<any[]>([]);
 
     useEffect(() => {
-        getLiveGallery().then(setItems).catch(console.error);
+        getLiveGallery("Home").then(setItems).catch(console.error);
     }, []);
 
     if (!items || items.length === 0) {

@@ -3,8 +3,16 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Loader2, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import ImageCropper from "@/components/admin/ImageCropper";
+import { supabase } from "@/lib/supabase";
 
-const CATEGORIES = ["Projects", "Workshop", "Industrial Visit", "Schools", "Lab Setup"];
+const PAGE_LOCATIONS = ["Home", "About Us", "Gallery", "Schools", "Contact"];
+const CATEGORIES: Record<string, string[]> = {
+    "Home": ["Hero Slider", "Spotlight", "Testimonials", "Partners"],
+    "About Us": ["Team", "Office", "History"],
+    "Gallery": ["Projects", "Workshop", "Industrial Visit", "Schools", "Lab Setup", "Robotics Lab"],
+    "Schools": ["Testimonials", "Curriculum in Action"],
+    "Contact": ["Location Map", "Office Front"],
+};
 
 export default function AdminGallery() {
     const [items, setItems] = useState<any[]>([]);
@@ -15,7 +23,18 @@ export default function AdminGallery() {
     const [file, setFile] = useState<File | null>(null);
     const [fileToCrop, setFileToCrop] = useState<File | null>(null);
     const [title, setTitle] = useState("");
+    const [pageLocation, setPageLocation] = useState("Gallery");
     const [category, setCategory] = useState("Projects");
+    
+    // UI state for viewing
+    const [activeTab, setActiveTab] = useState("Gallery");
+
+    useEffect(() => {
+        // Automatically update category when page location changes to ensure valid selection
+        if (CATEGORIES[pageLocation] && !CATEGORIES[pageLocation].includes(category)) {
+            setCategory(CATEGORIES[pageLocation][0]);
+        }
+    }, [pageLocation]);
 
     useEffect(() => {
         fetchGallery();
@@ -62,20 +81,18 @@ export default function AdminGallery() {
         setIsUploading(true);
 
         try {
-            // 1. Upload to Cloudinary using unsigned preset
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "pnt_academy_unsigned");
+            // 1. Upload to Supabase Storage
+            const uniqueFilename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+            const { data, error: uploadError } = await supabase.storage
+                .from("website_assets")
+                .upload(`gallery/${uniqueFilename}`, file, { cacheControl: "3600", upsert: false });
 
-            const cloudinaryRes = await fetch("https://api.cloudinary.com/v1_1/dycht8a6s/image/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!cloudinaryRes.ok) throw new Error("Cloudinary upload failed");
+            if (uploadError) throw new Error("Supabase upload failed");
             
-            const cloudinaryData = await cloudinaryRes.json();
-            const secureUrl = cloudinaryData.secure_url;
+            const { data: publicUrlData } = supabase.storage
+                .from("website_assets")
+                .getPublicUrl(`gallery/${uniqueFilename}`);
+            const secureUrl = publicUrlData.publicUrl;
 
             // 2. Save directly to MongoDB API
             const res = await fetch("/api/admin/gallery", {
@@ -84,6 +101,7 @@ export default function AdminGallery() {
                 body: JSON.stringify({
                     title,
                     category,
+                    pageLocation,
                     imageUrl: secureUrl,
                 }),
             });
@@ -138,7 +156,7 @@ export default function AdminGallery() {
                         <Plus className="w-5 h-5 text-blue-500" /> Add New Photo
                     </h3>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <div className="space-y-2">
                             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Photo Title</label>
                             <input
@@ -152,13 +170,24 @@ export default function AdminGallery() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Category</label>
+                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Website Page</label>
+                            <select
+                                value={pageLocation}
+                                onChange={(e) => setPageLocation(e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                            >
+                                {PAGE_LOCATIONS.map(loc => <option key={loc} value={loc}>{loc}</option>)}
+                            </select>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Section / Category</label>
                             <select
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                             >
-                                {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                                {(CATEGORIES[pageLocation] || []).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                             </select>
                         </div>
                     </div>
@@ -185,19 +214,40 @@ export default function AdminGallery() {
                 </form>
             </motion.div>
 
+            {/* Media Manager Header & Tabs */}
+            <div className="flex flex-col gap-4 pt-6 border-t border-slate-200 dark:border-slate-800">
+                <h3 className="font-bold text-lg text-slate-800 dark:text-white">Uploaded Media</h3>
+                
+                <div className="flex flex-wrap gap-2 mb-2">
+                    {PAGE_LOCATIONS.map(loc => (
+                        <button
+                            key={loc}
+                            onClick={() => setActiveTab(loc)}
+                            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                                activeTab === loc
+                                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                                    : "bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800"
+                            }`}
+                        >
+                            {loc}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             {/* Gallery Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {isLoading ? (
                     <div className="col-span-full py-12 flex justify-center text-slate-400">
                         <Loader2 className="w-8 h-8 animate-spin" />
                     </div>
-                ) : items.length === 0 ? (
+                ) : items.filter(i => (i.pageLocation || "Gallery") === activeTab).length === 0 ? (
                     <div className="col-span-full py-16 text-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl">
                         <ImageIcon className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-3" />
-                        <p className="text-slate-500">No media uploaded yet.</p>
+                        <p className="text-slate-500">No media uploaded for {activeTab} yet.</p>
                     </div>
                 ) : (
-                    items.map((item, i) => (
+                    items.filter(i => (i.pageLocation || "Gallery") === activeTab).map((item, i) => (
                         <motion.div
                             key={item._id}
                             initial={{ opacity: 0, scale: 0.95 }}

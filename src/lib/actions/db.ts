@@ -47,10 +47,11 @@ export async function getLiveFaqs() {
         return [];
     }
 }
-export async function getLiveGallery() {
+export async function getLiveGallery(pageLocation?: string) {
     try {
         await connectMongo();
-        const items = await Gallery.find({}).sort({ createdAt: -1 }).lean();
+        const query = pageLocation ? { pageLocation } : {};
+        const items = await Gallery.find(query).sort({ createdAt: -1 }).lean();
         return JSON.parse(JSON.stringify(items));
     } catch (error) {
         console.error("Failed to fetch gallery:", error);

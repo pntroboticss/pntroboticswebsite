@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Loader2, Plus, Trash2, Image as ImageIcon, GraduationCap } from "lucide-react";
 import ImageCropper from "@/components/admin/ImageCropper";
+import { supabase } from "@/lib/supabase";
 
 export default function AdminSchools() {
     const [items, setItems] = useState<any[]>([]);
@@ -59,20 +60,18 @@ export default function AdminSchools() {
         setIsUploading(true);
 
         try {
-            // 1. Upload to Cloudinary using unsigned preset
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "pnt_academy_unsigned");
+            // 1. Upload to Supabase Storage
+            const uniqueFilename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+            const { data, error: uploadError } = await supabase.storage
+                .from("website_assets")
+                .upload(`schools/${uniqueFilename}`, file, { cacheControl: "3600", upsert: false });
 
-            const cloudinaryRes = await fetch("https://api.cloudinary.com/v1_1/dycht8a6s/image/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!cloudinaryRes.ok) throw new Error("Cloudinary upload failed");
+            if (uploadError) throw new Error("Supabase upload failed");
             
-            const cloudinaryData = await cloudinaryRes.json();
-            const secureUrl = cloudinaryData.secure_url;
+            const { data: publicUrlData } = supabase.storage
+                .from("website_assets")
+                .getPublicUrl(`schools/${uniqueFilename}`);
+            const secureUrl = publicUrlData.publicUrl;
 
             // 2. Save directly to MongoDB API
             const res = await fetch("/api/admin/schools", {

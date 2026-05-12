@@ -16,14 +16,14 @@ export async function POST(req: Request) {
     try {
         await connectMongo();
         const data = await req.json();
-        const { name, email, profileImage, socialLinks, careersLink, sheetsWebhookUrl, paymentDetails, bootcampLink, roboticsChampionshipLink, individualChampionshipLink } = data;
+        const { name, email, profileImage, socialLinks, careersLink, sheetsWebhookUrl, paymentDetails, bootcampLink, roboticsChampionshipLink, individualChampionshipLink, groqApiKey } = data;
         if (!name || !email) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
         // Upsert single settings document
         const updated = await AdminSettings.findOneAndUpdate(
             {},
-            { name, email, profileImage, socialLinks, careersLink, sheetsWebhookUrl, paymentDetails, bootcampLink, roboticsChampionshipLink, individualChampionshipLink },
+            { name, email, profileImage, socialLinks, careersLink, sheetsWebhookUrl, paymentDetails, bootcampLink, roboticsChampionshipLink, individualChampionshipLink, groqApiKey },
             { upsert: true, returnDocument: "after", new: true }
         );
         return NextResponse.json(updated, { status: 201 });

@@ -1,66 +1,45 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    LayoutDashboard, Image as ImageIcon, Briefcase, GraduationCap,
+    LayoutDashboard, ImageIcon, Briefcase, GraduationCap,
     FileText, Settings, LogOut, Users, MessageSquare, Inbox,
-    ThumbsDown, Ticket, Video, HelpCircle, ExternalLink, X, Box, type LucideIcon
+    Ticket, Video, HelpCircle, ExternalLink, X, Box, type LucideIcon
 } from "lucide-react";
-import { auth } from "@/lib/firebase/config";
-import { signOut } from "firebase/auth";
+import { supabase } from "@/lib/supabase";
 import { useSidebar } from "./SidebarContext";
+import Image from "next/image";
 
 type NavItem = { name: string; href: string; icon: LucideIcon };
 type NavGroup = { label: string; items: NavItem[] };
 
 const NAV_GROUPS: NavGroup[] = [
     {
-        label: "Overview",
-        items: [{ name: "Overview", href: "/admin", icon: LayoutDashboard }],
-    },
-    {
-        label: "Enquiries & Finance",
+        label: "General",
         items: [
+            { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
             { name: "Enquiries", href: "/admin/enquiries", icon: Inbox },
-            { name: "Payment Tickets", href: "/admin/tickets", icon: Ticket },
+            { name: "Careers", href: "/admin/careers", icon: Briefcase },
         ],
     },
     {
-        label: "Content",
+        label: "Catalog",
         items: [
-            { name: "Gallery", href: "/admin/gallery", icon: ImageIcon },
-            { name: "School Videos", href: "/admin/videos", icon: Video },
-            { name: "About Photos", href: "/admin/about", icon: Users },
-            { name: "News & Blog", href: "/admin/blog", icon: FileText },
+            { name: "Products", href: "/admin/products", icon: Box },
         ],
     },
     {
-        label: "Partnerships",
+        label: "Media Manager",
         items: [
-            { name: "Partner Schools", href: "/admin/schools", icon: GraduationCap },
-            { name: "Partners & Logos", href: "/admin/partners", icon: Briefcase },
-            { name: "Internships", href: "/admin/internships", icon: Briefcase },
-        ],
-    },
-    {
-        label: "3D Content",
-        items: [
-            { name: "3D Hardware Models", href: "/admin/hardware-models", icon: Box },
-        ],
-    },
-    {
-        label: "Engagement",
-        items: [
-            { name: "Testimonials", href: "/admin/testimonials", icon: MessageSquare },
-            { name: "FAQs", href: "/admin/faq", icon: HelpCircle },
-            { name: "AI Feedback", href: "/admin/ai-feedback", icon: ThumbsDown },
+            { name: "Media Gallery", href: "/admin/gallery", icon: ImageIcon },
         ],
     },
     {
         label: "System",
-        items: [{ name: "Settings", href: "/admin/settings", icon: Settings }],
+        items: [
+            { name: "Settings", href: "/admin/settings", icon: Settings },
+        ],
     },
 ];
 
@@ -69,59 +48,38 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
     const router = useRouter();
 
     const handleLogout = async () => {
-        if (auth) await signOut(auth);
+        await supabase.auth.signOut();
         router.push("/admin/login");
     };
 
     return (
-        <div className="flex flex-col h-full relative overflow-hidden">
-            {/* Animated background orbs */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
-                <motion.div
-                    className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-indigo-100/70 dark:bg-indigo-900/20 blur-3xl"
-                    animate={{ scale: [1, 1.12, 1], opacity: [0.6, 0.9, 0.6] }}
-                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                    className="absolute top-1/2 -right-20 w-52 h-52 rounded-full bg-violet-100/60 dark:bg-violet-900/15 blur-3xl"
-                    animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.8, 0.5] }}
-                    transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                />
-                <motion.div
-                    className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full bg-blue-100/50 dark:bg-blue-900/15 blur-3xl"
-                    animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.7, 0.4] }}
-                    transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-                />
-                <div className="absolute inset-0 dark:hidden bg-[radial-gradient(circle,_#6366f120_1px,_transparent_1px)] bg-[size:20px_20px] opacity-60" />
-                <div className="absolute inset-0 hidden dark:block bg-[linear-gradient(rgba(99,102,241,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.03)_1px,transparent_1px)] bg-[size:24px_24px]" />
-            </div>
-
-            {/* Logo */}
-            <div className="relative px-5 pt-6 pb-5 border-b border-slate-100 dark:border-white/[0.06]">
-                <Link href="/admin" onClick={onLinkClick} className="flex flex-col items-center gap-1 hover:opacity-80 transition-opacity">
-                    <div className="relative w-28 h-8 mx-auto">
+        <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-300 border-r border-slate-200 dark:border-slate-800 transition-colors">
+            {/* Logo Area */}
+            <div className="px-6 py-8 border-b border-slate-200 dark:border-slate-800/60">
+                <Link href="/admin" onClick={onLinkClick} className="flex flex-col gap-2 hover:opacity-80 transition-opacity">
+                    <div className="relative w-full h-24 flex items-center">
                         <Image
-                            src="/PNT%20Robo%20logo.png"
-                            alt="PNT Robotics"
+                            src="/PNT Robo logo.png"
+                            alt="PNT Robotics Logo"
                             fill
-                            className="object-contain invert dark:invert-0 drop-shadow-sm transition-all duration-500"
+                            className="object-contain object-left transition-all duration-500 dark:invert dark:hue-rotate-180"
+                            priority
                         />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 dark:text-indigo-400 mt-1">
-                        Admin Panel
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 dark:text-indigo-400 pl-1">
+                        Command Center
                     </span>
                 </Link>
             </div>
 
             {/* Navigation */}
-            <nav className="relative flex-1 px-3 py-4 overflow-y-auto scrollbar-hide space-y-5">
-                {NAV_GROUPS.map((group, gi) => (
+            <nav className="flex-1 px-4 py-6 overflow-y-auto scrollbar-hide space-y-6">
+                {NAV_GROUPS.map((group) => (
                     <div key={group.label}>
-                        {gi > 0 && <div className="h-px bg-slate-200 dark:bg-white/[0.05] mx-2 mb-3" />}
-                        <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500 px-3 mb-1.5">
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-500 px-2 mb-2">
                             {group.label}
                         </p>
-                        <div className="space-y-0.5">
+                        <div className="space-y-1">
                             {group.items.map((item) => {
                                 const Icon = item.icon;
                                 const isActive =
@@ -130,22 +88,12 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 
                                 return (
                                     <Link key={item.href} href={item.href} className="block" onClick={onLinkClick}>
-                                        <div className="relative">
-                                            {isActive && (
-                                                <motion.div
-                                                    layoutId="sidebar-active-pill"
-                                                    className="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 dark:from-indigo-600 dark:to-indigo-500 shadow-lg shadow-indigo-400/20 dark:shadow-indigo-900/40"
-                                                    transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
-                                                />
-                                            )}
-                                            <div className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-colors ${
-                                                isActive
-                                                    ? "text-white"
-                                                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.04]"
+                                        <div className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${isActive
+                                            ? "bg-indigo-600 dark:bg-indigo-500 text-white shadow-md shadow-indigo-500/20"
+                                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
                                             }`}>
-                                                <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? "text-indigo-100" : "text-slate-400 dark:text-slate-500"}`} />
-                                                {item.name}
-                                            </div>
+                                            <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-500"}`} />
+                                            {item.name}
                                         </div>
                                     </Link>
                                 );
@@ -155,22 +103,22 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
                 ))}
             </nav>
 
-            {/* Bottom actions */}
-            <div className="relative px-3 py-4 border-t border-slate-100 dark:border-white/[0.06] space-y-0.5">
+            {/* Bottom Actions */}
+            <div className="p-4 border-t border-slate-200 dark:border-slate-800/60 space-y-2">
                 <Link
                     href="/"
                     target="_blank"
                     onClick={onLinkClick}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-colors group"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all"
                 >
-                    <ExternalLink className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-indigo-500 transition-colors" />
-                    View Live Site
+                    <ExternalLink className="w-4 h-4 text-slate-500" />
+                    Visit Website
                 </Link>
                 <button
                     onClick={async () => { onLinkClick?.(); await handleLogout(); }}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/[0.08] transition-colors group"
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
                 >
-                    <LogOut className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-red-500 transition-colors" />
+                    <LogOut className="w-4 h-4 text-slate-500 group-hover:text-red-500" />
                     Sign Out
                 </button>
             </div>
@@ -183,17 +131,12 @@ export default function AdminSidebar() {
 
     return (
         <>
-            {/* ── Desktop sidebar (md and up) ── */}
-            <aside className="
-                hidden md:flex flex-col w-60 min-h-screen sticky top-0 z-20
-                bg-white dark:bg-[#080c1a]
-                border-r border-slate-200 dark:border-white/[0.06]
-                transition-colors duration-300
-            ">
+            {/* Desktop sidebar */}
+            <aside className="hidden md:block w-64 min-h-screen sticky top-0 z-20">
                 <SidebarContent />
             </aside>
 
-            {/* ── Mobile: Backdrop ── */}
+            {/* Mobile Backdrop */}
             <AnimatePresence>
                 {open && (
                     <motion.div
@@ -201,33 +144,27 @@ export default function AdminSidebar() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
+                        className="fixed inset-0 z-40 bg-slate-900/40 dark:bg-slate-900/80 backdrop-blur-sm md:hidden"
                         onClick={close}
-                        aria-hidden
                     />
                 )}
             </AnimatePresence>
 
-            {/* ── Mobile: Off-canvas drawer ── */}
+            {/* Mobile Drawer */}
             <AnimatePresence>
                 {open && (
                     <motion.aside
                         initial={{ x: "-100%" }}
                         animate={{ x: 0 }}
                         exit={{ x: "-100%" }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed left-0 top-0 bottom-0 z-50 w-72 md:hidden
-                            bg-white dark:bg-[#080c1a]
-                            border-r border-slate-200 dark:border-white/[0.06]
-                            shadow-2xl overflow-hidden"
+                        transition={{ type: "spring", bounce: 0, duration: 0.3 }}
+                        className="fixed left-0 top-0 bottom-0 z-50 w-72 md:hidden shadow-2xl bg-white dark:bg-slate-900"
                     >
-                        {/* Close button */}
                         <button
                             onClick={close}
-                            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                            aria-label="Close menu"
+                            className="absolute top-6 right-4 z-10 p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white"
                         >
-                            <X className="w-4 h-4" />
+                            <X className="w-5 h-5" />
                         </button>
                         <SidebarContent onLinkClick={close} />
                     </motion.aside>

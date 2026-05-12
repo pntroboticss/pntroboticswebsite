@@ -10,7 +10,7 @@ interface AdminStats {
     internshipsCount: number;
     totalVisits: number;
     dbSizeInBytes: number;
-    cloudinaryUsageMB: number;
+    supabaseUsageMB: number;
 }
 
 export default function AdminDashboard() {
@@ -55,10 +55,10 @@ export default function AdminDashboard() {
     const storagePercentage = Math.min((currentStorageBytes / maxStorageBytes) * 100, 100);
     const storageMegabytes = (currentStorageBytes / (1024 * 1024)).toFixed(2);
 
-    // Calculate Cloudinary Storage (Free tier is 25 Credits = ~25GB = 25600 MB)
-    const maxCloudinaryMB = 25600;
-    const currentCloudinaryMB = stats?.cloudinaryUsageMB || 0;
-    const cloudinaryPercentage = Math.min((currentCloudinaryMB / maxCloudinaryMB) * 100, 100);
+    // Calculate Supabase Storage (Free tier is up to 1GB = 1024 MB)
+    const maxSupabaseMB = 1024;
+    const currentSupabaseMB = stats?.supabaseUsageMB || 0;
+    const supabasePercentage = Math.min((currentSupabaseMB / maxSupabaseMB) * 100, 100);
 
     const STATS = [
         { label: "Gallery Photos", value: loading ? "-" : stats?.galleryCount || 0, icon: ImageIcon, color: "text-blue-500", bg: "bg-blue-500/10" },
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
                                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Welcome to your new Dashboard!</h2>
                             </div>
                             <p className="text-blue-100 text-lg mb-6 leading-relaxed">
-                                This panel controls the live content on the PNT Academy website. Any changes you make here (adding partner logos, gallery images, or updating settings) will instantly sync with the global MongoDB cluster and update the main website in real-time.
+                                This panel controls the live content on the PNT Robotics website. Any changes you make here (adding partner logos, gallery images, or updating settings) will instantly sync with the global MongoDB cluster and update the main website in real-time.
                             </p>
                             <button onClick={dismissWelcome} className="px-6 py-3 bg-white text-blue-900 font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all text-sm">
                                 Get Started
@@ -241,7 +241,7 @@ export default function AdminDashboard() {
                     </div>
                 </motion.div>
 
-                {/* Cloudinary Media Storage Gauge */}
+                {/* Supabase Media Storage Gauge */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -256,10 +256,10 @@ export default function AdminDashboard() {
                             <div className="p-3 bg-blue-500/20 rounded-xl">
                                 <ImageIcon className="w-6 h-6 text-blue-400" />
                             </div>
-                            <h2 className="text-xl font-bold">Cloudinary Media</h2>
+                            <h2 className="text-xl font-bold">Supabase Media</h2>
                         </div>
                         <p className="text-slate-400 text-sm mb-8 leading-relaxed">
-                            Dedicated cloud storage for massive 4K gallery images, student photos, and video assets. Enjoy up to ~25GB totally free on this tier.
+                            Dedicated cloud storage for massive 4K gallery images, student photos, and video assets. Enjoy up to 1GB free storage on the free tier.
                         </p>
                     </div>
 
@@ -267,19 +267,19 @@ export default function AdminDashboard() {
                         <div className="flex justify-between items-end mb-3">
                             <div>
                                 <span className="text-3xl font-black text-white">
-                                    {loading ? "-" : currentCloudinaryMB.toFixed(2)}
+                                    {loading ? "-" : currentSupabaseMB.toFixed(2)}
                                 </span>
                                 <span className="text-slate-400 text-sm ml-1 font-medium">MB Used</span>
                             </div>
                             <span className="text-blue-400 text-sm font-bold bg-blue-500/10 px-3 py-1 rounded-full">
-                                {loading ? "-" : cloudinaryPercentage.toFixed(2)}%
+                                {loading ? "-" : supabasePercentage.toFixed(2)}%
                             </span>
                         </div>
 
                         <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden mb-3">
                             <motion.div
                                 initial={{ width: 0 }}
-                                animate={{ width: `${cloudinaryPercentage}%` }}
+                                animate={{ width: `${supabasePercentage}%` }}
                                 transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
                                 className="h-full bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full relative"
                             >
@@ -288,7 +288,7 @@ export default function AdminDashboard() {
                         </div>
                         <div className="flex justify-between text-xs text-slate-500 font-medium tracking-wide border-t border-slate-800 pt-3">
                             <span>0 GB</span>
-                            <span>25 GB (Free Tier Limit)</span>
+                            <span>1 GB (Free Tier Limit)</span>
                         </div>
                     </div>
                 </motion.div>

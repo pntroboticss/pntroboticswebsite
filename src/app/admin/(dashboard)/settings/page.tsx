@@ -18,18 +18,8 @@ interface SettingsForm {
   name: string;
   email: string;
   socialLinks: { instagram: string; linkedin: string; twitter: string; youtube: string };
-  careersLink: string;
-  bootcampLink: string;
-  roboticsChampionshipLink: string;
-  individualChampionshipLink: string;
   sheetsWebhookUrl: string;
-  paymentDetails: {
-    upiId: string;
-    accountName: string;
-    accountNumber: string;
-    ifscCode: string;
-    bankName: string;
-  };
+  groqApiKey: string;
 }
 
 type SectionId = "account" | "links" | "integrations" | "ai";
@@ -39,8 +29,8 @@ const NAV_SECTIONS: {
   gradient: string; badgeTxt?: string;
 }[] = [
   { id: "account",      label: "My Account",              icon: User,       gradient: "from-blue-500 to-indigo-500" },
-  { id: "links",        label: "Public Links",             icon: Globe,      gradient: "from-purple-500 to-violet-500", badgeTxt: "Social & Careers" },
-  { id: "integrations", label: "Integrations & Payments", icon: CreditCard, gradient: "from-amber-400 to-orange-500", badgeTxt: "New" },
+  { id: "links",        label: "Public Links",             icon: Globe,      gradient: "from-purple-500 to-violet-500", badgeTxt: "Socials" },
+  { id: "integrations", label: "Integrations", icon: LinkIcon, gradient: "from-amber-400 to-orange-500" },
   { id: "ai",           label: "AI Knowledge",            icon: Brain,      gradient: "from-violet-500 to-fuchsia-500" },
 ];
 
@@ -88,17 +78,16 @@ export default function AdminSettings() {
   const { register, handleSubmit, setValue, watch } = useForm<SettingsForm>({
     defaultValues: {
       socialLinks: { instagram: "", linkedin: "", twitter: "", youtube: "" },
-      careersLink: "", bootcampLink: "", roboticsChampionshipLink: "", individualChampionshipLink: "", sheetsWebhookUrl: "",
-      paymentDetails: { upiId: "", accountName: "", accountNumber: "", ifscCode: "", bankName: "" },
+      sheetsWebhookUrl: "",
+      groqApiKey: "",
     },
   });
 
   const [loading, setLoading]             = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [previewImage, setPreviewImage]   = useState<string | null>(null);
-  const [qrPreviewImage, setQrPreviewImage] = useState<string | null>(null);
   const [saveStatus, setSaveStatus]       = useState<{ type: "success" | "error"; message: string } | null>(null);
-  const [fileToCrop, setFileToCrop]       = useState<{ file: File; type: "profile" | "qr" } | null>(null);
+  const [fileToCrop, setFileToCrop]       = useState<{ file: File; type: "profile" } | null>(null);
   const [activeSection, setActiveSection] = useState<SectionId>("account");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -107,21 +96,6 @@ export default function AdminSettings() {
   const [kbTextLength, setKbTextLength]   = useState(0);
   const [kbUploading, setKbUploading]     = useState(false);
   const [kbStatus, setKbStatus]           = useState("");
-
-  // Link gen
-  const [linkCourse, setLinkCourse]       = useState("");
-  const [linkAmount, setLinkAmount]       = useState("");
-  const [linkClientName, setLinkClientName] = useState("");
-  const [linkCopied, setLinkCopied]       = useState(false);
-
-  const generatedLink = (() => {
-    const base = typeof window !== "undefined" ? window.location.origin : "https://pntacademy.com";
-    const p = new URLSearchParams();
-    if (linkAmount) p.set("amount", linkAmount);
-    if (linkCourse) p.set("course", linkCourse);
-    if (linkClientName) p.set("name", linkClientName);
-    return `${base}/payments?${p.toString()}`;
-  })();
 
   const switchTo = (id: SectionId) => {
     setActiveSection(id);
@@ -145,21 +119,8 @@ export default function AdminSettings() {
           setValue("socialLinks.twitter", d.socialLinks.twitter || "");
           setValue("socialLinks.youtube", d.socialLinks.youtube || "");
         }
-        setValue("careersLink", d?.careersLink || "");
-        setValue("bootcampLink", d?.bootcampLink || "");
-        setValue("roboticsChampionshipLink", d?.roboticsChampionshipLink || "");
-        setValue("individualChampionshipLink", d?.individualChampionshipLink || "");
         setValue("sheetsWebhookUrl", d?.sheetsWebhookUrl || "");
-        if (d?.paymentDetails) {
-          setValue("paymentDetails.upiId", d.paymentDetails.upiId || "");
-          setValue("paymentDetails.accountName", d.paymentDetails.accountName || "");
-          setValue("paymentDetails.accountNumber", d.paymentDetails.accountNumber || "");
-          setValue("paymentDetails.ifscCode", d.paymentDetails.ifscCode || "");
-          setValue("paymentDetails.bankName", d.paymentDetails.bankName || "");
-          setQrPreviewImage(d.paymentDetails.upiQrCodeBase64 || null);
-        } else {
-          setQrPreviewImage(null);
-        }
+        setValue("groqApiKey", d?.groqApiKey || "");
       }
     } catch { /**/ }
     finally { setInitialLoading(false); }
@@ -178,16 +139,10 @@ export default function AdminSettings() {
     if (f) setFileToCrop({ file: f, type: "profile" });
     e.target.value = "";
   };
-  const handleQrSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (f) setFileToCrop({ file: f, type: "qr" });
-    e.target.value = "";
-  };
   const handleCropComplete = async (croppedFile: File) => {
     try {
       const b64 = await fileToBase64(croppedFile);
       if (fileToCrop?.type === "profile") setPreviewImage(b64);
-      else if (fileToCrop?.type === "qr") setQrPreviewImage(b64);
     } catch { /**/ }
     finally { setFileToCrop(null); }
   };
@@ -201,11 +156,8 @@ export default function AdminSettings() {
         body: JSON.stringify({
           name: form.name, email: form.email, profileImage: previewImage,
           socialLinks: form.socialLinks,
-          careersLink: form.careersLink, bootcampLink: form.bootcampLink,
-          roboticsChampionshipLink: form.roboticsChampionshipLink,
-          individualChampionshipLink: form.individualChampionshipLink,
           sheetsWebhookUrl: form.sheetsWebhookUrl,
-          paymentDetails: { ...form.paymentDetails, upiQrCodeBase64: qrPreviewImage },
+          groqApiKey: form.groqApiKey,
         }),
       });
       if (!res.ok) throw new Error();
@@ -351,7 +303,7 @@ export default function AdminSettings() {
                       </div>
                       <div>
                         <p className="font-black text-slate-800 dark:text-white text-base">{watch("name") || "Director Name"}</p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">{watch("email") || "director@pntacademy.com"}</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">{watch("email") || "director@pntrobotics.com"}</p>
                         <span className="mt-1.5 inline-flex items-center gap-1 text-[11px] text-blue-600 dark:text-blue-400 font-bold bg-blue-50 dark:bg-blue-500/10 px-2.5 py-0.5 rounded-full">
                           <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" /> Admin
                         </span>
@@ -383,10 +335,10 @@ export default function AdminSettings() {
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {([
-                        { key: "socialLinks.instagram" as const, label: "Instagram", icon: <Instagram className="w-3.5 h-3.5 text-pink-500" />, ph: "https://instagram.com/pnt_academy" },
+                        { key: "socialLinks.instagram" as const, label: "Instagram", icon: <Instagram className="w-3.5 h-3.5 text-pink-500" />, ph: "https://instagram.com/pntrobotics" },
                         { key: "socialLinks.linkedin"  as const, label: "LinkedIn",  icon: <Linkedin className="w-3.5 h-3.5 text-blue-600" />,   ph: "https://linkedin.com/company/pnt" },
-                        { key: "socialLinks.twitter"   as const, label: "X / Twitter", icon: <Twitter className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300" />, ph: "https://twitter.com/pntacademy" },
-                        { key: "socialLinks.youtube"   as const, label: "YouTube",   icon: <Youtube className="w-3.5 h-3.5 text-red-600" />,      ph: "https://youtube.com/c/pntacademy" },
+                        { key: "socialLinks.twitter"   as const, label: "X / Twitter", icon: <Twitter className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300" />, ph: "https://twitter.com/pntrobotics" },
+                        { key: "socialLinks.youtube"   as const, label: "YouTube",   icon: <Youtube className="w-3.5 h-3.5 text-red-600" />,      ph: "https://youtube.com/c/pntrobotics" },
                       ]).map(({ key, label, icon, ph }) => (
                         <div key={key}>
                           <label className={`${lbl} flex items-center gap-1.5`}>{icon}{label}</label>
@@ -394,46 +346,17 @@ export default function AdminSettings() {
                         </div>
                       ))}
                     </div>
-                    <div className="pt-4 space-y-4 border-t border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <Briefcase className="w-4 h-4 text-violet-500" />
-                        <span className="text-sm font-bold text-slate-700 dark:text-white">Careers &amp; Bootcamp</span>
-                        <a href="https://docs.google.com/forms" target="_blank" rel="noopener noreferrer"
-                          className="ml-auto flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors">
-                          New Form <ExternalLink size={10} />
-                        </a>
-                      </div>
-                      <div>
-                        <label className={lbl}>Careers Form URL</label>
-                        <input type="url" {...register("careersLink")} placeholder="https://forms.gle/..." className={pill} />
-                      </div>
-                      <div>
-                        <label className={lbl}>Bootcamp Ribbon URL <span className="normal-case font-normal text-slate-400">(Schools page hero)</span></label>
-                        <input type="url" {...register("bootcampLink")} placeholder="https://forms.gle/bPqn2u..." className={pill} />
-                        <p className="text-[11px] text-slate-400 mt-1.5 ml-1">Drives the &quot;Free AI &amp; Robotics Bootcamp&quot; ribbon on the Schools page.</p>
-                      </div>
-                      <div>
-                        <label className={lbl}>Robotics Champ. Form (Schools) <span className="normal-case font-normal text-slate-400">(School page hero)</span></label>
-                        <input type="url" {...register("roboticsChampionshipLink")} placeholder="https://forms.gle/..." className={pill} />
-                        <p className="text-[11px] text-slate-400 mt-1.5 ml-1">Form link used for schools registering teams.</p>
-                      </div>
-                      <div>
-                        <label className={lbl}>Robotics Champ. Form (Individual) <span className="normal-case font-normal text-slate-400">(Home & Kids pg)</span></label>
-                        <input type="url" {...register("individualChampionshipLink")} placeholder="https://forms.gle/..." className={pill} />
-                        <p className="text-[11px] text-slate-400 mt-1.5 ml-1">Form link used for individual student registrations.</p>
-                      </div>
-                    </div>
                   </SectionCard>
                   <StickyBar loading={loading} label="Links" onDiscard={loadSettings} />
                 </form>
               </motion.div>
             )}
 
-            {/* ── INTEGRATIONS & PAYMENTS ── */}
+            {/* ── INTEGRATIONS ── */}
             {activeSection === "integrations" && (
               <motion.div key="integrations" {...fadeTab}>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  <SectionCard label="Integrations & Payments" icon={CreditCard} gradient="from-amber-400 to-orange-500">
+                  <SectionCard label="Integrations" icon={LinkIcon} gradient="from-amber-400 to-orange-500">
                     {/* Google Sheets */}
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 mb-1">
@@ -444,102 +367,8 @@ export default function AdminSettings() {
                       <input type="url" {...register("sheetsWebhookUrl")} placeholder="https://script.google.com/macros/s/..." className={`${pill} font-mono`} />
                       <p className="text-[11px] text-slate-400 ml-1">Leave blank to disable. Needs a Google Apps Script Web App URL.</p>
                     </div>
-
-                    {/* Payment Details */}
-                    <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center gap-2 mb-3">
-                        <CreditCard className="w-4 h-4 text-amber-500" />
-                        <span className="text-sm font-bold text-slate-700 dark:text-white">Payment Details</span>
-                      </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Shown on student payment pages. Add UPI ID &amp; QR code for instant scanning.</p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className={lbl}>UPI ID</label>
-                          <input type="text" {...register("paymentDetails.upiId")} placeholder="yourid@upi" className={pill} />
-                        </div>
-                        <div>
-                          <label className={`${lbl} flex items-center justify-between`}>
-                            <span>UPI QR Code</span>
-                            {qrPreviewImage && <span className="text-emerald-500 normal-case font-semibold text-[10px]">✓ Uploaded</span>}
-                          </label>
-                          <div className="flex items-center gap-3">
-                            {qrPreviewImage && (
-                              <div className="w-10 h-10 rounded-xl border border-amber-200 dark:border-amber-500/20 overflow-hidden relative bg-white shrink-0">
-                                <Image src={qrPreviewImage} alt="QR" fill className="object-contain p-1" />
-                              </div>
-                            )}
-                            <input type="file" accept="image/*" onChange={handleQrSelect}
-                              className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-amber-50 dark:file:bg-amber-400/10 file:text-amber-700 dark:file:text-amber-400 hover:file:bg-amber-100" />
-                          </div>
-                        </div>
-                        <div>
-                          <label className={lbl}>Account Holder Name</label>
-                          <input type="text" {...register("paymentDetails.accountName")} placeholder="PNT Academy" className={pill} />
-                        </div>
-                        <div>
-                          <label className={lbl}>Bank Name</label>
-                          <input type="text" {...register("paymentDetails.bankName")} placeholder="HDFC Bank" className={pill} />
-                        </div>
-                        <div>
-                          <label className={lbl}>Account Number</label>
-                          <input type="text" {...register("paymentDetails.accountNumber")} placeholder="50100XXXXXXX" className={pill} />
-                        </div>
-                        <div>
-                          <label className={lbl}>IFSC Code</label>
-                          <input type="text" {...register("paymentDetails.ifscCode")} placeholder="HDFC0001234" className={`${pill} uppercase`} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Payment Link Generator */}
-                    <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center gap-2 mb-3">
-                        <Zap className="w-4 h-4 text-emerald-500" />
-                        <span className="text-sm font-bold text-slate-700 dark:text-white">Payment Link Generator</span>
-                        <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ml-1">TOOL</span>
-                      </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Generate a shareable payment link. Not saved to settings.</p>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {[
-                          { l: "Course Name", v: linkCourse, fn: setLinkCourse, ph: "Robotics Basic", t: "text" },
-                          { l: "Amount (₹)", v: linkAmount, fn: setLinkAmount, ph: "5000", t: "number" },
-                          { l: "Client Name", v: linkClientName, fn: setLinkClientName, ph: "Rahul (optional)", t: "text" },
-                        ].map(({ l, v, fn, ph, t }) => (
-                          <div key={l}>
-                            <label className={lbl}>{l}</label>
-                            <input type={t} value={v} onChange={e => fn(e.target.value)} placeholder={ph} className={pill} />
-                          </div>
-                        ))}
-                      </div>
-                      {(linkCourse || linkAmount) && (
-                        <div className="space-y-3 mt-4">
-                          <label className={lbl}>Generated Link</label>
-                          <div className="flex items-center gap-2">
-                            <input readOnly value={generatedLink}
-                              className="flex-1 px-5 py-3.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-mono text-xs focus:outline-none min-w-0" />
-                            <motion.button type="button" whileTap={{ scale: 0.95 }}
-                              onClick={() => { navigator.clipboard.writeText(generatedLink); setLinkCopied(true); setTimeout(() => setLinkCopied(false), 2000); }}
-                              className={`shrink-0 px-5 py-3.5 rounded-full font-bold text-sm transition-all ${linkCopied ? "bg-emerald-500 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-emerald-50"}`}
-                            >
-                              {linkCopied ? "✓ Copied" : "Copy"}
-                            </motion.button>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            <a href={`https://wa.me/?text=${encodeURIComponent(`Payment link for ${linkCourse || "your course"}: ${generatedLink}`)}`}
-                              target="_blank" rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full text-xs shadow-lg shadow-green-500/20">
-                              📱 Share via WhatsApp
-                            </a>
-                            <button type="button" onClick={() => { setLinkCourse(""); setLinkAmount(""); setLinkClientName(""); }}
-                              className="px-5 py-2.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold rounded-full text-xs transition-colors">
-                              Clear
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
                   </SectionCard>
-                  <StickyBar loading={loading} label="Integrations & Payments" onDiscard={loadSettings} />
+                  <StickyBar loading={loading} label="Integrations" onDiscard={loadSettings} />
                 </form>
               </motion.div>
             )}
@@ -548,9 +377,20 @@ export default function AdminSettings() {
             {activeSection === "ai" && (
               <motion.div key="ai" {...fadeTab}>
                 <SectionCard label="AI Knowledge" icon={Brain} gradient="from-violet-500 to-fuchsia-500">
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Upload a company .txt document to make the AI chatbot smarter. It answers visitor questions using this context.
-                  </p>
+                  <form onSubmit={handleSubmit(onSubmit)} className="mb-6 space-y-2">
+                    <label className={lbl}>Chatbot API Key (Groq)</label>
+                    <input type="password" {...register("groqApiKey")} placeholder="gsk_..." className={pill} />
+                    <p className="text-[11px] text-slate-400 ml-1">If blank, it falls back to the environment variable.</p>
+                    <div className="pt-2">
+                      <button type="submit" disabled={loading} className="px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-full transition-all text-xs shadow-md">
+                        {loading ? "Saving..." : "Save API Key"}
+                      </button>
+                    </div>
+                  </form>
+                  <div className="border-t border-slate-100 dark:border-slate-800 pt-6">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                      Upload a company .txt document to make the AI chatbot smarter. It answers visitor questions using this context.
+                    </p>
                   {kbFileName && (
                     <div className="flex items-center justify-between p-4 bg-violet-50 dark:bg-violet-500/10 rounded-2xl border border-violet-100 dark:border-violet-500/20">
                       <div className="flex items-center gap-3">
@@ -598,6 +438,7 @@ export default function AdminSettings() {
                     />
                     <p className="text-[11px] text-slate-400 mt-2">💡 Have a .docx? Save it as .txt in Word or Google Docs first.</p>
                     {kbStatus && <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{kbUploading ? "⏳ " : ""}{kbStatus}</p>}
+                  </div>
                   </div>
                 </SectionCard>
               </motion.div>

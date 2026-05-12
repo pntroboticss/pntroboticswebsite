@@ -16,13 +16,13 @@ export async function POST(req: Request) {
     try {
         await connectMongo();
         const data = await req.json();
-        const { title, category, imageUrl } = data;
+        const { title, category, pageLocation, imageUrl } = data;
 
         if (!title || !category || !imageUrl) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        const newItem = await Gallery.create({ title, category, imageUrl });
+        const newItem = await Gallery.create({ title, category, pageLocation: pageLocation || "Gallery", imageUrl });
         return NextResponse.json(newItem, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: 'Failed to create gallery item' }, { status: 500 });

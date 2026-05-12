@@ -1,5 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import NetworkBackground from "@/components/NetworkBackground";
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,32 +9,9 @@ export const metadata: Metadata = {
   description: "Join PNT Robotics and shape the future of AI and robotic automation.",
 };
 
-const OPEN_POSITIONS = [
-  {
-    title: "Robotics Engineer",
-    type: "Full-Time",
-    location: "Dombivli, Maharashtra",
-    desc: "Design and implement autonomous navigation systems for our AGVs and defense robots.",
-  },
-  {
-    title: "AI/ML Researcher",
-    type: "Full-Time",
-    location: "Dombivli, Maharashtra",
-    desc: "Develop cutting-edge computer vision and sensor fusion models for complex industrial environments.",
-  },
-  {
-    title: "Embedded Systems Engineer",
-    type: "Full-Time",
-    location: "Dombivli, Maharashtra",
-    desc: "Program microcontrollers and design PCBs for our custom robotic manipulators.",
-  },
-  {
-    title: "Full Stack Developer",
-    type: "Full-Time",
-    location: "Dombivli, Maharashtra",
-    desc: "Build web dashboards and internal tools for robot fleet management and data visualization.",
-  }
-];
+import { supabase } from "@/lib/supabase";
+
+export const revalidate = 0; // Ensures jobs are always fresh
 
 const BENEFITS = [
   { title: "Cutting-Edge Tech", icon: "🚀", desc: "Work with the latest in robotics, AI, and autonomous systems." },
@@ -41,27 +20,40 @@ const BENEFITS = [
   { title: "Health & Wellness", icon: "❤️", desc: "Comprehensive health coverage and flexible working arrangements." }
 ];
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const { data: OPEN_POSITIONS } = await supabase.from("job_postings").select("*").eq("is_active", true).order("created_at", { ascending: false });
   return (
     <div className="relative min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50">
       <Navbar />
       
-      <main className="flex-1 pt-24 pb-16">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <main className="flex-1 pb-16">
+        
+        {/* Hero Section */}
+        <section className="relative min-h-[60vh] flex items-center pt-20 overflow-hidden mb-16 bg-slate-900 dark:bg-slate-950 border-b border-slate-800 shadow-2xl">
+          <NetworkBackground />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/20 dark:bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
           
-          {/* Hero Section */}
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs uppercase tracking-wider text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800/50 mb-6">
+          <div className="container mx-auto px-4 sm:px-6 z-10 flex flex-col items-center text-center justify-center h-full gap-6 pb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold text-xs uppercase tracking-wider text-cyan-400 bg-cyan-900/30 border border-cyan-800/50 mt-12 mb-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
+              </span>
               Join Our Team
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-slate-900 dark:text-white">
+            
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-white drop-shadow-sm max-w-5xl">
               Build the Future of <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">Robotics & AI</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Robotics & AI</span>
             </h1>
-            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            
+            <p className="text-lg md:text-xl text-slate-300 max-w-2xl leading-relaxed mt-2 font-medium">
               We are a collective of engineers, researchers, and creators dedicated to solving complex real-world problems with advanced robotics.
             </p>
           </div>
+        </section>
+
+        <div className="container mx-auto px-4 max-w-6xl">
 
           {/* Benefits Section */}
           <section className="mb-24">
@@ -86,13 +78,13 @@ export default function CareersPage() {
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Open Positions</h2>
               <span className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 py-1 px-3 rounded-full text-sm font-bold">
-                {OPEN_POSITIONS.length} Roles
+                {OPEN_POSITIONS?.length || 0} Roles
               </span>
             </div>
             
             <div className="grid gap-4">
-              {OPEN_POSITIONS.map((pos, idx) => (
-                <div key={idx} className="group bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              {OPEN_POSITIONS?.map((pos, idx) => (
+                <div key={pos.id || idx} className="group bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <div>
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{pos.title}</h3>
                     <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -105,13 +97,13 @@ export default function CareersPage() {
                         {pos.location}
                       </span>
                     </div>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl">{pos.desc}</p>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl line-clamp-2">{pos.description}</p>
                   </div>
                   
                   <div className="shrink-0">
-                    <a href="mailto:pratik@pntsolutions.in?subject=Application%20for%20Position" className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors w-full sm:w-auto">
+                    <Link href={`/careers/${pos.id}`} className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors w-full sm:w-auto">
                       Apply Now
-                    </a>
+                    </Link>
                   </div>
                 </div>
               ))}

@@ -1,116 +1,230 @@
 "use client";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import NetworkBackground from "@/components/NetworkBackground";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase/config";
+import { supabase } from "@/lib/supabase";
+import { ShieldCheck, Mail, Lock, ArrowLeft, Loader2, UserPlus, LogIn } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function AdminLogin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [isSignUp, setIsSignUp] = useState(false);
     const router = useRouter();
 
-    const handleLogin = async (e: React.FormEvent) => {
+    useEffect(() => {
+        // Redirect to dashboard if already logged in
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                router.push("/admin");
+            }
+        });
+    }, [router]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
         setError("");
+        setSuccessMsg("");
+        setLoading(true);
 
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            router.push("/admin");
+            if (isSignUp) {
+                // Handle Registration
+                const { data, error: signUpError } = await supabase.auth.signUp({
+                    email,
+                    password,
+                });
+                if (signUpError) throw signUpError;
+
+                if (data?.session) {
+                    // Auto-login succeeded
+                    router.push("/admin");
+                } else {
+                    // Requires email verification
+                    setSuccessMsg("Account created! If your Supabase requires email confirmation, please check your inbox. Otherwise, you can try signing in now.");
+                    setIsSignUp(false);
+                }
+            } else {
+                // Handle Login
+                const { error: signInError } = await supabase.auth.signInWithPassword({
+                    email,
+                    password,
+                });
+                if (signInError) throw signInError;
+                
+                router.push("/admin");
+            }
         } catch (err: any) {
-            console.error("Firebase Login Error", err);
-            setError("Invalid credentials or Firebase is not configured properly yet.");
+            console.error("Auth Error:", err);
+            
+            // Provide helpful feedback for common Supabase errors
+            if (err.message.includes("rate limit")) {
+                setError("Too many attempts. If you already created an account, try signing in now (switched automatically). Otherwise, wait an hour.");
+                setIsSignUp(false); // Automatically switch to sign in
+            } else if (err.message.includes("Email not confirmed")) {
+                setError("Please confirm your email address. (Or disable 'Confirm Email' in your Supabase Auth settings).");
+            } else if (err.message.includes("Invalid login")) {
+                setError("Invalid email or password.");
+            } else {
+                setError(err.message || "An unexpected error occurred.");
+            }
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     };
 
     return (
-        <main className="min-h-screen relative flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-500 overflow-hidden">
-            <NetworkBackground />
+        <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 selection:bg-indigo-500/30 relative">
+            {/* Background Details */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/10 blur-[120px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/10 blur-[120px]"></div>
+            </div>
 
-            {/* Back to Home Button */}
-            <Link href="/" className="absolute top-8 left-8 z-50 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors bg-white/50 dark:bg-slate-900/50 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 dark:border-slate-800 text-sm font-medium flex items-center gap-2">
-                <span>←</span> Go to Website
-            </Link>
+            <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+                <Link 
+                    href="/"
+                    className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors mb-8 px-4 sm:px-0"
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to website
+                </Link>
 
-            <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="relative z-10 w-full max-w-md mx-4 p-8 md:p-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/50 dark:border-white/10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)]"
-            >
-                {/* Visual Flair */}
-                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg transform rotate-12 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                    <span className="text-4xl text-white transform -rotate-12">🔐</span>
-                </div>
-
-                <div className="text-center mt-8 mb-10">
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">Admin Portal</h1>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">Sign in to manage PNT Robotics content.</p>
-                </div>
-
-                {error && (
-                    <div className="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 text-sm font-medium text-center">
-                        {error}
-                    </div>
-                )}
-
-                <form onSubmit={handleLogin} className="space-y-6">
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Email Address</label>
-                        <input
-                            type="email"
-                            required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 font-medium"
-                            placeholder="director@pntrobotics.com"
+                <div className="flex justify-center">
+                    <div className="w-20 h-20 bg-white dark:bg-white rounded-2xl flex items-center justify-center shadow-lg border border-slate-200 dark:border-slate-700 relative overflow-hidden">
+                        <Image 
+                            src="/PNT Robo logo.png" 
+                            alt="PNT Robotics Logo" 
+                            fill
+                            className="object-contain p-2"
                         />
                     </div>
+                </div>
+                <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-white">
+                    {isSignUp ? "Create Admin Account" : "Admin Portal"}
+                </h2>
+                <p className="mt-2 text-center text-sm text-slate-400">
+                    {isSignUp ? "Register your master access credentials" : "Sign in to manage PNT Robotics"}
+                </p>
+            </div>
 
-                    <div className="space-y-2">
-                        <div className="flex justify-between items-center ml-1">
-                            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
-                            <a href="#" className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">Forgot?</a>
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
+                <div className="bg-slate-800/80 backdrop-blur-xl py-8 px-4 shadow-2xl sm:rounded-2xl sm:px-10 border border-slate-700/50">
+                    
+                    {error && (
+                        <div className="mb-6 p-4 rounded-xl bg-red-900/30 border border-red-500/30 text-red-200 text-sm">
+                            <p className="font-medium flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                Error
+                            </p>
+                            <p className="mt-1 opacity-90">{error}</p>
                         </div>
-                        <input
-                            type="password"
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/50 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 font-medium"
-                            placeholder="••••••••"
-                        />
+                    )}
+
+                    {successMsg && (
+                        <div className="mb-6 p-4 rounded-xl bg-green-900/30 border border-green-500/30 text-green-200 text-sm">
+                            <p className="font-medium flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                Success
+                            </p>
+                            <p className="mt-1 opacity-90">{successMsg}</p>
+                        </div>
+                    )}
+
+                    <form className="space-y-6" onSubmit={handleSubmit}>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-300">
+                                Email address
+                            </label>
+                            <div className="mt-2 relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Mail className="h-5 w-5 text-slate-500" />
+                                </div>
+                                <input
+                                    type="email"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="appearance-none block w-full pl-10 pr-3 py-3 border border-slate-600 bg-slate-900/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
+                                    placeholder="admin@pntrobotics.com"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-slate-300">
+                                Password
+                            </label>
+                            <div className="mt-2 relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Lock className="h-5 w-5 text-slate-500" />
+                                </div>
+                                <input
+                                    type="password"
+                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="appearance-none block w-full pl-10 pr-3 py-3 border border-slate-600 bg-slate-900/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm"
+                                    placeholder="••••••••"
+                                    minLength={6}
+                                />
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading || !email || !password}
+                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
+                        >
+                            {/* Button subtle highlight effect */}
+                            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                            
+                            {loading ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                                <span className="flex items-center gap-2">
+                                    {isSignUp ? <UserPlus className="w-4 h-4" /> : <LogIn className="w-4 h-4" />}
+                                    {isSignUp ? 'Create Account' : 'Sign In'}
+                                </span>
+                            )}
+                        </button>
+                    </form>
+
+                    <div className="mt-8">
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-slate-700" />
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 bg-slate-800 text-slate-400">
+                                    {isSignUp ? "Already have an account?" : "Need admin access?"}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="mt-6">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsSignUp(!isSignUp);
+                                    setError("");
+                                    setSuccessMsg("");
+                                }}
+                                className="w-full inline-flex justify-center py-3 px-4 border border-slate-600 rounded-xl shadow-sm bg-transparent text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white focus:outline-none transition-colors"
+                            >
+                                {isSignUp ? "Switch to Sign In" : "Switch to Create Account"}
+                            </button>
+                        </div>
                     </div>
-
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full py-4 mt-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
-                    >
-                        {isLoading ? (
-                            <>
-                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                <span>Authenticating...</span>
-                            </>
-                        ) : (
-                            <span>Secure Sign In</span>
-                        )}
-                    </button>
-                </form>
-
-                {/* Secure Badge */}
-                <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 text-center flex items-center justify-center gap-2 text-slate-400 dark:text-slate-500 text-xs">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    <span>Google Firebase Protected Route</span>
                 </div>
-            </motion.div>
-        </main>
+                
+                <p className="text-center mt-8 text-xs text-slate-500 font-medium">
+                    Powered by Supabase Auth
+                </p>
+            </div>
+        </div>
     );
 }

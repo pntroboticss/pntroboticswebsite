@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Upload, Home, FlaskConical, School, CheckCircle2, X } from "lucide-react";
 import Image from "next/image";
 import ImageCropper from "./ImageCropper";
+import { supabase } from "@/lib/supabase";
 
 export default function TestimonialManager({ onSuccess }: { onSuccess?: () => void }) {
     const [name, setName] = useState("");
@@ -69,24 +70,17 @@ export default function TestimonialManager({ onSuccess }: { onSuccess?: () => vo
             let secureUrl = "";
 
             if (selectedFile) {
-                const cloudName = "dycht8a6s";
-                const uploadPreset = "pnt_robotics_unsigned";
-                const formData = new FormData();
-                formData.append("file", selectedFile);
-                formData.append("upload_preset", uploadPreset);
+                const uniqueFilename = `${Date.now()}-${selectedFile.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+                const { data, error: uploadError } = await supabase.storage
+                    .from("website_assets")
+                    .upload(`testimonials/${uniqueFilename}`, selectedFile, { cacheControl: "3600", upsert: false });
 
-                // GIFs must go to the video endpoint on Cloudinary for animated support
-                const resourceType = selectedFile.type === "image/gif" ? "image" : "image";
-                const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
-                    method: "POST",
-                    body: formData,
-                });
-                if (!cloudRes.ok) {
-                    const err = await cloudRes.json();
-                    throw new Error(`Cloudinary upload failed: ${err.error?.message || cloudRes.statusText}`);
-                }
-                const cloudData = await cloudRes.json();
-                secureUrl = cloudData.secure_url;
+                if (uploadError) throw new Error(`Supabase upload failed: ${uploadError.message}`);
+                
+                const { data: publicUrlData } = supabase.storage
+                    .from("website_assets")
+                    .getPublicUrl(`testimonials/${uniqueFilename}`);
+                secureUrl = publicUrlData.publicUrl;
             }
 
             const dbRes = await fetch("/api/admin/testimonials", {

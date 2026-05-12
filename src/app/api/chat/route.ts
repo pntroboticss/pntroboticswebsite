@@ -65,9 +65,10 @@ RULES:
 // ─── Groq Cloud Engine (Primary) ───────────────────────────────────
 async function callGroq(
     systemPrompt: string,
-    messages: { role: string; content: string }[]
+    messages: { role: string; content: string }[],
+    customApiKey?: string
 ): Promise<ReadableStream> {
-    const GROQ_API_KEY = process.env.GROQ_API_KEY;
+    const GROQ_API_KEY = customApiKey || process.env.GROQ_API_KEY;
     if (!GROQ_API_KEY) throw new Error("GROQ_API_KEY not configured");
 
     const groqMessages = [
@@ -211,13 +212,14 @@ export async function POST(req: Request) {
             ? faqs.map((f: any) => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n")
             : "No FAQs available.";
 
+        const groqApiKey = settings?.groqApiKey || '';
         const knowledgeBase = settings?.knowledgeBaseText || '';
         const systemPrompt = buildSystemPrompt(faqKnowledge, knowledgeBase);
 
         // Try Groq (Primary)
         try {
             console.log("[AI] Groq (llama-3.3-70b)...");
-            const stream = await callGroq(systemPrompt, recentMessages);
+            const stream = await callGroq(systemPrompt, recentMessages, groqApiKey);
 
             return new Response(stream, {
                 headers: {

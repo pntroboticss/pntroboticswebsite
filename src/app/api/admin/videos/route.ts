@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { SchoolVideo } from "@/lib/models/SchoolVideo";
-import { v2 as cloudinary } from "cloudinary";
+import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
 
-// Configure Cloudinary for deletions (since uploads happen via unsigned preset on client)
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "dycht8a6s",
-    api_key: process.env.CLOUDINARY_API_KEY || "889225457437711",
-    api_secret: process.env.CLOUDINARY_API_SECRET || "cJaINIKbk-AvK-PR67tQoWrmEdc",
-});
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+// Using the service role key if available, otherwise fallback to anon key for deletions
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // GET: Fetch all videos from MongoDB
 export async function GET() {
@@ -106,13 +104,18 @@ export async function DELETE(req: Request) {
             return NextResponse.json({ error: "Video not found" }, { status: 404 });
         }
 
-        // 1. Delete from Cloudinary
+        // 1. Delete from Supabase
         if (video.publicId) {
             try {
-                // Because it's a video, resource_type MUST be 'video' to delete properly
-                await cloudinary.uploader.destroy(video.publicId, { resource_type: "video" });
+                const { error: supaErr } = await supabase.storage
+                    .from("website_assets")
+                    .remove([video.publicId]);
+                
+                if (supaErr) {
+                    console.error("Supabase delete failed, but continuing to remove from DB:", supaErr);
+                }
             } catch (cloudErr) {
-                console.error("Cloudinary delete failed, but continuing to remove from DB:", cloudErr);
+                console.error("Supabase delete exception, but continuing to remove from DB:", cloudErr);
             }
         }
 

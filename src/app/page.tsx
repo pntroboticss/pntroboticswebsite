@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import NetworkBackground from "@/components/NetworkBackground";
-import GallerySlider from "@/components/GallerySlider";
+import Gallery from "@/components/Gallery";
 import ProductSpotlight from "@/components/ProductSpotlight";
 import fs from "fs";
 import path from "path";
@@ -18,19 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  let galleryImages: string[] = [];
   let productImages: string[] = [];
-
-  try {
-    const galleryPath = path.join(process.cwd(), "public", "gallery");
-    if (!fs.existsSync(galleryPath)) fs.mkdirSync(galleryPath, { recursive: true });
-    const galleryFiles = fs.readdirSync(galleryPath);
-    galleryImages = galleryFiles
-      .filter(f => f.match(/\.(jpg|jpeg|png|webp|gif|JPG|JPEG|PNG)$/i))
-      .map(f => `/gallery/${f}`);
-  } catch (e) {
-    console.error("Error reading gallery folder", e);
-  }
 
   try {
     const productsPath = path.join(process.cwd(), "public", "products");
@@ -257,7 +245,7 @@ export default function Home() {
         </section>
 
         {/* Dynamic Photo Gallery */}
-        <GallerySlider images={galleryImages} />
+        <Gallery />
 
         <Footer />
       </div>

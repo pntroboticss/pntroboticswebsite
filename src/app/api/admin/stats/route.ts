@@ -29,34 +29,10 @@ export async function GET() {
             dbSizeInBytes = stats.dataSize + stats.indexSize; // Total logical size
         }
 
-        // 3. Get Cloudinary storage stats
-        // To do this we need to use Basic Auth: base64(API_KEY:API_SECRET)
-        // For security in this demo, if keys aren't in ENV yet, we return 0.
-        let cloudinaryUsageMB = 0;
-        const cloudName = process.env.CLOUDINARY_CLOUD_NAME || "dycht8a6s";
-        const apiKey = process.env.CLOUDINARY_API_KEY || "889225457437711";
-        const apiSecret = process.env.CLOUDINARY_API_SECRET || "cJaINIKbk-AvK-PR67tQoWrmEdc";
-
-        try {
-            if (cloudName && apiKey && apiSecret) {
-                const encodedCreds = Buffer.from(`${apiKey}:${apiSecret}`).toString("base64");
-                const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/usage`, {
-                    headers: {
-                        Authorization: `Basic ${encodedCreds}`
-                    },
-                    // next: { revalidate: 60 } // Cache for 60 seconds
-                });
-
-                if (cloudRes.ok) {
-                    const cloudData = await cloudRes.json();
-                    // Cloudinary returns storage in bytes under storage.usage
-                    cloudinaryUsageMB = (cloudData.storage?.usage || 0) / (1024 * 1024);
-                }
-            }
-        } catch (cloudError) {
-            console.error("Cloudinary stats fetch error:", cloudError);
-            // Non-fatal, let MongoDB stats still return
-        }
+        // 3. Get Supabase storage stats
+        // Note: Supabase doesn't expose a direct "bucket size" API via the JS client without RPC.
+        // For now, we will return a placeholder or calculate based on DB entries if needed.
+        let supabaseUsageMB = 0;
 
         return NextResponse.json({
             success: true,
@@ -66,7 +42,7 @@ export async function GET() {
                 internshipsCount,
                 totalVisits,
                 dbSizeInBytes,
-                cloudinaryUsageMB, // Append cloud data
+                supabaseUsageMB, // Append Supabase storage data
             }
         });
     } catch (error: any) {

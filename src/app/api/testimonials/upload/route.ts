@@ -15,17 +15,12 @@ export async function POST(request: Request) {
 
         /* 
          * TODO: STORAGE PROVIDER INTEGRATION
-         * The user needs to confirm which provider they want (Cloudinary, Vercel Blob, Firebase).
+         * The user needs to confirm which provider they want (Supabase).
          * 
-         * Example workflow for Vercel Blob:
-         * const blob = await put(imageFile.name, imageFile, { access: 'public' });
-         * const imageUrl = blob.url;
-         * 
-         * Example workflow for Cloudinary:
-         * const arrayBuffer = await imageFile.arrayBuffer();
-         * const buffer = Buffer.from(arrayBuffer);
-         * // Upload buffer to Cloudinary using v2.uploader.upload_stream
-         * 
+         * Example workflow for Supabase:
+         * const { data, error } = await supabase.storage.from('website_assets').upload(imageFile.name, imageFile);
+         * const { data: publicUrl } = supabase.storage.from('website_assets').getPublicUrl(imageFile.name);
+         * const imageUrl = publicUrl.publicUrl;
          */
 
         // Placeholder image URL until provider is confirmed

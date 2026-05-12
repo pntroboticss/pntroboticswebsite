@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Loader2, Plus, Trash2, Users } from "lucide-react";
 import ImageCropper from "@/components/admin/ImageCropper";
+import { supabase } from "@/lib/supabase";
 
 export default function AdminAboutPhotos() {
     const [items, setItems] = useState<any[]>([]);
@@ -49,19 +50,17 @@ export default function AdminAboutPhotos() {
         if (!file) return;
         setIsUploading(true);
         try {
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "pnt_academy_unsigned");
+            const uniqueFilename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+            const { data, error: uploadError } = await supabase.storage
+                .from("website_assets")
+                .upload(`about/${uniqueFilename}`, file, { cacheControl: "3600", upsert: false });
 
-            const cloudinaryRes = await fetch("https://api.cloudinary.com/v1_1/dycht8a6s/image/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!cloudinaryRes.ok) throw new Error("Cloudinary upload failed");
+            if (uploadError) throw new Error("Supabase upload failed");
             
-            const cloudinaryData = await cloudinaryRes.json();
-            const secureUrl = cloudinaryData.secure_url;
+            const { data: publicUrlData } = supabase.storage
+                .from("website_assets")
+                .getPublicUrl(`about/${uniqueFilename}`);
+            const secureUrl = publicUrlData.publicUrl;
 
             const res = await fetch("/api/admin/about", {
                 method: "POST",
@@ -86,7 +85,7 @@ export default function AdminAboutPhotos() {
                     About Section Photos
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm max-w-lg">
-                    Upload team & campus photos. They appear in the image slider on the About PNT Academy section of the homepage.
+                    Upload team & campus photos. They appear in the image slider on the About PNT Robotics section of the homepage.
                 </p>
             </header>
 

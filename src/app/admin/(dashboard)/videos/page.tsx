@@ -14,9 +14,9 @@ function formatBytes(bytes: number) {
 interface VideoItem {
     _id: string;      // MongoDB ID
     filename: string; // Original File Name
-    url: string;      // Cloudinary Secure URL
+    url: string;      // Supabase Public URL
     size: number;     // File Size in Bytes
-    publicId: string; // Cloudinary Public ID
+    publicId: string; // Supabase Object Path
     order: number;
     startTime: number;
     endTime: number;
@@ -47,11 +47,13 @@ export default function AdminVideos() {
         }
     };
 
+import { supabase } from "@/lib/supabase";
+
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Size limit ~20MB for direct Cloudinary unsigned upload
+        // Size limit ~50MB
         if (file.size > 50 * 1024 * 1024) {
             alert("File is too large! Please keep videos under 50MB.");
             return;
@@ -61,37 +63,40 @@ export default function AdminVideos() {
         setUploadProgress(10); // Start progress
 
         try {
-            // 1. Upload to Cloudinary using unsigned preset (resource_type: "video")
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "pnt_academy_unsigned");
+            const uniqueFilename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+            const filePath = `videos/${uniqueFilename}`;
 
-            // We do a manual fetch for Cloudinary upload to show raw progress via standard fetch isn't possible,
-            // but we can fake progress or just wait. For production, XHR is better for real progress bars.
+            // 1. Upload to Supabase Storage
             setUploadProgress(40);
-            
-            const cloudinaryRes = await fetch("https://api.cloudinary.com/v1_1/dycht8a6s/video/upload", {
-                method: "POST",
-                body: formData,
-            });
+            const { data, error: uploadError } = await supabase.storage
+                .from("website_assets")
+                .upload(filePath, file, {
+                    cacheControl: "3600",
+                    upsert: false,
+                });
 
-            if (!cloudinaryRes.ok) {
-                const err = await cloudinaryRes.text();
-                throw new Error(`Cloudinary Auth/Network fail: ${err}`);
+            if (uploadError) {
+                throw new Error(`Supabase upload failed: ${uploadError.message}`);
             }
 
             setUploadProgress(80);
-            const cloudinaryData = await cloudinaryRes.json();
             
+            // Get public URL
+            const { data: publicUrlData } = supabase.storage
+                .from("website_assets")
+                .getPublicUrl(filePath);
+
+            const secure_url = publicUrlData.publicUrl;
+
             // 2. Save secure_url to our MongoDB Database
             const res = await fetch("/api/admin/videos", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     filename: file.name,
-                    url: cloudinaryData.secure_url,
-                    size: cloudinaryData.bytes || file.size,
-                    publicId: cloudinaryData.public_id,
+                    url: secure_url,
+                    size: file.size,
+                    publicId: filePath,
                 }),
             });
 
@@ -112,7 +117,7 @@ export default function AdminVideos() {
     };
 
     const handleDelete = async (id: string, filename: string) => {
-        if (!confirm(`Are you sure you want to delete "${filename}"? This will be removed from Cloudinary and the Schools Training page immediately.`)) return;
+        if (!confirm(`Are you sure you want to delete "${filename}"? This will be removed from Supabase and the Schools Training page immediately.`)) return;
 
         try {
             const res = await fetch(`/api/admin/videos?id=${id}`, { method: "DELETE" });
@@ -181,7 +186,7 @@ export default function AdminVideos() {
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Schools Training Videos</h1>
                     <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm max-w-lg">
-                        Manage hero background videos for the Training for Schools page. Videos play sequentially with crossfade transitions. Uploading here hosts the video on Cloudinary for blazing fast, globally distributed playback.
+                        Manage hero background videos for the Training for Schools page. Videos play sequentially with crossfade transitions. Uploading here hosts the video on Supabase for blazing fast, globally distributed playback.
                     </p>
                 </div>
                 <button

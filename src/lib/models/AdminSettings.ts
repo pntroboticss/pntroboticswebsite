@@ -25,6 +25,7 @@ export interface IAdminSettings extends Document {
     };
     knowledgeBaseText?: string; // Extracted text from uploaded company docs
     knowledgeBaseFileName?: string; // Name of the uploaded file
+    groqApiKey?: string; // Custom Groq API Key
 }
 
 const AdminSettingsSchema = new Schema<IAdminSettings>({
@@ -52,6 +53,7 @@ const AdminSettingsSchema = new Schema<IAdminSettings>({
     },
     knowledgeBaseText: { type: String, default: "" },
     knowledgeBaseFileName: { type: String, default: "" },
+    groqApiKey: { type: String, default: "" },
 });
 
 export default mongoose.models.AdminSettings || mongoose.model<IAdminSettings>('AdminSettings', AdminSettingsSchema);
