@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Loader2, Trash2, Video, Upload, RefreshCw, HardDrive } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 function formatBytes(bytes: number) {
     if (bytes === 0) return "0 B";
@@ -46,9 +47,6 @@ export default function AdminVideos() {
             setIsLoading(false);
         }
     };
-
-import { supabase } from "@/lib/supabase";
-
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;

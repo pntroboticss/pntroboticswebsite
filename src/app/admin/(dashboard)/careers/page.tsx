@@ -166,10 +166,21 @@ export default function CareersAdmin() {
           ctx.drawImage(img, 0, 0);
           const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           for (let i = 0; i < imgData.data.length; i += 4) {
-            if (imgData.data[i + 3] > 0) { // If pixel is visible, turn it pure white
-              imgData.data[i] = 255;
-              imgData.data[i + 1] = 255;
-              imgData.data[i + 2] = 255;
+            if (imgData.data[i + 3] > 0) { // If pixel is visible
+              const r = imgData.data[i];
+              const g = imgData.data[i + 1];
+              const b = imgData.data[i + 2];
+              
+              // If the pixel is distinctly BLUE, we leave it alone!
+              // (Blue pixels have significantly higher B value than R)
+              const isBlue = b > r + 30;
+              
+              if (!isBlue) {
+                // Otherwise (black text, dark gray robot parts), turn it pure white
+                imgData.data[i] = 255;
+                imgData.data[i + 1] = 255;
+                imgData.data[i + 2] = 255;
+              }
             }
           }
           ctx.putImageData(imgData, 0, 0);
