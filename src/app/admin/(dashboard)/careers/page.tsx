@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Plus, Trash2, Edit, Users, Briefcase, Eye, Download, X } from "lucide-react";
+import { Plus, Trash2, Edit, Users, Briefcase, Eye, Download, X, FileText } from "lucide-react";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 type Job = {
   id: string;
@@ -63,14 +64,17 @@ export default function CareersAdmin() {
   const saveJob = async () => {
     try {
       if (editingJob.id) {
-        await supabase.from("job_postings").update(editingJob).eq("id", editingJob.id);
+        const { error } = await supabase.from("job_postings").update(editingJob).eq("id", editingJob.id);
+        if (error) throw error;
       } else {
-        await supabase.from("job_postings").insert([editingJob]);
+        const { error } = await supabase.from("job_postings").insert([editingJob]);
+        if (error) throw error;
       }
       setIsJobModalOpen(false);
       fetchData();
-    } catch (e) {
-      alert("Error saving job");
+    } catch (e: any) {
+      console.error(e);
+      alert("Error saving job: " + (e.message || "Unknown error"));
     }
   };
 
@@ -90,6 +94,199 @@ export default function CareersAdmin() {
     fetchData();
     if (viewingApp && viewingApp.id === id) {
       setViewingApp({ ...viewingApp, status });
+    }
+  };
+
+  const exportToCSV = () => {
+    if (applications.length === 0) return alert("No applications to export");
+
+    const allAnswerKeys = new Set<string>();
+    applications.forEach(app => {
+      Object.keys(app.answers || {}).forEach(k => allAnswerKeys.add(k));
+    });
+    const answerHeaders = Array.from(allAnswerKeys);
+
+    const headers = ["ID", "Applicant Name", "Email", "Phone", "Job Applied For", "Status", "Date Applied", "Resume URL", ...answerHeaders];
+    
+    const rows = applications.map(app => {
+      const baseData = [app.id, `"${app.name}"`, app.email, app.phone, `"${app.job?.title || 'Unknown Job'}"`, app.status, new Date(app.created_at).toLocaleDateString(), `"${app.resume_url}"`];
+      const answerData = answerHeaders.map(key => {
+        let val = app.answers?.[key] || "";
+        if (typeof val === 'string') val = `"${val.replace(/"/g, '""').replace(/\n/g, ' ')}"`;
+        return val;
+      });
+      return [...baseData, ...answerData].join(",");
+    });
+
+    const csvContent = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `job_applications_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const downloadProfilePDF = async (app: Application) => {
+    try {
+      const pdfDoc = await PDFDocument.create();
+      const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      const primaryColor = rgb(0.145, 0.380, 0.925); // Blue-600
+      const textColor = rgb(0.2, 0.2, 0.2);
+      const labelColor = rgb(0.5, 0.5, 0.5);
+
+      let page = pdfDoc.addPage();
+      let { width, height } = page.getSize();
+      let y = height;
+
+      const checkPageBreak = (neededSpace: number) => {
+        if (y - neededSpace < 50) {
+          page = pdfDoc.addPage();
+          y = height - 50;
+        }
+      };
+
+      // Header Rectangle
+      page.drawRectangle({ x: 0, y: height - 120, width, height: 120, color: rgb(0.06, 0.09, 0.16) }); // Dark Slate
+
+      // Helper to turn the dark logo white dynamically using an HTML5 Canvas
+      const getWhiteLogoBytes = (): Promise<ArrayBuffer> => new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return reject("No 2d context");
+          
+          ctx.drawImage(img, 0, 0);
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          for (let i = 0; i < imgData.data.length; i += 4) {
+            if (imgData.data[i + 3] > 0) { // If pixel is visible, turn it pure white
+              imgData.data[i] = 255;
+              imgData.data[i + 1] = 255;
+              imgData.data[i + 2] = 255;
+            }
+          }
+          ctx.putImageData(imgData, 0, 0);
+          
+          canvas.toBlob(blob => {
+            if (!blob) return reject("No blob");
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as ArrayBuffer);
+            reader.readAsArrayBuffer(blob);
+          }, "image/png");
+        };
+        img.onerror = reject;
+        img.src = "/PNT%20Robo%20logo.png";
+      });
+
+      // Try to load Logo (fallback to text if missing)
+      try {
+        const logoBytes = await getWhiteLogoBytes();
+        const logoImage = await pdfDoc.embedPng(logoBytes);
+        const logoDims = logoImage.scale(0.3);
+        page.drawImage(logoImage, { x: 50, y: height - 90, width: logoDims.width, height: logoDims.height });
+      } catch (e) {
+        page.drawText("PNT Robotics", { x: 50, y: height - 70, size: 24, font: fontBold, color: rgb(1,1,1) });
+      }
+
+      // Title
+      page.drawText("Applicant Profile", { x: width - 250, y: height - 60, size: 24, font: fontBold, color: rgb(1,1,1) });
+      page.drawText(`Status: ${app.status} | Date: ${new Date(app.created_at).toLocaleDateString()}`, { x: width - 250, y: height - 80, size: 10, font: fontRegular, color: rgb(0.7,0.7,0.7) });
+
+      y = height - 160;
+
+      // Overview Section
+      page.drawText("OVERVIEW", { x: 50, y, size: 14, font: fontBold, color: primaryColor });
+      page.drawLine({ start: { x: 50, y: y - 8 }, end: { x: width - 50, y: y - 8 }, thickness: 1, color: primaryColor });
+      y -= 30;
+
+      const drawRow = (label: string, value: string, xOffset = 50) => {
+        checkPageBreak(40);
+        page.drawText(label.toUpperCase(), { x: xOffset, y, size: 9, font: fontBold, color: labelColor });
+        
+        // Wrap text
+        const words = String(value || "-").split(' ');
+        let currentLine = '';
+        const lines = [];
+        words.forEach(word => {
+          const testLine = currentLine + word + ' ';
+          // Split roughly at width 220
+          if (fontRegular.widthOfTextAtSize(testLine, 11) > 220 && currentLine !== '') {
+            lines.push(currentLine);
+            currentLine = word + ' ';
+          } else {
+            currentLine = testLine;
+          }
+        });
+        lines.push(currentLine);
+
+        lines.forEach((line, i) => {
+          page.drawText(line.trim(), { x: xOffset, y: y - 16 - (i * 14), size: 11, font: fontRegular, color: textColor });
+        });
+
+        return lines.length * 14;
+      };
+
+      const h1 = drawRow("Full Name", app.name, 50);
+      const h2 = drawRow("Email", app.email, 300);
+      y -= Math.max(h1, h2) + 25;
+
+      const h3 = drawRow("Phone", app.phone, 50);
+      const h4 = drawRow("Job Applied For", app.job?.title || 'Unknown', 300);
+      y -= Math.max(h3, h4) + 40;
+
+      // Detailed Info Section
+      page.drawText("APPLICATION DETAILS", { x: 50, y, size: 14, font: fontBold, color: primaryColor });
+      page.drawLine({ start: { x: 50, y: y - 8 }, end: { x: width - 50, y: y - 8 }, thickness: 1, color: primaryColor });
+      y -= 30;
+
+      const answers = app.answers || {};
+      const keys = Object.keys(answers);
+      
+      for (let i = 0; i < keys.length; i += 2) {
+        const key1 = keys[i];
+        const val1 = answers[key1];
+        const key2 = keys[i+1];
+        const val2 = answers[key2];
+
+        const formatKey = (k: string) => k.replace(/_/g, ' ');
+        
+        let height1 = drawRow(formatKey(key1), val1, 50);
+        let height2 = 0;
+        if (key2) height2 = drawRow(formatKey(key2), val2, 300);
+
+        y -= Math.max(height1, height2) + 25;
+      }
+
+      // Merge Original Resume
+      try {
+        const resumeBytes = await fetch(app.resume_url).then(res => res.arrayBuffer());
+        const resumePdf = await PDFDocument.load(resumeBytes);
+        const copiedPages = await pdfDoc.copyPages(resumePdf, resumePdf.getPageIndices());
+        copiedPages.forEach((p) => pdfDoc.addPage(p));
+      } catch (resumeErr) {
+        console.error("Could not merge resume PDF:", resumeErr);
+        checkPageBreak(50);
+        y -= 20;
+        page.drawText("* Note: Could not attach the original resume PDF. Please download it separately.", { x: 50, y, size: 10, font: fontBold, color: rgb(0.8, 0.2, 0.2) });
+      }
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${app.name.replace(/\s+/g, '_')}_Full_Profile.pdf`;
+      link.click();
+    } catch (e) {
+      console.error(e);
+      alert("Error generating merged PDF profile. Make sure 'npm install pdf-lib' was run.");
     }
   };
 
@@ -156,8 +353,14 @@ export default function CareersAdmin() {
       )}
 
       {activeTab === "applications" && (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-          <table className="w-full text-left">
+        <div className="space-y-4">
+          <div className="flex justify-end">
+            <button onClick={exportToCSV} className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm">
+              <Download size={18} /> Export as CSV (For Google Sheets)
+            </button>
+          </div>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+            <table className="w-full text-left">
             <thead className="bg-slate-50 dark:bg-slate-950 text-xs uppercase font-bold text-slate-500 border-b border-slate-200 dark:border-slate-800">
               <tr>
                 <th className="p-4">Applicant</th>
@@ -209,6 +412,7 @@ export default function CareersAdmin() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -266,8 +470,11 @@ export default function CareersAdmin() {
             <div className="space-y-8">
               {/* Top Meta */}
               <div className="flex flex-wrap gap-4">
+                <button onClick={() => downloadProfilePDF(viewingApp)} className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:bg-slate-800 dark:hover:bg-slate-200 shadow-md transition-colors">
+                  <FileText size={18} /> Print Full Profile (Merged PDF)
+                </button>
                 <a href={viewingApp.resume_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-3 rounded-xl bg-purple-600 text-white font-bold hover:bg-purple-700 shadow-md">
-                  <Download size={18} /> Download Resume
+                  <Download size={18} /> Original CV
                 </a>
                 <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-800 px-5 py-3 rounded-xl">
                   <span className="text-slate-500 text-sm font-bold">Email:</span>
