@@ -299,7 +299,8 @@ export default function CareersAdmin() {
       y -= Math.max(h1, h2) + 25;
 
       const h3 = drawRow("Phone", app.phone, 50);
-      const h4 = drawRow("Job Applied For", app.job?.title || 'Unknown', 300);
+      const appliedFor = app.answers?.application_type === "internship" ? "Internship – PNT Robotics" : (app.job?.title || "Unknown");
+      const h4 = drawRow("Applied For", appliedFor, 300);
       y -= Math.max(h3, h4) + 40;
 
       // Detailed Info Section
@@ -308,21 +309,50 @@ export default function CareersAdmin() {
       y -= 30;
 
       const answers = app.answers || {};
-      const keys = Object.keys(answers);
-      
-      for (let i = 0; i < keys.length; i += 2) {
-        const key1 = keys[i];
+      // Keys to skip from the detail grid (internal use only)
+      const SKIP_KEYS = new Set(["application_type", "work_experience"]);
+      const regularKeys = Object.keys(answers).filter(k => !SKIP_KEYS.has(k));
+
+      const formatKey = (k: string) => k.replace(/_/g, ' ');
+
+      for (let i = 0; i < regularKeys.length; i += 2) {
+        const key1 = regularKeys[i];
         const val1 = answers[key1];
-        const key2 = keys[i+1];
+        const key2 = regularKeys[i + 1];
         const val2 = answers[key2];
 
-        const formatKey = (k: string) => k.replace(/_/g, ' ');
-        
-        let height1 = drawRow(formatKey(key1), val1, 50);
+        let height1 = drawRow(formatKey(key1), String(val1 ?? "-"), 50);
         let height2 = 0;
-        if (key2) height2 = drawRow(formatKey(key2), val2, 300);
+        if (key2) height2 = drawRow(formatKey(key2), String(val2 ?? "-"), 300);
 
         y -= Math.max(height1, height2) + 25;
+      }
+
+      // Work Experience — parse JSON and render each entry as a block
+      const rawExp = answers["work_experience"];
+      if (rawExp && rawExp !== "None") {
+        let exps: { company: string; role: string; duration: string; work: string }[] = [];
+        try { exps = JSON.parse(rawExp); } catch { exps = []; }
+
+        if (exps.length > 0) {
+          checkPageBreak(40);
+          page.drawText("WORK EXPERIENCE", { x: 50, y, size: 14, font: fontBold, color: primaryColor });
+          page.drawLine({ start: { x: 50, y: y - 8 }, end: { x: width - 50, y: y - 8 }, thickness: 1, color: primaryColor });
+          y -= 30;
+
+          exps.forEach((exp, idx) => {
+            checkPageBreak(80);
+            page.drawText(`Experience #${idx + 1}`, { x: 50, y, size: 11, font: fontBold, color: textColor });
+            y -= 18;
+            const r1 = drawRow("Company", exp.company || "-", 50);
+            const r2 = drawRow("Role", exp.role || "-", 300);
+            y -= Math.max(r1, r2) + 12;
+            const r3 = drawRow("Duration", exp.duration || "-", 50);
+            y -= r3 + 12;
+            const r4 = drawRow("Work Done", exp.work || "-", 50);
+            y -= r4 + 20;
+          });
+        }
       }
 
       // Merge Original Resume
@@ -450,7 +480,7 @@ export default function CareersAdmin() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-sm">
             <table className="w-full text-left">
             <thead className="bg-slate-50 dark:bg-slate-950 text-xs uppercase font-bold text-slate-500 border-b border-slate-200 dark:border-slate-800">
               <tr>
@@ -554,7 +584,7 @@ export default function CareersAdmin() {
             )}
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-sm">
             <table className="w-full text-left">
             <thead className="bg-amber-50 dark:bg-amber-950/30 text-xs uppercase font-bold text-amber-700 dark:text-amber-400 border-b border-amber-100 dark:border-amber-900/40">
               <tr>
