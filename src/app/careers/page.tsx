@@ -120,47 +120,31 @@ export default async function CareersPage() {
           {/* ===== INTERNSHIP BANNER ===== */}
           <section className="mb-24">
             <div className="relative overflow-hidden rounded-[2rem] border border-amber-200 dark:border-amber-800/40 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-slate-900 shadow-xl">
-              {/* Decorative blobs */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-400/10 rounded-full blur-2xl pointer-events-none" />
 
               <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 p-8 md:p-12">
-                {/* Icon / Badge */}
                 <div className="shrink-0 flex flex-col items-center gap-3">
                   <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-4xl shadow-lg shadow-amber-500/30">
                     🎓
                   </div>
-                  <span className="bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-amber-300 dark:border-amber-700">
-                    Year-Round
-                  </span>
                 </div>
 
-                {/* Text */}
                 <div className="flex-1 text-center md:text-left">
-                  <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3">
-                    <span className="w-4 h-px bg-amber-400" />
-                    Internship Programme
-                    <span className="w-4 h-px bg-amber-400" />
-                  </div>
-                  <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-3">
-                    Apply for an Internship
+                  <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2">
+                    Internship Openings
                   </h2>
-                  <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed max-w-xl mb-1">
-                    We accept interns <strong>year-round</strong>, based on your field of interest — Robotics, AI, Electronics, Software, Mechanical Design, and more. No fixed JD; you work on what excites you.
-                  </p>
-                  <p className="text-sm text-amber-700 dark:text-amber-400 font-semibold">
-                    ⚠️ This is an <strong>unpaid internship</strong>. Stipend may be provided based on performance and project contributions.
+                  <p className="text-slate-500 dark:text-slate-400 text-sm">
+                    Interested in working with us? Apply for an internship at PNT Robotics.
                   </p>
                 </div>
 
-                {/* CTA Button */}
                 <div className="shrink-0">
                   <Link
                     href="/careers/internship"
-                    className="inline-flex flex-col items-center justify-center px-8 py-4 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-black text-lg shadow-xl shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-105 transition-all duration-200 group"
+                    className="inline-flex flex-col items-center justify-center px-8 py-4 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-black text-lg shadow-xl shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-105 transition-all duration-200"
                   >
-                    <span>Apply for Internship</span>
-                    <span className="text-[11px] font-normal text-amber-100 mt-0.5">Takes 5 minutes →</span>
+                    Apply Now
                   </Link>
                 </div>
               </div>

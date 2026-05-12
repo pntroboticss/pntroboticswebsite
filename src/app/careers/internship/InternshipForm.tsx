@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { ArrowLeft, Upload, Loader2, MapPinned, CheckCircle, Plus, Trash2, GraduationCap, Briefcase } from "lucide-react";
+import { ArrowLeft, Upload, Loader2, MapPinned, CheckCircle, Plus, Trash2, GraduationCap, Briefcase, X } from "lucide-react";
 import Link from "next/link";
 
 const Input = ({ label, required = false, type = "text", ...props }: any) => (
@@ -26,12 +26,57 @@ const Select = ({ label, required = false, children, ...props }: any) => (
   </div>
 );
 
-// Cool animated success popup
+// Step 1: Unpaid internship confirmation popup
+function ConfirmationModal({ onConfirm, onCancel, submitting }: {
+  onConfirm: () => void;
+  onCancel: () => void;
+  submitting: boolean;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+      <div className="bg-white dark:bg-slate-900 rounded-[2rem] p-8 md:p-10 max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800">
+        {/* Icon */}
+        <div className="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-3xl mx-auto mb-6">
+          💡
+        </div>
+
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white text-center mb-3">Before You Submit</h2>
+        <p className="text-slate-600 dark:text-slate-400 text-center text-base leading-relaxed mb-6">
+          Please note that this is an <strong className="text-slate-900 dark:text-white">unpaid internship</strong>. A stipend may be provided based on your performance and contribution during your tenure.
+        </p>
+
+        <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 rounded-2xl p-5 mb-8">
+          <p className="text-sm text-amber-800 dark:text-amber-300 font-semibold text-center">
+            Would you like to continue and submit your application?
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={onCancel}
+            disabled={submitting}
+            className="flex-1 py-3.5 px-6 rounded-xl border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+          >
+            <X size={18} /> Go Back
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={submitting}
+            className="flex-1 py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 disabled:opacity-60"
+          >
+            {submitting ? <><Loader2 className="animate-spin" size={18} /> Submitting...</> : <>Yes, Submit 🚀</>}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Step 2: Success popup
 function SuccessModal({ name }: { name: string }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-      <div className="bg-white dark:bg-slate-900 rounded-[2rem] p-10 max-w-md w-full text-center shadow-2xl border border-amber-200 dark:border-amber-800/40 animate-fade-in">
-        {/* Animated checkmark */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+      <div className="bg-white dark:bg-slate-900 rounded-[2rem] p-10 max-w-md w-full text-center shadow-2xl border border-slate-200 dark:border-slate-800">
         <div className="relative w-24 h-24 mx-auto mb-6">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full animate-pulse opacity-20" />
           <div className="absolute inset-2 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
@@ -39,19 +84,10 @@ function SuccessModal({ name }: { name: string }) {
           </div>
         </div>
 
-        <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-2">Application Sent! 🎉</h2>
-        <p className="text-slate-600 dark:text-slate-400 mb-6 text-base leading-relaxed">
-          Hi <strong className="text-slate-900 dark:text-white">{name}</strong>, we received your internship application!
-          Our team will review your profile and reach out if there's a good match.
+        <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-3">Application Sent! 🎉</h2>
+        <p className="text-slate-600 dark:text-slate-400 mb-8 text-base leading-relaxed">
+          Hi <strong className="text-slate-900 dark:text-white">{name}</strong>! We have received your internship application and are reviewing it. We'll be in touch soon.
         </p>
-
-        {/* Stipend notice */}
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 rounded-2xl p-5 mb-8 text-left">
-          <p className="text-sm font-bold text-amber-700 dark:text-amber-400 mb-1">💡 About Stipend</p>
-          <p className="text-sm text-amber-600 dark:text-amber-300">
-            This internship is <strong>unpaid</strong>. However, a stipend may be offered based on your performance and contribution to live projects during your tenure.
-          </p>
-        </div>
 
         <Link href="/careers" className="inline-flex items-center justify-center w-full px-8 py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-bold text-base transition-all hover:scale-105 shadow-lg shadow-amber-500/20">
           Back to Careers
@@ -62,6 +98,7 @@ function SuccessModal({ name }: { name: string }) {
 }
 
 export default function InternshipForm() {
+  const [showConfirm, setShowConfirm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -75,50 +112,47 @@ export default function InternshipForm() {
   const [canRelocate, setCanRelocate] = useState("");
 
   // Education
-  const [eduStatus, setEduStatus] = useState(""); // diploma | degree | passout
+  const [eduStatus, setEduStatus] = useState("");
   const [diplomaYear, setDiplomaYear] = useState("");
   const [diplomaField, setDiplomaField] = useState("");
   const [diplomaCollege, setDiplomaCollege] = useState("");
-
-  const [degreeType, setDegreeType] = useState(""); // 3yr | 4yr | 5yr
-  const [degreeYear, setDegreeYear] = useState(""); // current year
+  const [degreeType, setDegreeType] = useState("");
+  const [degreeYear, setDegreeYear] = useState("");
   const [degreeMajor, setDegreeMajor] = useState("");
   const [degreeCollege, setDegreeCollege] = useState("");
   const [degreeStartYear, setDegreeStartYear] = useState("");
   const [degreeEndYear, setDegreeEndYear] = useState("");
 
-  // Experience (optional, for all)
+  // Experience
   const [experiences, setExperiences] = useState<{ company: string; role: string; duration: string; work: string }[]>([]);
 
-  // Internship Preferences
+  // Preferences
   const [areaOfInterest, setAreaOfInterest] = useState("");
   const [customInterest, setCustomInterest] = useState("");
   const [resumeFile, setResumeFile] = useState<File | null>(null);
 
-  const addExperience = () => {
-    setExperiences([...experiences, { company: "", role: "", duration: "", work: "" }]);
-  };
-
-  const removeExperience = (idx: number) => {
-    setExperiences(experiences.filter((_, i) => i !== idx));
-  };
-
+  const addExperience = () => setExperiences([...experiences, { company: "", role: "", duration: "", work: "" }]);
+  const removeExperience = (idx: number) => setExperiences(experiences.filter((_, i) => i !== idx));
   const updateExperience = (idx: number, field: string, value: string) => {
     const updated = [...experiences];
     updated[idx] = { ...updated[idx], [field]: value };
     setExperiences(updated);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Called when the form's native submit fires — show confirmation instead
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!resumeFile) return alert("Please upload your resume/CV.");
+    setShowConfirm(true);
+  };
 
+  // Called when user confirms in the popup
+  const handleConfirmedSubmit = async () => {
     setSubmitting(true);
     try {
-      // Upload resume
-      const fileExt = resumeFile.name.split('.').pop();
+      const fileExt = resumeFile!.name.split('.').pop();
       const fileName = `interns/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage.from('resumes').upload(fileName, resumeFile);
+      const { error: uploadError } = await supabase.storage.from('resumes').upload(fileName, resumeFile!);
       if (uploadError) throw new Error("Resume upload failed. " + uploadError.message);
       const { data: publicUrlData } = supabase.storage.from('resumes').getPublicUrl(fileName);
 
@@ -157,6 +191,7 @@ export default function InternshipForm() {
         throw new Error(err.error || "Failed to submit application.");
       }
 
+      setShowConfirm(false);
       setShowSuccess(true);
     } catch (err: any) {
       console.error(err);
@@ -168,25 +203,28 @@ export default function InternshipForm() {
 
   return (
     <>
+      {showConfirm && (
+        <ConfirmationModal
+          onConfirm={handleConfirmedSubmit}
+          onCancel={() => setShowConfirm(false)}
+          submitting={submitting}
+        />
+      )}
       {showSuccess && <SuccessModal name={firstName} />}
 
       <Link href="/careers" className="inline-flex items-center gap-2 text-slate-500 hover:text-amber-600 font-bold mb-8 transition-colors">
         <ArrowLeft size={18} /> Back to Careers
       </Link>
 
-      {/* Job Header */}
+      {/* Header */}
       <div className="bg-white dark:bg-slate-900 rounded-[2rem] p-8 md:p-12 shadow-sm border border-slate-200 dark:border-slate-800 mb-10">
         <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 px-3 py-1.5 rounded-full">
-          <GraduationCap size={14} /> Year-Round Internship Programme
+          <GraduationCap size={14} /> Internship
         </div>
         <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">Internship at PNT Robotics</h1>
-        <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl leading-relaxed mb-6">
-          We don't have a fixed JD — you work on what interests you! Whether it's Robotics, AI, Embedded Systems, Mechanical Design, or Software Engineering, we'll find the right project for you.
-        </p>
         <div className="flex flex-wrap gap-3">
           <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-bold px-4 py-2 rounded-xl">📍 Dombivli, Maharashtra</span>
           <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-bold px-4 py-2 rounded-xl">⏱ Flexible Duration</span>
-          <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-sm font-bold px-4 py-2 rounded-xl">💰 Unpaid (Stipend on Performance)</span>
         </div>
       </div>
 
@@ -194,10 +232,10 @@ export default function InternshipForm() {
       <div className="bg-white dark:bg-slate-900 rounded-[2rem] shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
         <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-6 text-white">
           <h2 className="text-2xl font-black">Internship Application Form</h2>
-          <p className="text-amber-100 mt-1">Takes about 5 minutes. Fill everything accurately!</p>
+          <p className="text-amber-100 mt-1">Fill everything accurately.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 md:p-12 space-y-14">
+        <form onSubmit={handleFormSubmit} className="p-8 md:p-12 space-y-14">
 
           {/* Section 1 - Personal */}
           <div className="space-y-6">
@@ -214,7 +252,6 @@ export default function InternshipForm() {
               <Input label="Pincode" required value={pincode} onChange={(e: any) => setPincode(e.target.value)} />
             </div>
 
-            {/* Relocation */}
             <div className="bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl border border-blue-100 dark:border-blue-900/30">
               <div className="flex items-start gap-4">
                 <MapPinned className="text-blue-500 shrink-0 mt-1" size={22} />
@@ -246,7 +283,6 @@ export default function InternshipForm() {
               <option value="passout">Passed Out</option>
             </Select>
 
-            {/* Diploma fields */}
             {eduStatus === "diploma" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl">
                 <Select label="Current Year of Diploma" required value={diplomaYear} onChange={(e: any) => setDiplomaYear(e.target.value)}>
@@ -259,7 +295,6 @@ export default function InternshipForm() {
               </div>
             )}
 
-            {/* Degree fields */}
             {eduStatus === "degree" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl">
                 <Select label="Degree Duration" required value={degreeType} onChange={(e: any) => setDegreeType(e.target.value)}>
@@ -281,22 +316,21 @@ export default function InternshipForm() {
               </div>
             )}
 
-            {/* Passout - basic info */}
             {eduStatus === "passout" && (
-              <div className="bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl">
-                <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">Please add your experience below, and upload your resume for educational details.</p>
+              <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl">
+                <p className="text-slate-500 dark:text-slate-400 text-sm">Please add your experience below, and upload your resume for full educational details.</p>
               </div>
             )}
           </div>
 
-          {/* Section 3 - Experience (optional for all) */}
+          {/* Section 3 - Experience */}
           <div className="space-y-6">
             <h3 className="text-lg font-black text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               <span className="w-7 h-7 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center text-sm font-black">3</span>
               Work Experience <span className="text-sm font-medium text-slate-400 ml-2">(Optional)</span>
             </h3>
 
-            <p className="text-sm text-slate-500 dark:text-slate-400">If you've worked at a company, done a project, or completed an internship before — add it here. It's optional but helps us understand your background.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">If you've worked, done a project, or completed an internship before — add it here.</p>
 
             <div className="space-y-4">
               {experiences.map((exp, idx) => (
@@ -331,7 +365,6 @@ export default function InternshipForm() {
               <span className="w-7 h-7 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center text-sm font-black">4</span>
               Area of Interest
             </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">What field would you want to work in at PNT Robotics? We'll match you with a live project.</p>
             <Select label="Field of Interest" required value={areaOfInterest} onChange={(e: any) => setAreaOfInterest(e.target.value)}>
               <option>Robotics & Automation</option>
               <option>Artificial Intelligence / Machine Learning</option>
@@ -368,14 +401,14 @@ export default function InternshipForm() {
           </div>
 
           {/* Submit */}
-          <div className="pt-8 border-t border-slate-200 dark:border-slate-800">
+          <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col items-start gap-4">
             <button
-              type="submit" disabled={submitting}
-              className="w-full md:w-auto px-12 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-black text-lg rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl shadow-amber-500/20 hover:scale-105"
+              type="submit"
+              className="px-12 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-black text-lg rounded-xl transition-all flex items-center justify-center gap-3 shadow-xl shadow-amber-500/20 hover:scale-105"
             >
-              {submitting ? <><Loader2 className="animate-spin" size={22} /> Submitting...</> : "Submit Application 🚀"}
+              Submit Application 🚀
             </button>
-            <p className="text-xs text-slate-400 mt-3">By submitting, you agree that this is an unpaid internship. A stipend may be provided based on your performance.</p>
+            <p className="text-xs text-slate-400">This is an unpaid internship. Stipend may be provided based on performance.</p>
           </div>
 
         </form>
