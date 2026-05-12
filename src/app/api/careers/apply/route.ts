@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { supabase } from "@/lib/supabase";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "hr@pntsolution.in";
 
 export async function POST(req: Request) {
   try {
@@ -28,32 +29,60 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Failed to save application to database." }, { status: 500 });
     }
 
-    // 2. Send Auto-Reply Email
+    // 2. Send Auto-Reply Email to applicant
     try {
       await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL || "PNT Robotics <pnt-trainings@pntacademy.com>",
+        from: `PNT Robotics HR <${FROM_EMAIL}>`,
         to: email,
-        subject: `Application Received: ${jobTitle}`,
+        subject: `Application Received: ${jobTitle} – PNT Robotics`,
         html: `
-          <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; color: #333;">
-            <div style="background-color: #0f172a; padding: 24px; border-radius: 12px 12px 0 0;">
-              <h2 style="color: white; margin: 0;">Application Received</h2>
+          <div style="font-family: 'Helvetica Neue', sans-serif; max-width: 560px; margin: 0 auto; color: #1e293b; border-radius: 16px; overflow: hidden;">
+            <div style="background: #0f172a; padding: 28px 28px;">
+              <h1 style="color: white; margin: 0; font-size: 22px; font-weight: 900;">Application Received ✅</h1>
+              <p style="color: #94a3b8; margin: 6px 0 0; font-size: 13px;">PNT Robotics – Careers</p>
             </div>
-            <div style="padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
-              <p>Dear <strong>${name}</strong>,</p>
-              <p>Thank you for applying for the <strong>${jobTitle}</strong> position at PNT Robotics.</p>
-              <p>We have successfully received your application form and resume. Our hiring team will review your profile and get back to you if your qualifications align with our current needs.</p>
-              <p>Thank you for your interest in joining our team!</p>
+            <div style="padding: 32px 28px; background: white;">
+              <p style="margin: 0 0 16px;">Dear <strong>${name}</strong>,</p>
+              <p style="color: #475569; line-height: 1.6; margin: 0 0 16px;">
+                Thank you for applying for the <strong>${jobTitle}</strong> position at PNT Robotics. We have successfully received your application and resume.
+              </p>
+              <p style="color: #475569; line-height: 1.6; margin: 0 0 20px;">
+                Our hiring team will carefully review your profile and reach out to you if your qualifications match our current needs.
+              </p>
+              <p style="color: #64748b; font-size: 14px;">Questions? Email us at <a href="mailto:hr@pntsolution.in" style="color: #2563eb; font-weight: bold;">hr@pntsolution.in</a></p>
               <br/>
-              <p style="color: #64748b; font-size: 14px; margin-bottom: 0;">Best regards,</p>
-              <p style="font-weight: bold; margin-top: 4px;">PNT Robotics HR Team</p>
+              <p style="color: #94a3b8; font-size: 14px; margin-bottom: 4px;">Best regards,</p>
+              <p style="font-weight: 900; margin: 0; font-size: 15px;">PNT Robotics HR Team</p>
             </div>
           </div>
         `,
       });
     } catch (emailError) {
       console.error("Failed to send auto-reply email:", emailError);
-      // We don't fail the request if the email fails
+    }
+
+    // 3. Notify HR internally
+    try {
+      await resend.emails.send({
+        from: `PNT Careers Bot <${FROM_EMAIL}>`,
+        to: "hr@pntsolution.in",
+        subject: `New Job Application: ${name} for ${jobTitle}`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto;">
+            <h2 style="color: #1e293b;">New Job Application</h2>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><td style="padding: 8px 0; color: #64748b; font-size: 14px; font-weight: bold;">Name</td><td style="font-size: 14px;">${name}</td></tr>
+              <tr><td style="padding: 8px 0; color: #64748b; font-size: 14px; font-weight: bold;">Email</td><td style="font-size: 14px;"><a href="mailto:${email}">${email}</a></td></tr>
+              <tr><td style="padding: 8px 0; color: #64748b; font-size: 14px; font-weight: bold;">Phone</td><td style="font-size: 14px;">${phone}</td></tr>
+              <tr><td style="padding: 8px 0; color: #64748b; font-size: 14px; font-weight: bold;">Job</td><td style="font-size: 14px;">${jobTitle}</td></tr>
+              <tr><td style="padding: 8px 0; color: #64748b; font-size: 14px; font-weight: bold;">Resume</td><td style="font-size: 14px;"><a href="${resume_url}">Download CV</a></td></tr>
+            </table>
+            <p style="margin-top: 20px; font-size: 13px; color: #94a3b8;">Review this application in the <strong>Admin Panel → Careers</strong></p>
+          </div>
+        `,
+      });
+    } catch (e) {
+      console.error("HR notify failed:", e);
     }
 
     return NextResponse.json({ success: true });
