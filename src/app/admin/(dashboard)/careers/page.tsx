@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Plus, Trash2, Edit, Users, Briefcase, Eye, Download, X, FileText, Mail, Filter, CheckSquare, Square } from "lucide-react";
+import { Plus, Trash2, Edit, Users, Briefcase, Eye, Download, X, FileText, Mail, Filter, CheckSquare, Square, AlertTriangle } from "lucide-react";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 type Job = {
@@ -90,6 +90,22 @@ export default function CareersAdmin() {
     Interview: "bg-blue-100 text-blue-700",
     Accepted: "bg-emerald-100 text-emerald-700",
     Rejected: "bg-red-100 text-red-700",
+  };
+
+  // Delete confirmation state
+  const [deleteConfirm, setDeleteConfirm] = useState<{ ids: string[]; label: string } | null>(null);
+
+  const deleteApps = async (ids: string[]) => {
+    for (const id of ids) {
+      await supabase.from("job_applications").delete().eq("id", id);
+    }
+    setDeleteConfirm(null);
+    clearSelection();
+    fetchData();
+  };
+
+  const confirmDelete = (ids: string[], label: string) => {
+    setDeleteConfirm({ ids, label });
   };
 
   useEffect(() => {
@@ -470,9 +486,14 @@ export default function CareersAdmin() {
             </div>
             <div className="flex gap-2">
               {selectedIds.size > 0 && (
-                <button onClick={() => bulkEmail(jobApps)} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm">
-                  <Mail size={15} /> Email Selected ({selectedIds.size})
-                </button>
+                <>
+                  <button onClick={() => bulkEmail(jobApps)} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm">
+                    <Mail size={15} /> Email Selected ({selectedIds.size})
+                  </button>
+                  <button onClick={() => confirmDelete(Array.from(selectedIds).filter(id => jobApps.some(a => a.id === id)), `${selectedIds.size} application(s)`)} className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm">
+                    <Trash2 size={15} /> Delete Selected
+                  </button>
+                </>
               )}
               <button onClick={exportToCSV} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 shadow-sm">
                 <Download size={15} /> Export CSV
@@ -545,6 +566,9 @@ export default function CareersAdmin() {
                       <button onClick={() => contactApplicant(app.email, app.name)} className="text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-100 flex items-center gap-1.5">
                         <Mail size={13} /> Contact
                       </button>
+                      <button onClick={() => confirmDelete([app.id], app.name)} className="text-red-500 bg-red-50 dark:bg-red-900/20 p-1.5 rounded-lg hover:bg-red-100 flex items-center">
+                        <Trash2 size={13} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -578,9 +602,14 @@ export default function CareersAdmin() {
               ))}
             </div>
             {selectedIds.size > 0 && (
-              <button onClick={() => bulkEmail(internApps)} className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm">
-                <Mail size={15} /> Email Selected ({selectedIds.size})
-              </button>
+              <div className="flex gap-2">
+                <button onClick={() => bulkEmail(internApps)} className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm">
+                  <Mail size={15} /> Email Selected ({selectedIds.size})
+                </button>
+                <button onClick={() => confirmDelete(Array.from(selectedIds).filter(id => internApps.some(a => a.id === id)), `${selectedIds.size} internship application(s)`)} className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm">
+                  <Trash2 size={15} /> Delete Selected
+                </button>
+              </div>
             )}
           </div>
 
@@ -658,6 +687,9 @@ export default function CareersAdmin() {
                       <button onClick={() => contactApplicant(app.email, app.name)} className="text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-emerald-100 flex items-center gap-1.5">
                         <Mail size={13} /> Contact
                       </button>
+                      <button onClick={() => confirmDelete([app.id], app.name)} className="text-red-500 bg-red-50 dark:bg-red-900/20 p-1.5 rounded-lg hover:bg-red-100 flex items-center">
+                        <Trash2 size={13} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -671,6 +703,32 @@ export default function CareersAdmin() {
         </div>
         );
       })()}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-md w-full shadow-2xl border border-red-100 dark:border-red-900/30">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-2xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-5">
+                <AlertTriangle className="text-red-500" size={32} />
+              </div>
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Delete Application?</h2>
+              <p className="text-slate-500 dark:text-slate-400 mb-2">
+                You are about to permanently delete <strong className="text-slate-800 dark:text-white">{deleteConfirm.label}</strong>.
+              </p>
+              <p className="text-xs text-red-500 font-semibold mb-8">This action cannot be undone.</p>
+              <div className="flex gap-3 w-full">
+                <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                  Cancel
+                </button>
+                <button onClick={() => deleteApps(deleteConfirm.ids)} className="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black transition-all flex items-center justify-center gap-2">
+                  <Trash2 size={16} /> Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODALS */}
       {isJobModalOpen && (
