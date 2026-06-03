@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import connectDB from "@/lib/mongodb";
-import { SchoolVideo } from "@/lib/models/SchoolVideo";
+// MongoDB removed
 import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
@@ -13,10 +12,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // GET: Fetch all videos from MongoDB
 export async function GET() {
     try {
-        await connectDB();
-        // Sort by 'order' ascending first, then fallback to newest first if orders are equal
-        const videos = await SchoolVideo.find().sort({ order: 1, createdAt: -1 });
-        return NextResponse.json(videos);
+        const { data: videos, error } = await supabase.from('school_videos').select('*').order('display_order', { ascending: true }).order('created_at', { ascending: false });
+        if (error) throw error;
+        const mappedVideos = videos.map(v => ({ ...v, _id: v.id, publicId: v.public_id, startTime: v.start_time, endTime: v.end_time, order: v.display_order }));
+        return NextResponse.json(mappedVideos);
     } catch (error) {
         console.error("Failed to fetch videos from DB:", error);
         return NextResponse.json([], { status: 500 });
@@ -26,28 +25,21 @@ export async function GET() {
 // POST: Save a new video URL to MongoDB
 export async function POST(req: Request) {
     try {
-        await connectDB();
-        const body = await req.json();
-        const { filename, url, size, publicId } = body;
-
-        if (!filename || !url || !publicId) {
-            return NextResponse.json({ error: "Missing video data" }, { status: 400 });
-        }
-
-        const count = await SchoolVideo.countDocuments();
+        const { count, error: countErr } = await supabase.from('school_videos').select('*', { count: 'exact', head: true });
+        const { filename, url, size, publicId } = await req.json();
         
-        const newVideo = new SchoolVideo({
+        const { data: newVideo, error } = await supabase.from('school_videos').insert([{
             filename,
             url,
             size: size || 0,
-            publicId,
-            order: count, 
-            startTime: 0,
-            endTime: 0
-        });
+            public_id: publicId,
+            display_order: count || 0,
+            start_time: 0,
+            end_time: 0
+        }]).select().single();
+        if (error) throw error;
 
-        await newVideo.save();
-        return NextResponse.json({ success: true, video: newVideo });
+        return NextResponse.json({ success: true, video: { ...newVideo, _id: newVideo.id, publicId: newVideo.public_id, startTime: newVideo.start_time, endTime: newVideo.end_time, order: newVideo.display_order } });
     } catch (error) {
         console.error("Failed to save video to DB:", error);
         return NextResponse.json({ error: "Database save failed" }, { status: 500 });
@@ -56,18 +48,11 @@ export async function POST(req: Request) {
 // PUT: Update video metadata (order, startTime, endTime)
 export async function PUT(req: Request) {
     try {
-        await connectDB();
         const body = await req.json();
-
-        // Handle bulk reordering
         if (body.reorder && Array.isArray(body.items)) {
-            const bulkOps = body.items.map((item: { _id: string, order: number }) => ({
-                updateOne: {
-                    filter: { _id: item._id },
-                    update: { $set: { order: item.order } }
-                }
-            }));
-            await SchoolVideo.bulkWrite(bulkOps);
+            await Promise.all(body.items.map((item: any) => 
+                supabase.from('school_videos').update({ display_order: item.order }).eq('id', item._id)
+            ));
             return NextResponse.json({ success: true, message: "Reordered successfully" });
         }
 
@@ -77,13 +62,10 @@ export async function PUT(req: Request) {
             return NextResponse.json({ error: "Missing video ID" }, { status: 400 });
         }
 
-        const updated = await SchoolVideo.findByIdAndUpdate(
-            _id,
-            { $set: { startTime, endTime } },
-            { new: true }
-        );
+        const { data: updated, error } = await supabase.from('school_videos').update({ start_time: startTime, end_time: endTime }).eq('id', _id).select().single();
+        if (error) throw error;
 
-        return NextResponse.json({ success: true, video: updated });
+        return NextResponse.json({ success: true, video: { ...updated, _id: updated.id, publicId: updated.public_id, startTime: updated.start_time, endTime: updated.end_time, order: updated.display_order } });
     } catch (error) {
         console.error("Failed to update video:", error);
         return NextResponse.json({ error: "Update failed" }, { status: 500 });
@@ -97,19 +79,18 @@ export async function DELETE(req: Request) {
 
         if (!id) return NextResponse.json({ error: "id is required" }, { status: 400 });
 
-        await connectDB();
-        const video = await SchoolVideo.findById(id);
+        const { data: video, error: findErr } = await supabase.from('school_videos').select('*').eq('id', id).single();
 
-        if (!video) {
+        if (findErr || !video) {
             return NextResponse.json({ error: "Video not found" }, { status: 404 });
         }
 
         // 1. Delete from Supabase
-        if (video.publicId) {
+        if (video.public_id) {
             try {
                 const { error: supaErr } = await supabase.storage
                     .from("website_assets")
-                    .remove([video.publicId]);
+                    .remove([video.public_id]);
                 
                 if (supaErr) {
                     console.error("Supabase delete failed, but continuing to remove from DB:", supaErr);
@@ -119,8 +100,8 @@ export async function DELETE(req: Request) {
             }
         }
 
-        // 2. Delete from MongoDB
-        await SchoolVideo.findByIdAndDelete(id);
+        // 2. Delete from Supabase Database
+        await supabase.from('school_videos').delete().eq('id', id);
 
         return NextResponse.json({ success: true, deleted: id });
     } catch (error) {

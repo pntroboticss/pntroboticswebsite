@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendPaymentEmail } from "@/lib/utils/sendPaymentEmail";
-import connectMongo from "@/lib/mongodb";
-import PaymentTicket from "@/lib/models/PaymentTicket";
+import { supabase } from "@/lib/supabase";
 import { getAdminSettings } from "@/lib/actions/db";
 
 /**
@@ -50,16 +49,17 @@ export async function POST(req: NextRequest) {
 
         const safeTicketId = ticketId || `PNT-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
-        // 1. Save to MongoDB
-        await connectMongo();
-        await PaymentTicket.create({
-            ticketId: safeTicketId,
-            clientName: clientName || "Not provided",
-            courseName: courseName || "Not specified",
+        // 1. Save to Supabase
+        const { error: dbError } = await supabase.from('payment_tickets').insert([{
+            ticket_id: safeTicketId,
+            client_name: clientName || "Not provided",
+            course_name: courseName || "Not specified",
             amount: amount || "Not specified",
-            queryMessage: queryMessage.trim(),
+            query_message: queryMessage.trim(),
             status: "open",
-        });
+        }]);
+
+        if (dbError) throw dbError;
 
         // 2. Google Sheets sync (non-blocking)
         try {

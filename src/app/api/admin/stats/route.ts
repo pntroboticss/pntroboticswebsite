@@ -1,48 +1,36 @@
 import { NextResponse } from "next/server";
-import connectMongo from "@/lib/mongodb";
-import Gallery from "@/lib/models/Gallery";
-import School from "@/lib/models/School";
-import Internship from "@/lib/models/Internship";
-import SiteMetric from "@/lib/models/SiteMetric";
-import mongoose from "mongoose";
+import { supabase } from "@/lib/supabase";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
-        await connectMongo();
-
-        // 1. Get counts for each collection
-        const [galleryCount, schoolsCount, internshipsCount, visitsMetric] = await Promise.all([
-            Gallery.countDocuments({}),
-            School.countDocuments({}),
-            Internship.countDocuments({}),
-            SiteMetric.findOne({ key: "total_visits" }).lean()
+        const [
+            { count: galleryCount },
+            { count: schoolsCount },
+            { count: internshipsCount },
+            { data: visitsMetric }
+        ] = await Promise.all([
+            supabase.from('gallery').select('*', { count: 'exact', head: true }),
+            supabase.from('schools').select('*', { count: 'exact', head: true }),
+            supabase.from('internships').select('*', { count: 'exact', head: true }),
+            supabase.from('site_metrics').select('value').eq('key', 'total_visits').maybeSingle()
         ]);
 
         const totalVisits = visitsMetric?.value || 0;
 
-        // 2. Get database storage stats (MongoDB)
-        let dbSizeInBytes = 0;
-        if (mongoose.connection.db) {
-            const stats = await mongoose.connection.db.stats();
-            dbSizeInBytes = stats.dataSize + stats.indexSize; // Total logical size
-        }
-
-        // 3. Get Supabase storage stats
-        // Note: Supabase doesn't expose a direct "bucket size" API via the JS client without RPC.
-        // For now, we will return a placeholder or calculate based on DB entries if needed.
+        let dbSizeInBytes = 0; // Not available easily via client
         let supabaseUsageMB = 0;
 
         return NextResponse.json({
             success: true,
             data: {
-                galleryCount,
-                schoolsCount,
-                internshipsCount,
+                galleryCount: galleryCount || 0,
+                schoolsCount: schoolsCount || 0,
+                internshipsCount: internshipsCount || 0,
                 totalVisits,
                 dbSizeInBytes,
-                supabaseUsageMB, // Append Supabase storage data
+                supabaseUsageMB,
             }
         });
     } catch (error: any) {

@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
-import connectMongo from "@/lib/mongodb";
-import Enquiry from "@/lib/models/Enquiry";
+import { createClient } from "@supabase/supabase-js";
 import { getAdminSettings } from "@/lib/actions/db";
-import { sendEnquiryEmail } from "@/lib/utils/sendEnquiryEmail"; // ← new
+import { sendEnquiryEmail } from "@/lib/utils/sendEnquiryEmail";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ─── Rate Limiter (Contact Form) ───────────────────────────────────
 const contactRateMap = new Map<string, { count: number; resetAt: number }>();
@@ -86,8 +89,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Please provide a valid email address." }, { status: 400 });
         }
 
-        await connectMongo();
-        await Enquiry.create({ name, email, phone, subject, message });
+        const { error: dbError } = await supabase
+            .from('enquiries')
+            .insert([{ name, email, phone, subject, message }]);
+            
+        if (dbError) throw dbError;
 
         // Await side effects so Vercel does not kill the serverless function early
         try {
@@ -115,9 +121,14 @@ export async function POST(req: Request) {
 // ─── GET: Fetch Enquiries (admin dashboard) ────────────────────────
 export async function GET() {
     try {
-        await connectMongo();
-        const items = await Enquiry.find({}).sort({ createdAt: -1 }).lean();
-        return NextResponse.json(JSON.parse(JSON.stringify(items)));
+        const { data, error } = await supabase
+            .from('enquiries')
+            .select('*')
+            .order('created_at', { ascending: false });
+            
+        if (error) throw error;
+        
+        return NextResponse.json(data);
     } catch {
         return NextResponse.json({ error: "Failed to fetch enquiries." }, { status: 500 });
     }

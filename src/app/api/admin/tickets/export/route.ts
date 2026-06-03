@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import connectMongo from "@/lib/mongodb";
-import PaymentTicket from "@/lib/models/PaymentTicket";
+import { supabase } from "@/lib/supabase";
 
 /**
  * GET /api/admin/tickets/export
@@ -9,19 +8,19 @@ import PaymentTicket from "@/lib/models/PaymentTicket";
  */
 export async function GET() {
     try {
-        await connectMongo();
-        const tickets = await PaymentTicket.find({}).sort({ createdAt: -1 }).lean();
+        const { data: tickets, error } = await supabase.from('payment_tickets').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
 
         const headers = ["Date", "Ticket ID", "Client Name", "Course", "Amount", "Query/Issue", "Status"];
-        const rows = (tickets as any[]).map((t) => {
-            const date = new Date(t.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+        const rows = (tickets || []).map((t) => {
+            const date = new Date(t.created_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
             return [
                 `"${date}"`,
-                `"${t.ticketId?.replace(/"/g, '""') || ""}"`,
-                `"${t.clientName?.replace(/"/g, '""') || ""}"`,
-                `"${t.courseName?.replace(/"/g, '""') || ""}"`,
+                `"${t.ticket_id?.replace(/"/g, '""') || ""}"`,
+                `"${t.client_name?.replace(/"/g, '""') || ""}"`,
+                `"${t.course_name?.replace(/"/g, '""') || ""}"`,
                 `"${t.amount?.replace(/"/g, '""') || ""}"`,
-                `"${t.queryMessage?.replace(/"/g, '""') || ""}"`,
+                `"${t.query_message?.replace(/"/g, '""') || ""}"`,
                 `"${t.status?.replace(/"/g, '""') || "open"}"`,
             ].join(",");
         });

@@ -1,16 +1,15 @@
 import { NextResponse } from 'next/server';
-import connectMongo from '@/lib/mongodb';
-import Enquiry from '@/lib/models/Enquiry';
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
     try {
-        await connectMongo();
-        const enquiries = await Enquiry.find({}).sort({ createdAt: -1 }).lean();
+        const { data: enquiries, error } = await supabase.from('enquiries').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
 
         // Convert to CSV
         const headers = ['Date', 'Name', 'Email', 'Phone', 'Subject', 'Message'];
-        const rows = enquiries.map((e: any) => {
-            const date = new Date(e.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        const rows = (enquiries || []).map((e: any) => {
+            const date = new Date(e.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
             return [
                 `"${date}"`,
                 `"${e.name?.replace(/"/g, '""') || ''}"`,

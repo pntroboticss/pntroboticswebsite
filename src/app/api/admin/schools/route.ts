@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
-import connectMongo from '@/lib/mongodb';
-import School from '@/lib/models/School';
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
     try {
-        await connectMongo();
-        const items = await School.find({}).sort({ createdAt: -1 });
-        return NextResponse.json(items, { status: 200 });
+        const { data: items, error } = await supabase.from('schools').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        // Map to expected _id field format
+        const mappedItems = items.map(item => ({ ...item, _id: item.id, imageUrl: item.image_url }));
+        return NextResponse.json(mappedItems, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: 'Failed to fetch school logos' }, { status: 500 });
     }
@@ -14,16 +15,10 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
-        await connectMongo();
-        const data = await req.json();
-        const { name, imageUrl } = data;
-
-        if (!name || !imageUrl) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-        }
-
-        const newItem = await School.create({ name, imageUrl });
-        return NextResponse.json(newItem, { status: 201 });
+        const { name, imageUrl } = await req.json();
+        const { data: newItem, error } = await supabase.from('schools').insert([{ name, image_url: imageUrl }]).select().single();
+        if (error) throw error;
+        return NextResponse.json({ ...newItem, _id: newItem.id, imageUrl: newItem.image_url }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: 'Failed to create school logo record' }, { status: 500 });
     }
@@ -38,8 +33,8 @@ export async function DELETE(req: Request) {
             return NextResponse.json({ error: 'Item ID is required' }, { status: 400 });
         }
 
-        await connectMongo();
-        await School.findByIdAndDelete(id);
+        const { error } = await supabase.from('schools').delete().eq('id', id);
+        if (error) throw error;
 
         return NextResponse.json({ message: 'Item deleted successfully' }, { status: 200 });
     } catch (error) {

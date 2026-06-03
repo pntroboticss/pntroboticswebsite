@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
-import connectMongo from '@/lib/mongodb';
-import AboutPhoto from '@/lib/models/AboutPhoto';
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
     try {
-        await connectMongo();
-        const items = await AboutPhoto.find({}).sort({ createdAt: -1 });
-        return NextResponse.json(items, { status: 200 });
+        const { data: items, error } = await supabase.from('about_photos').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        const mappedItems = items.map(item => ({ ...item, _id: item.id, imageUrl: item.image_url }));
+        return NextResponse.json(mappedItems, { status: 200 });
     } catch {
         return NextResponse.json({ error: 'Failed to fetch about photos' }, { status: 500 });
     }
@@ -14,13 +14,10 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
-        await connectMongo();
         const { caption, imageUrl } = await req.json();
-        if (!imageUrl) {
-            return NextResponse.json({ error: 'Image is required' }, { status: 400 });
-        }
-        const item = await AboutPhoto.create({ caption, imageUrl });
-        return NextResponse.json(item, { status: 201 });
+        const { data: item, error } = await supabase.from('about_photos').insert([{ caption, image_url: imageUrl }]).select().single();
+        if (error) throw error;
+        return NextResponse.json({ ...item, _id: item.id, imageUrl: item.image_url }, { status: 201 });
     } catch {
         return NextResponse.json({ error: 'Failed to upload photo' }, { status: 500 });
     }
@@ -31,8 +28,8 @@ export async function DELETE(req: Request) {
         const { searchParams } = new URL(req.url);
         const id = searchParams.get('id');
         if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
-        await connectMongo();
-        await AboutPhoto.findByIdAndDelete(id);
+        const { error } = await supabase.from('about_photos').delete().eq('id', id);
+        if (error) throw error;
         return NextResponse.json({ message: 'Deleted' }, { status: 200 });
     } catch {
         return NextResponse.json({ error: 'Failed to delete' }, { status: 500 });

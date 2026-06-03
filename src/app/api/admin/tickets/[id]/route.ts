@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import connectMongo from "@/lib/mongodb";
-import PaymentTicket from "@/lib/models/PaymentTicket";
+import { supabase } from "@/lib/supabase";
 
 /**
  * DELETE /api/admin/tickets/[id]
@@ -13,9 +12,8 @@ export async function DELETE(
 ) {
     try {
         const { id } = await params;
-        await connectMongo();
-        const result = await PaymentTicket.findByIdAndDelete(id);
-        if (!result) {
+        const { error } = await supabase.from('payment_tickets').delete().eq('id', id);
+        if (error) {
             return NextResponse.json({ error: "Ticket not found." }, { status: 404 });
         }
         return NextResponse.json({ success: true });
@@ -44,16 +42,21 @@ export async function PATCH(
             return NextResponse.json({ error: "Invalid status." }, { status: 400 });
         }
 
-        await connectMongo();
-        const result = await PaymentTicket.findByIdAndUpdate(
-            id,
-            { status },
-            { new: true }
-        );
-        if (!result) {
+        const { data: result, error: dbError } = await supabase.from('payment_tickets').update({ status }).eq('id', id).select().single();
+        if (dbError || !result) {
             return NextResponse.json({ error: "Ticket not found." }, { status: 404 });
         }
-        return NextResponse.json({ success: true, ticket: JSON.parse(JSON.stringify(result)) });
+        const mappedResult = {
+            ...result,
+            _id: result.id,
+            ticketId: result.ticket_id,
+            clientName: result.client_name,
+            courseName: result.course_name,
+            queryMessage: result.query_message,
+            createdAt: result.created_at,
+            updatedAt: result.updated_at
+        };
+        return NextResponse.json({ success: true, ticket: mappedResult });
     } catch (error) {
         console.error("[ADMIN TICKETS] Patch error:", error);
         return NextResponse.json({ error: "Failed to update ticket." }, { status: 500 });

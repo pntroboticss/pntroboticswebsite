@@ -12,7 +12,7 @@ type StatusResult = {
   shortId: string;
 };
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; border: string; icon: JSX.Element; message: string }> = {
+const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; border: string; icon: React.ReactNode; message: string }> = {
   Pending: {
     label: "Under Review",
     color: "text-amber-700 dark:text-amber-300",

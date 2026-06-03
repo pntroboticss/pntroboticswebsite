@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/mongodb";
-import Testimonial from "@/lib/models/Testimonial";
+import { supabase } from "@/lib/supabase";
 
 // GET testimonials — optionally filter by page (?page=home or ?page=lab)
 export async function GET(req: Request) {
     try {
-        await dbConnect();
         const { searchParams } = new URL(req.url);
-        const page = searchParams.get("page");
-        const query = page ? { page } : {};
-        const testimonials = await Testimonial.find(query).sort({ createdAt: -1 });
-        return NextResponse.json(testimonials);
+        const page = searchParams.get('page');
+        let query = supabase.from('testimonials').select('*').order('created_at', { ascending: false });
+        if (page) query = query.eq('page', page);
+        const { data: testimonials, error } = await query;
+        if (error) throw error;
+        const mappedTestimonials = testimonials.map(t => ({ ...t, _id: t.id, imageUrl: t.image_url, logoUrl: t.logo_url }));
+        return NextResponse.json(mappedTestimonials);
     } catch (error: any) {
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
@@ -19,22 +20,18 @@ export async function GET(req: Request) {
 // POST a new testimonial
 export async function POST(req: Request) {
     try {
-        await dbConnect();
         const body = await req.json();
-        
-        if (!body.name || !body.role || !body.quote) {
-            return NextResponse.json({ success: false, message: "Name, role, and quote are required" }, { status: 400 });
-        }
-
-        const newTestimonial = await Testimonial.create({
+        const { data: newTestimonial, error } = await supabase.from('testimonials').insert([{
             name: body.name,
             role: body.role,
             quote: body.quote,
-            imageUrl: body.imageUrl || "",
-            logoUrl: body.logoUrl || "",
+            image_url: body.imageUrl || "",
+            logo_url: body.logoUrl || "",
             page: body.page || "employee",
-        });
-        return NextResponse.json({ success: true, data: newTestimonial }, { status: 201 });
+        }]).select().single();
+        if (error) throw error;
+        
+        return NextResponse.json({ success: true, data: { ...newTestimonial, _id: newTestimonial.id, imageUrl: newTestimonial.image_url, logoUrl: newTestimonial.logo_url } }, { status: 201 });
     } catch (error: any) {
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
@@ -50,12 +47,8 @@ export async function DELETE(req: Request) {
              return NextResponse.json({ success: false, message: "ID is required" }, { status: 400 });
         }
 
-        await dbConnect();
-        const deletedTestimonial = await Testimonial.findByIdAndDelete(id);
-        
-        if (!deletedTestimonial) {
-            return NextResponse.json({ success: false, message: "Testimonial not found" }, { status: 404 });
-        }
+        const { error } = await supabase.from('testimonials').delete().eq('id', id);
+        if (error) throw error;
 
         return NextResponse.json({ success: true, message: "Testimonial deleted" });
     } catch (error: any) {

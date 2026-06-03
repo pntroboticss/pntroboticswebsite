@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import connectMongo from "@/lib/mongodb";
-import PaymentTicket from "@/lib/models/PaymentTicket";
+import { supabase } from "@/lib/supabase";
 
 /**
  * GET /api/admin/tickets
@@ -9,9 +8,21 @@ import PaymentTicket from "@/lib/models/PaymentTicket";
  */
 export async function GET() {
     try {
-        await connectMongo();
-        const tickets = await PaymentTicket.find({}).sort({ createdAt: -1 }).lean();
-        return NextResponse.json(JSON.parse(JSON.stringify(tickets)));
+        const { data: tickets, error } = await supabase.from('payment_tickets').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        
+        const mappedTickets = tickets.map(t => ({
+            ...t,
+            _id: t.id,
+            ticketId: t.ticket_id,
+            clientName: t.client_name,
+            courseName: t.course_name,
+            queryMessage: t.query_message,
+            createdAt: t.created_at,
+            updatedAt: t.updated_at
+        }));
+        
+        return NextResponse.json(mappedTickets);
     } catch (error) {
         console.error("[ADMIN TICKETS] Error:", error);
         return NextResponse.json({ error: "Failed to fetch tickets." }, { status: 500 });

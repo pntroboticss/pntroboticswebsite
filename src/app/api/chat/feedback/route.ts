@@ -1,23 +1,17 @@
 import { NextResponse } from "next/server";
-import connectDB from "@/lib/mongodb";
-import ChatFeedback from "@/lib/models/ChatFeedback";
+import { supabase } from "@/lib/supabase";
 
 // POST: Save a new feedback entry
 export async function POST(req: Request) {
     try {
-        await connectDB();
-        const body = await req.json();
-        const { userMessage, aiResponse, isThumbsUp } = body;
+        const { userMessage, aiResponse, isThumbsUp } = await req.json();
+        const { data: newFeedback, error: dbError } = await supabase.from('chat_feedback').insert([{
+            user_message: userMessage,
+            ai_response: aiResponse,
+            is_thumbs_up: isThumbsUp,
+        }]).select().single();
 
-        if (!userMessage || !aiResponse || typeof isThumbsUp !== "boolean") {
-            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-        }
-
-        const newFeedback = await ChatFeedback.create({
-            userMessage,
-            aiResponse,
-            isThumbsUp,
-        });
+        if (dbError) throw dbError;
 
         return NextResponse.json(newFeedback, { status: 201 });
     } catch (error) {
@@ -29,15 +23,16 @@ export async function POST(req: Request) {
 // GET: Fetch feedback for the Admin portal (e.g., to review thumbs down)
 export async function GET(req: Request) {
     try {
-        await connectDB();
         const { searchParams } = new URL(req.url);
         const type = searchParams.get("type"); // "down" or "up" or "all"
 
-        let filter = {};
-        if (type === "down") filter = { isThumbsUp: false };
-        if (type === "up") filter = { isThumbsUp: true };
+        let query = supabase.from('chat_feedback').select('*').order('created_at', { ascending: false });
+        
+        if (type === "down") query = query.eq('is_thumbs_up', false);
+        if (type === "up") query = query.eq('is_thumbs_up', true);
 
-        const feedbacks = await ChatFeedback.find(filter).sort({ createdAt: -1 });
+        const { data: feedbacks, error: dbError } = await query;
+        if (dbError) throw dbError;
 
         return NextResponse.json(feedbacks, { status: 200 });
     } catch (error) {

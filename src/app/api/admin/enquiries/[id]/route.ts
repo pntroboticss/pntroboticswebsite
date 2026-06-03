@@ -1,16 +1,22 @@
 import { NextResponse } from 'next/server';
-import connectMongo from '@/lib/mongodb';
-import Enquiry from '@/lib/models/Enquiry';
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await params;
-        await connectMongo();
+        
+        const { error } = await supabase
+            .from('enquiries')
+            .delete()
+            .eq('id', id);
 
-        const deleted = await Enquiry.findByIdAndDelete(id);
-
-        if (!deleted) {
-            return NextResponse.json({ error: 'Enquiry not found' }, { status: 404 });
+        if (error) {
+            console.error('Failed to delete enquiry:', error);
+            return NextResponse.json({ error: 'Enquiry not found or could not be deleted' }, { status: 404 });
         }
 
         return NextResponse.json({ success: true }, { status: 200 });
