@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function InternshipPage() {
   return (
-    <div className="relative min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50">
+    <div className="relative min-h-screen flex flex-col bg-transparent text-slate-900 dark:text-slate-50">
       <Navbar />
       <main className="flex-1 pt-24 pb-20">
         <div className="container mx-auto px-4 max-w-4xl">

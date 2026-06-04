@@ -1,6 +1,5 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import NetworkBackground from "@/components/NetworkBackground";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
@@ -23,14 +22,13 @@ export default async function CareersPage() {
   const { data: OPEN_POSITIONS } = await supabase.from("job_postings").select("*").eq("is_active", true).order("created_at", { ascending: false });
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50">
+    <div className="relative min-h-screen flex flex-col bg-transparent text-slate-900 dark:text-slate-50">
       <Navbar />
 
       <main className="flex-1 pb-16">
 
         {/* Hero Section */}
-        <section className="relative min-h-[60vh] flex items-center pt-20 overflow-hidden mb-16 bg-slate-900 dark:bg-slate-950 border-b border-slate-800 shadow-2xl">
-          <NetworkBackground />
+        <section className="relative min-h-[60vh] flex items-center pt-20 overflow-hidden mb-16 bg-transparent border-b border-slate-800/50 shadow-2xl">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/20 dark:bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="container mx-auto px-4 sm:px-6 z-10 flex flex-col items-center text-center justify-center h-full gap-6 pb-12">

@@ -18,14 +18,24 @@ type NavItemType = {
 
 const NAV_ITEMS: NavItemType[] = [
     {
+        label: "Home",
+        href: "/",
+        icon: "🏠",
+    },
+    {
+        label: "Products",
+        href: "/products",
+        icon: "⚙️",
+    },
+    {
+        label: "Services",
+        href: "/services",
+        icon: "💻",
+    },
+    {
         label: "About Us",
         href: "/about",
         icon: "🏢",
-    },
-    {
-        label: "Products & Solutions",
-        href: "/products",
-        icon: "🤖",
     },
     {
         label: "Careers",
@@ -34,9 +44,7 @@ const NAV_ITEMS: NavItemType[] = [
     },
 ];
 
-const SIMPLE_LINKS = [
-    { label: "Contact Us", href: "/contact" },
-];
+const SIMPLE_LINKS: { label: string; href: string }[] = [];
 
 // ─── Desktop NavLink ──────────────────────────────────────────────────────────
 function NavLink({ item, isActive }: { item: NavItemType; isActive: boolean }) {
@@ -145,20 +153,18 @@ export default function Navbar() {
                         </Link>
                     ))}
 
-                    <div className="w-px h-6 bg-slate-200 dark:bg-white/10 mx-1" />
 
-                    {/* Academics external button */}
-                    <a
-                        href="https://pntacademy.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 shadow-md hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all duration-200 group"
+                    <Link 
+                        href="/contact"
+                        className="ml-2 px-5 py-2.5 rounded-full font-bold text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-cyan-600 dark:hover:bg-cyan-400 hover:text-white dark:hover:text-slate-900 transition-all shadow-md shadow-slate-900/10 dark:shadow-white/10 relative overflow-hidden group"
                     >
-                        🎓 Academics
-                        <svg className="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                    </a>
-
-                    <div className="w-px h-6 bg-slate-200 dark:bg-white/10 mx-1" />
+                        <span className="relative z-10">Contact Us</span>
+                        <motion.div
+                            className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/30 dark:via-slate-900/20 to-transparent skew-x-[-20deg] w-[150%] -left-[150%]"
+                            animate={{ left: ["-150%", "150%"] }}
+                            transition={{ duration: 2.5, ease: "easeInOut", repeat: Infinity, repeatDelay: 1 }}
+                        />
+                    </Link>
 
                     {mounted && (
                         <button
@@ -254,21 +260,20 @@ export default function Navbar() {
                                 </Link>
                             ))}
 
-                            {/* Academics mobile button */}
-                            <div className="h-px bg-slate-200 dark:bg-white/10 my-1" />
-                            <a
-                                href="https://pntacademy.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md"
-                            >
-                                <span className="text-xl">🎓</span>
-                                <div>
-                                    <div>Academics</div>
-                                    <div className="text-xs font-normal text-blue-100">pntacademy.com ↗</div>
-                                </div>
-                            </a>
-
+                            <div className="mt-4 pb-2 px-2">
+                                <Link 
+                                    href="/contact"
+                                    onClick={() => setMobileOpen(false)}
+                                    className="block w-full text-center px-5 py-3 rounded-xl font-bold text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-cyan-600 dark:hover:bg-cyan-400 hover:text-white dark:hover:text-slate-900 transition-all shadow-md shadow-slate-900/10 dark:shadow-white/10 relative overflow-hidden group"
+                                >
+                                    <span className="relative z-10">Contact Us</span>
+                                    <motion.div
+                                        className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/30 dark:via-slate-900/20 to-transparent skew-x-[-20deg] w-[150%] -left-[150%]"
+                                        animate={{ left: ["-150%", "150%"] }}
+                                        transition={{ duration: 2.5, ease: "easeInOut", repeat: Infinity, repeatDelay: 1 }}
+                                    />
+                                </Link>
+                            </div>
                         </nav>
                     </motion.div>
                 )}

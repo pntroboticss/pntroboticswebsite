@@ -2,9 +2,9 @@ import UnderConstructionPage from "@/components/UnderConstructionPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Products | PNT Robotics",
+  title: "Services | PNT Robotics",
 };
 
-export default function ProductsPage() {
-  return <UnderConstructionPage title="Products" />;
+export default function ServicesPage() {
+  return <UnderConstructionPage title="Services" />;
 }

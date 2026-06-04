@@ -5,12 +5,14 @@ import PageLoader from "@/components/PageLoader";
 import "./globals.css";
 
 import ClientIntroWrapper from "@/components/ClientIntroWrapper";
-import ClientAIChatbot from "@/components/ClientAIChatbot";
+
 import ClientOnly from "@/components/ClientOnly";
 import NetworkBackground from "@/components/NetworkBackground";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { CookieBanner } from "@/components/CookieBanner";
+import MaintenanceOverlay from "@/components/MaintenanceOverlay";
+import ScrollProgress from "@/components/ScrollProgress";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -119,9 +121,11 @@ export default function RootLayout({
             </div>
           </ClientOnly>
 
-          <ClientAIChatbot />
+
           <ClientIntroWrapper />
           <PageLoader />
+          <MaintenanceOverlay />
+          <ScrollProgress />
 
           <div className="relative z-10 pb-32 md:pb-0">
             {children}

@@ -1,28 +1,18 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://pntrobotics.vercel.app';
+  const baseUrl = 'https://pntrobotics.vercel.app'; // Replace with actual domain later
 
-  // Major routes defining the core of PNT Robotics
+  // Core routes for PNT Robotics
   const routes = [
     '',
-    '/championship',
-    '/championship/individual',
+    '/careers',
+    '/careers/internship',
+    '/careers/status',
     '/contact',
-    '/courses/offline-bootcamps',
-    '/courses/online',
-    '/curriculum/cbse-icse-ib',
-    '/curriculum/nep-aligned',
-    '/kit',
-    '/payments',
-    '/programs/army-navy-internship',
-    '/programs/colleges',
-    '/programs/courses-for-kids',
-    '/programs/schools',
-    '/programs/summer-camp',
-    '/schools/composite-skill-lab',
-    '/schools/robotics-lab',
-    '/workshop',
+    '/products',
+    '/services',
+    '/about'
   ];
 
   return routes.map((route) => ({

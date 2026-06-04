@@ -1,29 +1,24 @@
-import { getLiveFaqs, getAdminSettings } from "@/lib/actions/db";
-import ContactClient from "@/components/ContactClient";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import type { Metadata } from "next";
+import ContactFormAnimated from "@/components/ContactFormAnimated";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contact Us | PNT Robotics",
-  description: "Get in touch with PNT Robotics. Reach out for project enquiries, product info, partnerships, or general support.",
-  alternates: {
-    canonical: "/contact",
-  },
+  description: "Get in touch with PNT Robotics for any inquiries about our industrial automation solutions, robotic arms, and AGVs.",
 };
 
-// Revalidate every 60 seconds (ISR)
-export const revalidate = 60;
+export default function ContactPage() {
+  return (
+    <main className="min-h-screen bg-transparent transition-colors duration-500">
+      <Navbar />
+      
+      {/* Spacer for fixed navbar */}
+      <div className="pt-20" />
 
-export default async function ContactPage() {
-    const [faqs, settings] = await Promise.all([
-        getLiveFaqs(),
-        getAdminSettings()
-    ]);
+      <ContactFormAnimated />
 
-    return (
-        <>
-            <ContactClient faqs={faqs} settings={settings} />
-            <Footer />
-        </>
-    );
+      <Footer />
+    </main>
+  );
 }
