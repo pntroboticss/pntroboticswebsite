@@ -40,12 +40,12 @@ export default async function CareersPage() {
               Join Our Team
             </div>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-white drop-shadow-sm max-w-5xl">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-slate-900 dark:text-white drop-shadow-sm max-w-5xl">
               Build the Future of <br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Robotics & AI</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-300 max-w-2xl leading-relaxed mt-2 font-medium">
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed mt-2 font-medium">
               We are a collective of engineers, researchers, and creators dedicated to solving complex real-world problems with advanced robotics.
             </p>
           </div>

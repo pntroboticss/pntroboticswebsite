@@ -1,16 +1,46 @@
 import { NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        
-        // Mock server-side processing delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        
-        // Log the submission for debugging purposes
-        console.log("Contact form submitted:", body);
+        const { name, email, subject, message } = body;
 
-        // TODO: In the future, integrate Supabase insertion or Resend email sending here.
+        // 1. Insert into Supabase
+        const { error: dbError } = await supabase
+            .from("contacts")
+            .insert([{ name, email, subject, message }]);
+
+        if (dbError) {
+            console.error("Supabase insert error:", dbError);
+            // We won't block the email from sending if the DB fails, 
+            // but we log it.
+        }
+
+        // 2. Send Email via Resend
+        if (process.env.RESEND_API_KEY) {
+            const { error: emailError } = await resend.emails.send({
+                from: process.env.RESEND_FROM_EMAIL || "contact@pntsolutions.in",
+                to: process.env.ADMIN_NOTIFY_EMAIL || "contact@pntsolutions.in",
+                subject: `New Contact Message: ${subject || 'No Subject'}`,
+                html: `
+                    <h2>New Contact Message from PNT Robotics Website</h2>
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Subject:</strong> ${subject}</p>
+                    <br/>
+                    <h3>Message:</h3>
+                    <p>${message}</p>
+                `
+            });
+
+            if (emailError) {
+                console.error("Resend email error:", emailError);
+            }
+        }
 
         return NextResponse.json({ success: true, message: "Message received successfully." }, { status: 200 });
     } catch (error) {

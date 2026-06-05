@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { Send, MapPin, Mail, Phone, Loader2, CheckCircle2 } from "lucide-react";
+import { Send, MapPin, Mail, Phone, Loader2, CheckCircle2, Lightbulb } from "lucide-react";
+import CustomProjectModal from "./CustomProjectModal";
 
 export default function ContactFormAnimated() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
     const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -104,10 +106,35 @@ export default function ContactFormAnimated() {
                     </div>
 
                     {/* Right side: Form */}
-                    <motion.div variants={fadeIn} className="relative">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-[2rem] blur-2xl opacity-20 dark:opacity-30 translate-y-4 pointer-events-none" />
-                        
-                        <div className="relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 p-8 md:p-12 rounded-[2rem] shadow-2xl overflow-hidden">
+                    <motion.div variants={fadeIn} className="relative flex flex-col gap-8">
+                        {/* Custom Project Button */}
+                        <button 
+                            onClick={() => setIsCustomModalOpen(true)}
+                            className="group relative w-full overflow-hidden rounded-[2rem] bg-gradient-to-r from-blue-600 to-purple-600 p-[2px] hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+                        >
+                            <div className="absolute inset-0 bg-white/20 dark:bg-black/20 group-hover:bg-transparent transition-colors duration-300" />
+                            <div className="relative flex items-center justify-between gap-4 bg-white dark:bg-slate-900 px-8 py-6 rounded-[2rem] group-hover:bg-opacity-0 transition-all duration-300">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-xl group-hover:bg-white/20 transition-colors">
+                                        <Lightbulb className="w-6 h-6 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors" />
+                                    </div>
+                                    <div className="text-left">
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-white transition-colors">Have any unique idea?</h3>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 group-hover:text-blue-100 transition-colors">Click here for custom robot requests</p>
+                                    </div>
+                                </div>
+                                <div className="hidden sm:block">
+                                    <span className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-sm font-bold group-hover:bg-white group-hover:text-blue-600 transition-colors">
+                                        Start Project
+                                    </span>
+                                </div>
+                            </div>
+                        </button>
+
+                        <div className="relative">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-[2rem] blur-2xl opacity-20 dark:opacity-30 translate-y-4 pointer-events-none" />
+                            
+                            <div className="relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 p-8 md:p-12 rounded-[2rem] shadow-2xl overflow-hidden">
                             <AnimatePresence mode="wait">
                                 {isSuccess ? (
                                     <motion.div 
@@ -218,9 +245,15 @@ export default function ContactFormAnimated() {
                                 )}
                             </AnimatePresence>
                         </div>
-                    </motion.div>
+                    </div>
                 </motion.div>
-            </div>
+            </motion.div>
+        </div>
+
+            <CustomProjectModal 
+                isOpen={isCustomModalOpen} 
+                onClose={() => setIsCustomModalOpen(false)} 
+            />
         </section>
     );
 }
