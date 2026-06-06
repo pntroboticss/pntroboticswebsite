@@ -88,9 +88,9 @@ export default function ContactFormAnimated() {
 
                         <div className="space-y-6">
                             {[
-                                { icon: Mail, title: "Email Us", details: "contact@pntrobotics.com" },
-                                { icon: Phone, title: "Call Us", details: "+91 (123) 456-7890" },
-                                { icon: MapPin, title: "Visit Us", details: "PNT Robotics HQ, Innovation Hub" }
+                                { icon: Mail, title: "Email Us", details: "contact@pntsolutions.in" },
+                                { icon: Phone, title: "Call Us", details: "+91 7977543839 / +91 7977832907" },
+                                { icon: MapPin, title: "Visit Us", details: "Plot no. A115, Infinity Business Park, MIDC, Dombivli East, Kalyan, Maharashtra 421203" }
                             ].map((item, idx) => (
                                 <motion.div key={idx} variants={fadeIn} className="flex items-center gap-5 group">
                                     <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-center group-hover:scale-110 group-hover:shadow-blue-500/20 group-hover:border-blue-500/30 transition-all duration-300">
@@ -112,19 +112,18 @@ export default function ContactFormAnimated() {
                             onClick={() => setIsCustomModalOpen(true)}
                             className="group relative w-full overflow-hidden rounded-[2rem] bg-gradient-to-r from-blue-600 to-purple-600 p-[2px] hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
                         >
-                            <div className="absolute inset-0 bg-white/20 dark:bg-black/20 group-hover:bg-transparent transition-colors duration-300" />
-                            <div className="relative flex items-center justify-between gap-4 bg-white dark:bg-slate-900 px-8 py-6 rounded-[2rem] group-hover:bg-opacity-0 transition-all duration-300">
+                            <div className="relative flex items-center justify-between gap-4 bg-white dark:bg-slate-900 px-8 py-6 rounded-[2rem] group-hover:bg-blue-50 dark:group-hover:bg-slate-800 transition-all duration-300">
                                 <div className="flex items-center gap-4">
-                                    <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-xl group-hover:bg-white/20 transition-colors">
-                                        <Lightbulb className="w-6 h-6 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors" />
+                                    <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                                        <Lightbulb className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                                     </div>
                                     <div className="text-left">
-                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-white transition-colors">Have any unique idea?</h3>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400 group-hover:text-blue-100 transition-colors">Click here for custom robot requests</p>
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">Have any unique idea?</h3>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors">Click here for custom project requests</p>
                                     </div>
                                 </div>
                                 <div className="hidden sm:block">
-                                    <span className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-sm font-bold group-hover:bg-white group-hover:text-blue-600 transition-colors">
+                                    <span className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-blue-100 dark:bg-slate-800 text-blue-700 dark:text-blue-400 text-sm font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">
                                         Start Project
                                     </span>
                                 </div>

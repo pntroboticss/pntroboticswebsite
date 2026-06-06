@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { Resend } from "resend";
+import { appendToGoogleSheet } from "@/lib/googleSheets";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -41,6 +42,15 @@ export async function POST(req: Request) {
                 console.error("Resend email error:", emailError);
             }
         }
+
+        // 3. Sync to Google Sheets
+        await appendToGoogleSheet("Contacts", [
+            new Date().toLocaleString(), // Timestamp
+            name,
+            email,
+            subject || "",
+            message
+        ]);
 
         return NextResponse.json({ success: true, message: "Message received successfully." }, { status: 200 });
     } catch (error) {

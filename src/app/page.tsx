@@ -9,7 +9,7 @@ import HeroSection from "@/components/HeroSection";
 
 export const metadata: Metadata = {
   title: "PNT Robotics | Engineering the future",
-  description: "Engineering the future of robotics and automation systems. Custom hardware and software solutions.",
+  description: "Engineering the future of robotics and automation systems. Software solutions.",
   alternates: {
     canonical: "/",
   },

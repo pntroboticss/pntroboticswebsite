@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { Resend } from "resend";
+import { appendToGoogleSheet } from "@/lib/googleSheets";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -83,9 +84,9 @@ export async function POST(req: Request) {
             const { error: emailError } = await resend.emails.send({
                 from: process.env.RESEND_FROM_EMAIL || "contact@pntsolutions.in",
                 to: process.env.ADMIN_NOTIFY_EMAIL || "contact@pntsolutions.in",
-                subject: `New Custom Robot Request from ${name}`,
+                subject: `New Custom Project Request from ${name}`,
                 html: `
-                    <h2>New Custom Robot Project Request</h2>
+                    <h2>New Custom Project Request</h2>
                     <hr/>
                     <h3>1. Contact & Entity</h3>
                     <p><strong>Name:</strong> ${name}</p>
@@ -102,10 +103,10 @@ export async function POST(req: Request) {
                     <p><strong>Use Case:</strong> ${useCase}</p>
                     <br/>
                     
-                    <h3>3. Robot Requirements</h3>
+                    <h3>3. Project Requirements</h3>
                     <p><strong>Requirements:</strong><br/>${requirements.replace(/\n/g, '<br/>')}</p>
                     <p><strong>Estimated Quantity:</strong> ${quantity}</p>
-                    <p><strong>Budget (per Robot):</strong> ${budget}</p>
+                    <p><strong>Budget (per Project):</strong> ${budget}</p>
                     <p><strong>Time Frame:</strong> ${timeFrame}</p>
                     <br/>
                     
@@ -119,6 +120,25 @@ export async function POST(req: Request) {
                 console.error("Resend email error:", emailError);
             }
         }
+
+        // Sync to Google Sheets
+        await appendToGoogleSheet("Custom Projects", [
+            new Date().toLocaleString(), // Timestamp
+            name,
+            email,
+            entityType,
+            industryType,
+            stageOfDevelopment,
+            intendedUse,
+            targetAudience,
+            ndaRequired,
+            quantity,
+            budget,
+            timeFrame,
+            useCase,
+            requirements,
+            documentUrl || "No File Attached"
+        ]);
 
         // Return response, including fallback warning if needed
         return NextResponse.json({ 

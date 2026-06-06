@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { supabase } from "@/lib/supabase";
+import { appendToGoogleSheet } from "@/lib/googleSheets";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "hr@pntsolution.in";
@@ -87,6 +88,20 @@ export async function POST(req: Request) {
     } catch (e) {
       console.error("HR notify failed:", e);
     }
+
+    // 4. Sync to Google Sheets
+    await appendToGoogleSheet("Careers", [
+        new Date().toLocaleString(),
+        "Internship",
+        name,
+        email,
+        phone,
+        answers?.area_of_interest || "",
+        answers?.education_status || "",
+        resume_url || "No Resume",
+        answers?.linkedin || "",
+        answers?.portfolio || ""
+    ]);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

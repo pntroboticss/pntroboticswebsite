@@ -251,7 +251,7 @@ export default function CustomProjectModal({ isOpen, onClose }: CustomProjectMod
                                                     <label className={labelClasses}>Intended Use *</label>
                                                     <select name="intendedUse" required value={formData.intendedUse} onChange={handleChange} className={inputClasses}>
                                                         <option value="" disabled>Please Select</option>
-                                                        <option value="Sell the robot">Sell the robot</option>
+                                                        <option value="Sell the project">Sell the project</option>
                                                         <option value="Own business use">Own business use</option>
                                                         <option value="Personal project">Personal project</option>
                                                     </select>
@@ -275,19 +275,19 @@ export default function CustomProjectModal({ isOpen, onClose }: CustomProjectMod
 
                                             <div>
                                                 <label className={labelClasses}>Use Case Description *</label>
-                                                <textarea rows={3} name="useCase" required value={formData.useCase} onChange={handleChange} className={`${inputClasses} resize-none`} placeholder="Tell us about what this custom robot would be used for!" />
+                                                <textarea rows={3} name="useCase" required value={formData.useCase} onChange={handleChange} className={`${inputClasses} resize-none`} placeholder="Tell us about what this custom project would be used for!" />
                                             </div>
                                         </div>
 
-                                        {/* SECTION 3: Robot Requirements */}
+                                        {/* SECTION 3: Project Requirements */}
                                         <div>
-                                            <h4 className="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">3. Robot Requirements</h4>
+                                            <h4 className="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">3. Project Requirements</h4>
                                             <div className="mb-6">
                                                 <label className={labelClasses}>Detailed Requirements *</label>
                                                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
                                                     Provide details about the design & purpose. Examples: Dimensions (Min/Max), Weight Restrictions (lbs), Operating Environment (Indoor/Outdoor), Control Method (Autonomous/Direct Control), Run Time, Speed, Camera.
                                                 </p>
-                                                <textarea rows={5} name="requirements" required value={formData.requirements} onChange={handleChange} className={`${inputClasses} resize-none`} placeholder="Enter detailed robot specifications..." />
+                                                <textarea rows={5} name="requirements" required value={formData.requirements} onChange={handleChange} className={`${inputClasses} resize-none`} placeholder="Enter detailed project specifications..." />
                                             </div>
 
                                             <div className="grid md:grid-cols-3 gap-6">
@@ -296,7 +296,7 @@ export default function CustomProjectModal({ isOpen, onClose }: CustomProjectMod
                                                     <input type="number" min="1" name="quantity" required value={formData.quantity} onChange={handleChange} className={inputClasses} placeholder="e.g. 5" />
                                                 </div>
                                                 <div>
-                                                    <label className={labelClasses}>Estimated Budget (per Robot) *</label>
+                                                    <label className={labelClasses}>Estimated Budget (per Project) *</label>
                                                     <input type="text" name="budget" required value={formData.budget} onChange={handleChange} className={inputClasses} placeholder="e.g. $5000" />
                                                 </div>
                                                 <div>
@@ -312,9 +312,13 @@ export default function CustomProjectModal({ isOpen, onClose }: CustomProjectMod
                                             
                                             <div className="grid md:grid-cols-2 gap-6 items-start">
                                                 <div>
-                                                    <label className={labelClasses}>Additional Documents (Max 10MB)</label>
-                                                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
-                                                        Attach business plans, sketches, etc.
+                                                    <label className={labelClasses}>Additional Documents</label>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">
+                                                        Attach business plans, sketches, etc. <br/>
+                                                        <span className="font-medium text-slate-600 dark:text-slate-300">Max size: 10MB. Allowed: PDF, DOC, DOCX, JPG, PNG.</span>
+                                                    </p>
+                                                    <p className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-3">
+                                                        If you want to send files larger than 10MB, kindly email us a Drive link so we can review it.
                                                     </p>
                                                     
                                                     {!file ? (

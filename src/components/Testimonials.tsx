@@ -1,32 +1,58 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Quote } from "lucide-react";
-
-const testimonials = [
-    {
-        quote: "PNT Robotics transformed our assembly line with their custom automation platform. Our throughput increased by 40% in just three months.",
-        author: "Sarah Jenkins",
-        role: "Operations Director",
-        company: "TechManufacture Inc."
-    },
-    {
-        quote: "The autonomous robotics systems provided by PNT have set a new industry standard. Their hardware solutions are robust and highly reliable.",
-        author: "David Chen",
-        role: "Chief Technology Officer",
-        company: "Global Logistics Ltd."
-    },
-    {
-        quote: "Their team doesn't just deliver special purpose machines; they deliver a complete, integrated software solution that gives us full control.",
-        author: "Elena Rodriguez",
-        role: "Plant Manager",
-        company: "AeroParts Automation"
-    }
-];
+import { supabase } from "@/lib/supabase";
 
 export default function Testimonials() {
+    const [testimonials, setTestimonials] = useState<any[]>([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTestimonials = async () => {
+            const { data, error } = await supabase
+                .from("client_testimonials")
+                .select("*")
+                .eq("is_active", true)
+                .order("created_at", { ascending: false });
+                
+            if (!error && data) {
+                setTestimonials(data);
+            }
+            setIsLoading(false);
+        };
+        fetchTestimonials();
+    }, []);
+
+    // Auto-rotate if more than 3 testimonials
+    useEffect(() => {
+        if (testimonials.length <= 3) return;
+        
+        const interval = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+        }, 5000);
+        
+        return () => clearInterval(interval);
+    }, [testimonials.length]);
+
+    // Get the 3 visible testimonials (with wrapping)
+    const getVisibleTestimonials = () => {
+        if (testimonials.length === 0) return [];
+        if (testimonials.length <= 3) return testimonials;
+        
+        const extended = [...testimonials, ...testimonials];
+        return extended.slice(currentIndex, currentIndex + 3);
+    };
+
+    const visibleTestimonials = getVisibleTestimonials();
+
+    if (isLoading) return null; // Or a skeleton loader
+    if (testimonials.length === 0) return null; // Don't show section if empty
+
     return (
-        <section className="py-24 relative bg-transparent transition-colors duration-500">
+        <section className="py-24 relative bg-transparent transition-colors duration-500 overflow-hidden">
             <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center mb-16">
                     <motion.h2 
@@ -49,30 +75,85 @@ export default function Testimonials() {
                     </motion.p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    {testimonials.map((testimonial, idx) => (
+                {/* Desktop Grid / Carousel */}
+                <div className="hidden md:flex justify-center max-w-6xl mx-auto gap-8 relative">
+                    <AnimatePresence mode="popLayout">
+                        {visibleTestimonials.map((testimonial, idx) => (
+                            <motion.div
+                                key={`${testimonial.id}-${currentIndex + idx}`}
+                                layout
+                                initial={{ opacity: 0, x: 50, scale: 0.9 }}
+                                animate={{ opacity: 1, x: 0, scale: 1 }}
+                                exit={{ opacity: 0, x: -50, scale: 0.9 }}
+                                transition={{ duration: 0.5, type: "spring", bounce: 0.2 }}
+                                className="w-1/3 relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-8 rounded-3xl border border-slate-200 dark:border-slate-700/50 shadow-xl hover:shadow-2xl transition-shadow group flex flex-col justify-between"
+                            >
+                                <Quote className="w-10 h-10 text-cyan-500/20 absolute top-6 right-6 group-hover:text-cyan-500/40 transition-colors" />
+                                <div className="relative z-10 mb-8">
+                                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed italic line-clamp-6">
+                                        "{testimonial.quote}"
+                                    </p>
+                                </div>
+                                <div className="relative z-10 flex items-center gap-4 mt-auto">
+                                    {testimonial.photo_url ? (
+                                        <img 
+                                            src={testimonial.photo_url} 
+                                            alt={testimonial.author} 
+                                            className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700" 
+                                        />
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-bold text-xl border-2 border-slate-200 dark:border-slate-700">
+                                            {testimonial.author.charAt(0)}
+                                        </div>
+                                    )}
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 dark:text-white leading-tight">{testimonial.author}</h4>
+                                        <p className="text-xs text-cyan-600 dark:text-cyan-400 font-medium mt-0.5">{testimonial.role}</p>
+                                        <p className="text-[10px] text-slate-500 uppercase tracking-wider mt-0.5">{testimonial.company}</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </div>
+
+                {/* Mobile View (Single Card Carousel) */}
+                <div className="md:hidden flex justify-center w-full px-4">
+                    <AnimatePresence mode="wait">
                         <motion.div
-                            key={idx}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: idx * 0.15 }}
-                            className="relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-8 rounded-3xl border border-slate-200 dark:border-slate-700/50 shadow-xl hover:shadow-2xl transition-shadow group"
+                            key={testimonials[currentIndex]?.id || 'empty'}
+                            initial={{ opacity: 0, x: 50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -50 }}
+                            transition={{ duration: 0.3 }}
+                            className="w-full relative bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl"
                         >
-                            <Quote className="w-10 h-10 text-cyan-500/20 absolute top-6 right-6 group-hover:text-cyan-500/40 transition-colors" />
-                            <div className="relative z-10">
-                                <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-8 italic">
-                                    "{testimonial.quote}"
-                                </p>
+                            <Quote className="w-8 h-8 text-cyan-500/20 absolute top-6 right-6" />
+                            <p className="text-slate-700 dark:text-slate-300 leading-relaxed italic mb-8 relative z-10">
+                                "{testimonials[currentIndex]?.quote}"
+                            </p>
+                            <div className="flex items-center gap-4 relative z-10 mt-auto">
+                                {testimonials[currentIndex]?.photo_url ? (
+                                    <img 
+                                        src={testimonials[currentIndex]?.photo_url} 
+                                        alt={testimonials[currentIndex]?.author} 
+                                        className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700" 
+                                    />
+                                ) : (
+                                    <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-bold text-xl border-2 border-slate-200 dark:border-slate-700">
+                                        {testimonials[currentIndex]?.author?.charAt(0)}
+                                    </div>
+                                )}
                                 <div>
-                                    <h4 className="font-bold text-slate-900 dark:text-white">{testimonial.author}</h4>
-                                    <p className="text-sm text-cyan-600 dark:text-cyan-400 font-medium">{testimonial.role}</p>
-                                    <p className="text-xs text-slate-500 dark:text-slate-500 mt-1 uppercase tracking-wider">{testimonial.company}</p>
+                                    <h4 className="font-bold text-slate-900 dark:text-white leading-tight">{testimonials[currentIndex]?.author}</h4>
+                                    <p className="text-xs text-cyan-600 dark:text-cyan-400 font-medium mt-0.5">{testimonials[currentIndex]?.role}</p>
+                                    <p className="text-[10px] text-slate-500 uppercase tracking-wider mt-0.5">{testimonials[currentIndex]?.company}</p>
                                 </div>
                             </div>
                         </motion.div>
-                    ))}
+                    </AnimatePresence>
                 </div>
+
             </div>
         </section>
     );

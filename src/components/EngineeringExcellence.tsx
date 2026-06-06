@@ -7,8 +7,9 @@ import Hover3DWrapper from "@/components/Hover3DWrapper";
 const excellenceItems = [
     {
         title: "Autonomous Robotics Platform",
-        description: "[Add your detailed description here. This space is reserved for explaining the core capabilities of your automation platform.]",
+        description: "Based on our 2-wheel differential drive and 4-wheel tracked robotic base platforms, we engineer advanced Autonomous Mobile Robots (AMR), Autonomous Guided Vehicles (AGV), and Remotely Operated Vehicles (ROV). Utilizing these robust foundations, we can build custom robots tailored to your needs—capable of precise remote control and intelligent autonomous navigation.",
         icon: Cpu,
+        imagePath: "/CFDR Website render.jpg",
         imagePlaceholder: "Photo Placeholder - Platform",
         glowClass: "bg-blue-500/20",
         iconBgClass: "bg-blue-900/40 border-blue-700/50",
@@ -17,37 +18,16 @@ const excellenceItems = [
         hoverTextClass: "hover:text-blue-400"
     },
     {
-        title: "Custom Hardware Solutions",
-        description: "[Add your detailed description here. Highlight specific customized hardware projects or components you've built.]",
-        icon: Wrench,
-        imagePlaceholder: "Photo Placeholder - Hardware",
-        glowClass: "bg-cyan-500/20",
-        iconBgClass: "bg-cyan-900/40 border-cyan-700/50",
-        iconTextClass: "text-cyan-400",
-        hoverBorderClass: "hover:border-cyan-500/50",
-        hoverTextClass: "hover:text-cyan-400"
-    },
-    {
         title: "Special Purpose Machines",
-        description: "[Add your detailed description here. Showcase unique machines designed for specific industrial use-cases.]",
+        description: "Special Purpose Machines (SPM) are custom-engineered automation rigs designed to perform specific, highly specialized manufacturing or assembly tasks. Our bespoke automation rigs streamline complex workflows, dramatically improving productivity, precision, and consistency in industrial applications where standard off-the-shelf equipment falls short.",
         icon: Settings,
+        imagePath: "/HUL Rende for Website.jpg",
         imagePlaceholder: "Photo Placeholder - Machine",
         glowClass: "bg-indigo-500/20",
         iconBgClass: "bg-indigo-900/40 border-indigo-700/50",
         iconTextClass: "text-indigo-400",
         hoverBorderClass: "hover:border-indigo-500/50",
         hoverTextClass: "hover:text-indigo-400"
-    },
-    {
-        title: "Customized Software Solutions",
-        description: "[Add your detailed description here. Explain how you build bespoke software to control, monitor, and optimize your robotic platforms and specialized hardware.]",
-        icon: Code2,
-        imagePlaceholder: "Photo Placeholder - Software",
-        glowClass: "bg-teal-500/20",
-        iconBgClass: "bg-teal-900/40 border-teal-700/50",
-        iconTextClass: "text-teal-400",
-        hoverBorderClass: "hover:border-teal-500/50",
-        hoverTextClass: "hover:text-teal-400"
     }
 ];
 
@@ -108,20 +88,26 @@ export default function EngineeringExcellence() {
                                             </div>
                                             
                                             <h4 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">{item.title}</h4>
-                                            <p className="text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
+                                            <p className="text-slate-800 dark:text-slate-200 mb-8 leading-relaxed">
                                                 {item.description}
                                             </p>
-                                            <button className={`flex items-center gap-2 font-bold transition-colors group/btn ${item.iconTextClass} ${item.hoverTextClass}`}>
-                                                Learn More 
-                                                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                                            </button>
                                         </div>
 
-                                        {/* Image Placeholder */}
-                                        <div className={`w-full h-64 md:h-full min-h-[250px] rounded-2xl bg-slate-100 dark:bg-slate-800/50 border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 transition-colors backdrop-blur-sm ${idx % 2 !== 0 ? 'md:order-1' : ''} ${item.hoverBorderClass}`}>
-                                            <div className="mb-2 text-2xl">📷</div>
-                                            <span className="text-sm font-semibold">{item.imagePlaceholder}</span>
-                                        </div>
+                                        {/* Image or Placeholder */}
+                                        {item.imagePath ? (
+                                            <div className={`w-full h-64 md:h-full min-h-[250px] rounded-2xl overflow-hidden shadow-lg ${idx % 2 !== 0 ? 'md:order-1' : ''} ${item.hoverBorderClass} border-2 border-transparent transition-colors`}>
+                                                <img 
+                                                    src={item.imagePath} 
+                                                    alt={item.title} 
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className={`w-full h-64 md:h-full min-h-[250px] rounded-2xl bg-slate-100 dark:bg-slate-800/50 border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 transition-colors backdrop-blur-sm ${idx % 2 !== 0 ? 'md:order-1' : ''} ${item.hoverBorderClass}`}>
+                                                <div className="mb-2 text-2xl">📷</div>
+                                                <span className="text-sm font-semibold">{item.imagePlaceholder}</span>
+                                            </div>
+                                        )}
                                     </div>
                                         </div>
                                     </Hover3DWrapper>

@@ -25,7 +25,9 @@ export default async function Footer() {
                     )}
                 </div>
 
-                <p className="text-sm font-medium">© 2026 PNT Robotics. All rights reserved.</p>
+                <Link href="/admin" className="text-sm font-medium hover:text-slate-800 dark:hover:text-slate-500 cursor-default">
+                    © 2026 PNT Robotics. All rights reserved.
+                </Link>
 
 
             </div>
