@@ -824,7 +824,7 @@ export default function CareersAdmin() {
                   {Object.entries(viewingApp.answers || {}).map(([key, value]) => {
                     const formatKey = (k: string) => k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                     return (
-                      <div key={key} className={typeof value === 'string' && value.length > 50 ? "md:col-span-2" : ""}>
+                      <div key={key} className={typeof value === 'string' && String(value).length > 50 ? "md:col-span-2" : ""}>
                         <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">{formatKey(key)}</div>
                         <div className="text-slate-900 dark:text-slate-200 font-medium whitespace-pre-wrap">{value ? String(value) : "-"}</div>
                       </div>
