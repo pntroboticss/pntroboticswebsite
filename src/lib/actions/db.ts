@@ -4,7 +4,13 @@ import { createClient } from "@supabase/supabase-js";
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: false,
+    autoRefreshToken: false,
+    detectSessionInUrl: false
+  }
+});
 
 export async function getLiveTestimonials() {
     try {
@@ -139,9 +145,12 @@ export async function getAdminSettings() {
         };
     } catch (error: any) {
         if (error?.code === '42P01' || error?.code === 'PGRST205') {
-            console.error("ℹ️ [Info] Table 'admin_settings' does not exist yet. Using default settings until you run supabase_schema.sql");
+            console.warn("ℹ️ [Info] Table 'admin_settings' does not exist yet.");
+        } else if (error?.message?.includes('fetch failed') || error?.message?.includes('Failed to fetch')) {
+            // Mute the spammy network error if the Supabase project is paused/unreachable
+            console.warn("ℹ️ [Info] Supabase project is currently unreachable. Using default admin settings.");
         } else {
-            console.error("Failed to fetch admin settings:", error?.message || "Unknown error");
+            console.error("Failed to fetch admin settings:", error?.message || error);
         }
         return {
             name: "PNT Robotics",

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Sun, Moon, X } from "lucide-react";
+import { Menu, Sun, Moon, X, ChevronDown } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,6 +26,12 @@ const NAV_ITEMS: NavItemType[] = [
         label: "Products",
         href: "/products",
         icon: "⚙️",
+        dropdown: [
+            { label: "Healthcare & Medical", href: "/products/healthcare" },
+            { label: "Defence & Security", href: "/products/defence" },
+            { label: "Industrial Automation & Power", href: "/products/power" },
+            { label: "Commercial & R&D", href: "/products/commercial" },
+        ],
     },
     {
         label: "Services",
@@ -44,7 +50,9 @@ const NAV_ITEMS: NavItemType[] = [
     },
 ];
 
-const SIMPLE_LINKS: { label: string; href: string }[] = [];
+const SIMPLE_LINKS: { label: string; href: string }[] = [
+    { label: "Academy", href: "/academy" }
+];
 
 // ─── Desktop NavLink ──────────────────────────────────────────────────────────
 function NavLink({ item, isActive }: { item: NavItemType; isActive: boolean }) {
@@ -84,6 +92,7 @@ function NavLink({ item, isActive }: { item: NavItemType; isActive: boolean }) {
                 )}
                 <span className="hidden sm:inline">{item.icon}</span>
                 {item.label}
+                {item.dropdown && <ChevronDown size={14} className="ml-0.5 opacity-70 group-hover:rotate-180 transition-transform duration-200" />}
                 {item.sublabel && <span className="hidden xl:inline text-slate-400 dark:text-slate-500 font-normal">&nbsp;{item.sublabel}</span>}
             </Link>
             

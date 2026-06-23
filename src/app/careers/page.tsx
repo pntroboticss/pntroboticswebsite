@@ -52,10 +52,10 @@ export default async function CareersPage() {
         </section>
 
         {/* Application Status Checker CTA */}
-        <div className="bg-slate-900 border-b border-slate-800 py-3">
+        <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-3">
           <div className="container mx-auto px-4 max-w-6xl flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left">
-            <p className="text-slate-400 text-sm">
-              📋 Already applied? <span className="text-slate-300 font-medium">Track your application status in seconds.</span>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">
+              📋 Already applied? <span className="text-slate-900 dark:text-slate-300 font-medium">Track your application status in seconds.</span>
             </p>
             <Link
               href="/careers/status"

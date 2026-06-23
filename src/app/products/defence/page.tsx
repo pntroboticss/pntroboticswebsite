@@ -6,22 +6,22 @@ import SectorHeroHeader from "@/components/SectorHeroHeader";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Products | PNT Robotics",
+  title: "Defence & Security Products | PNT Robotics",
 };
 
-export default function ProductsPage() {
+export default function DefenceProductsPage() {
   return (
     <div className="flex flex-col min-h-screen bg-transparent transition-colors duration-500 pt-20">
       <NetworkBackground />
       <Navbar />
       
       <SectorHeroHeader 
-        title="All Products"
-        description="Explore our full catalog of cutting-edge robotic solutions, designed to revolutionize industries from Healthcare to Defense."
-        accentColor="cyan"
+        title="Defence & Security"
+        description="Advanced robotic solutions designed for national security, precision operations, and situational awareness in critical environments."
+        accentColor="red"
       />
 
-      <ProductPortfolio />
+      <ProductPortfolio fixedSectorId="defense" />
       <Footer />
     </div>
   );

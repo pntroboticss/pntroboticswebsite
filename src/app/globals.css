@@ -5,28 +5,19 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html {
-  /* Keep page-level bg to prevent FOUC */
-  background: var(--background);
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 body {
-  /* Transparent so the fixed NetworkBackground canvas in layout.tsx shows through */
-  background: transparent;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -115,6 +106,20 @@ body {
 .animate-gradient-x {
   background-size: 200% 200%;
   animation: gradient-x 4s ease infinite;
+}
+
+/* ─── Cyber Grid Background Animations ─── */
+
+@keyframes grid-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(50px); } /* exactly one grid cell size */
+}
+.animate-grid-scroll {
+  animation: grid-scroll 2s linear infinite;
+}
+
+.bg-radial-vignette {
+  background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
 }
 
 /* ─── 3D Flip Card Utilities ─── */

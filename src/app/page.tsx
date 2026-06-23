@@ -1,15 +1,16 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import EngineeringExcellence from "@/components/EngineeringExcellence";
-import Testimonials from "@/components/Testimonials";
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 
-import HeroSection from "@/components/HeroSection";
+import HomeHeroSlider from "@/components/HomeHeroSlider";
+import TrustedClients from "@/components/TrustedClients";
+import CompanyOverview from "@/components/CompanyOverview";
+// import EngineeringExcellence from "@/components/EngineeringExcellence";
+// import Testimonials from "@/components/Testimonials";
 
 export const metadata: Metadata = {
-  title: "PNT Robotics | Engineering the future",
-  description: "Engineering the future of robotics and automation systems. Software solutions.",
+  title: "PNT Robotics & Automation Solutions LLP | Engineering the future",
+  description: "Making human life simpler & safe with our robotic solutions.",
   alternates: {
     canonical: "/",
   },
@@ -17,17 +18,23 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-transparent text-slate-900 dark:text-slate-50 overflow-x-hidden transition-colors duration-500">
-      <div className="relative flex flex-col min-h-screen">
+    <main className="relative min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-slate-50 overflow-x-hidden transition-colors duration-500">
+      <div className="relative flex flex-col min-h-screen w-full z-10">
+        
         <Navbar />
 
-        <HeroSection />
-
-        <EngineeringExcellence />
-
-        <Testimonials />
-
+        {/* 1. Hero Section Slider */}
+        <HomeHeroSlider />
+        
+        {/* 2. About Us & Achievements */}
+        <CompanyOverview />
+        
+        {/* 3. Trusted Clientele */}
+        <TrustedClients />
+        
+        {/* 5. Footer & Contact */}
         <Footer />
+        
       </div>
     </main>
   );

@@ -7,7 +7,7 @@ import "./globals.css";
 import ClientIntroWrapper from "@/components/ClientIntroWrapper";
 
 import ClientOnly from "@/components/ClientOnly";
-import NetworkBackground from "@/components/NetworkBackground";
+import GalaxyBackground from "@/components/GalaxyBackground";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { CookieBanner } from "@/components/CookieBanner";
@@ -108,20 +108,13 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 min-h-screen selection:bg-blue-600 selection:text-white transition-colors duration-500`}
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-slate-50 min-h-screen selection:bg-blue-600 selection:text-white transition-colors duration-500`}
       >
         {/* Google Analytics — loaded after page is interactive, zero render-blocking */}
         <GoogleAnalytics />
 
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          {/* Global animated background */}
-          <ClientOnly>
-            <div className="fixed inset-0 z-0 pointer-events-none">
-              <NetworkBackground />
-            </div>
-          </ClientOnly>
-
-
           <ClientIntroWrapper />
           <PageLoader />
           <MaintenanceOverlay />
