@@ -5,8 +5,9 @@ import type { Metadata } from "next";
 import HomeHeroSlider from "@/components/HomeHeroSlider";
 import TrustedClients from "@/components/TrustedClients";
 import CompanyOverview from "@/components/CompanyOverview";
+import HomeIdeaBanner from "@/components/HomeIdeaBanner";
 // import EngineeringExcellence from "@/components/EngineeringExcellence";
-// import Testimonials from "@/components/Testimonials";
+import Testimonials from "@/components/Testimonials";
 
 export const metadata: Metadata = {
   title: "PNT Robotics & Automation Solutions LLP | Engineering the future",
@@ -32,7 +33,13 @@ export default function Home() {
         {/* 3. Trusted Clientele */}
         <TrustedClients />
         
-        {/* 5. Footer & Contact */}
+        {/* 4. Testimonials */}
+        <Testimonials />
+
+        {/* 5. Custom Idea Banner */}
+        <HomeIdeaBanner />
+
+        {/* 6. Footer & Contact */}
         <Footer />
         
       </div>

@@ -19,7 +19,7 @@ const slides = [
   },
   {
     id: 2,
-    image: "/images/slider/sharktank.png",
+    video: "/videos/sharktank.mp4", // This will play as the background!
     imagePosition: "object-center",
     title: "Featured on Shark Tank India",
     subtitle: "Nationally recognized for our innovative robotics platforms.",
@@ -81,18 +81,30 @@ export default function HomeHeroSlider() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="absolute inset-0"
         >
-          {/* Background Image (4K Full Bleed) */}
+          {/* Background Media (Image or Video) */}
           <div className="absolute inset-0">
-            <Image 
-              src={slides[current].image}
-              alt={slides[current].title}
-              fill
-              priority
-              quality={100}
-              unoptimized={true}
-              className="object-cover bg-slate-900"
-              style={{ objectPosition: slides[current].customPosition || "center" }}
-            />
+            {slides[current].video ? (
+              <video 
+                src={slides[current].video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover bg-slate-900"
+                style={{ objectPosition: slides[current].customPosition || "center" }}
+              />
+            ) : (
+              <Image 
+                src={slides[current].image!}
+                alt={slides[current].title}
+                fill
+                priority
+                unoptimized={true}
+                quality={100}
+                className="object-cover bg-slate-900"
+                style={{ objectPosition: slides[current].customPosition || "center" }}
+              />
+            )}
           </div>
 
           {/* Minimal overlay just to ensure the glass box pops */}

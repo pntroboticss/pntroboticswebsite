@@ -50,9 +50,7 @@ const NAV_ITEMS: NavItemType[] = [
     },
 ];
 
-const SIMPLE_LINKS: { label: string; href: string }[] = [
-    { label: "Academy", href: "/academy" }
-];
+const SIMPLE_LINKS: { label: string; href: string }[] = [];
 
 // ─── Desktop NavLink ──────────────────────────────────────────────────────────
 function NavLink({ item, isActive }: { item: NavItemType; isActive: boolean }) {
@@ -148,19 +146,22 @@ export default function Navbar() {
 
                     <div className="w-px h-6 bg-slate-200 dark:bg-white/10 mx-1" />
 
-                    {SIMPLE_LINKS.map((link) => (
-                        <Link
-                            key={link.href}
-                            href={link.href}
-                            className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all duration-200
-                                ${isActive(link.href)
-                                    ? "bg-white dark:bg-slate-800 text-cyan-600 dark:text-cyan-400 shadow-[0_4px_16px_rgba(6,182,212,0.25)] -translate-y-0.5 ring-1 ring-cyan-200 dark:ring-cyan-500/30"
-                                    : "text-slate-600 dark:text-slate-300 hover:text-cyan-500 hover:bg-slate-100 dark:hover:bg-white/5"
-                                }`}
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
+                    {/* Academy Animated Button */}
+                    <Link
+                        href="https://pntacademy.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-2 relative px-4 py-2 rounded-xl font-bold text-sm overflow-hidden group bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white shadow-lg shadow-indigo-500/25 hover:shadow-purple-500/40 hover:-translate-y-0.5 transition-all duration-300 border border-white/20"
+                    >
+                        <span className="relative z-10 flex items-center gap-2 drop-shadow-md">
+                            <span className="text-base">🎓</span> Academy
+                        </span>
+                        <motion.div
+                            className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] w-[150%] -left-[150%]"
+                            animate={{ left: ["-150%", "150%"] }}
+                            transition={{ duration: 3, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }}
+                        />
+                    </Link>
 
 
                     <Link 
@@ -255,19 +256,23 @@ export default function Navbar() {
 
                             <div className="h-px bg-slate-200 dark:bg-white/10 my-1" />
 
-                            {SIMPLE_LINKS.map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    onClick={() => setMobileOpen(false)}
-                                    className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all ${isActive(link.href)
-                                            ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-cyan-400"
-                                            : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
-                                        }`}
-                                >
-                                    {link.label}
-                                </Link>
-                            ))}
+                            {/* Mobile Academy Animated Button */}
+                            <Link
+                                href="https://pntacademy.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => setMobileOpen(false)}
+                                className="mt-2 relative px-4 py-3 rounded-xl font-bold text-sm overflow-hidden group bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white shadow-md text-center border border-white/10"
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-2 drop-shadow-md">
+                                    <span className="text-base">🎓</span> Academy
+                                </span>
+                                <motion.div
+                                    className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] w-[150%] -left-[150%]"
+                                    animate={{ left: ["-150%", "150%"] }}
+                                    transition={{ duration: 3, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }}
+                                />
+                            </Link>
 
                             <div className="mt-4 pb-2 px-2">
                                 <Link 
