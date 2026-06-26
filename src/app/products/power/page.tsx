@@ -6,7 +6,7 @@ import SectorHeroHeader from "@/components/SectorHeroHeader";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Industrial Automation & Power Products | PNT Robotics",
+  title: "Power Industry Robots | PNT Robotics",
 };
 
 export default function PowerProductsPage() {
@@ -16,12 +16,12 @@ export default function PowerProductsPage() {
       <Navbar />
       
       <SectorHeroHeader 
-        title="Industrial Automation & Power"
+        title="Power Industry Robots"
         description="Robust robotic solutions built for heavy industry, switchyard automation, and high-voltage environments."
         accentColor="yellow"
       />
 
-      <ProductPortfolio fixedSectorId="industrial" />
+      <ProductPortfolio fixedSectorId="power" />
       <Footer />
     </div>
   );

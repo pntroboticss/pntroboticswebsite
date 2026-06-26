@@ -27,10 +27,9 @@ const NAV_ITEMS: NavItemType[] = [
         href: "/products",
         icon: "⚙️",
         dropdown: [
-            { label: "Healthcare & Medical", href: "/products/healthcare" },
-            { label: "Defence & Security", href: "/products/defence" },
-            { label: "Industrial Automation & Power", href: "/products/power" },
-            { label: "Commercial & R&D", href: "/products/commercial" },
+            { label: "Commercial Robots", href: "/products/commercial" },
+            { label: "Power Industry Robots", href: "/products/power" },
+            { label: "Products for Defence", href: "/products/defence" },
         ],
     },
     {
@@ -40,7 +39,7 @@ const NAV_ITEMS: NavItemType[] = [
     },
     {
         label: "About Us",
-        href: "/about",
+        href: "/#about",
         icon: "🏢",
     },
     {

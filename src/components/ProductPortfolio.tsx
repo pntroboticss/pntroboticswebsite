@@ -20,95 +20,98 @@ type Sector = {
 
 const SECTORS: Sector[] = [
     {
-        id: "healthcare",
-        label: "Healthcare & Medical",
-        icon: <Activity size={20} />,
+        id: "commercial",
+        label: "Commercial Robots",
+        icon: <Lightbulb size={20} />,
         products: [
             {
-                name: "Coro-Bot",
-                description: "A medical robot designed to assist frontline workers by dispensing food, water, and medicines, featuring remote audio-visual communication and temperature monitoring.",
+                name: "Coro Bot",
+                description: "World's first Internet-controlled robot developed for health professionals doing frontline duty.",
                 image: "/images/products/coro-bot.jpg"
             },
             {
+                name: "ADO Advertisement Bot",
+                description: "An AI-powered advertisement robot. It is a fully automated humanoid that mimics human-like emotions and gestures to enhance interaction.",
+                image: "/images/products/ado-advertisement-bot.jpg"
+            },
+            {
+                name: "AGV (Autonomous Guided Vehicle)",
+                description: "Designed for hospitality, warehousing, medical, and custom applications. Supports Line-based & LIDAR-based navigation with obstacle sensors.",
+                image: "/images/products/agv-agriculture-robots.jpg"
+            },
+            {
+                name: "HUL Handwash Automation Rig",
+                description: "Ideal for detergent & textile manufacturers to test cleaning agents. Precision execution replicates handwashing for accurate stain removal evaluation.",
+                image: "/images/products/hul-handwash-rig.jpg"
+            },
+            {
                 name: "Wockhardt Delivery Robot",
-                description: "An autonomous desk-to-desk delivery robot with a 30 kg payload capacity, real-time obstacle avoidance, and a flame-resistant battery.",
+                description: "Autonomous desk-to-desk file and stationery delivery robot featuring real-time obstacle avoidance and a 30 kg payload capacity.",
                 image: "/images/products/wockhardt-delivery-robot.jpg"
+            },
+            {
+                name: "Agriculture Robot",
+                description: "Customizable robot that helps farmers optimize operations. Supports seed sowing, pesticide spraying, ploughing, and weed cutting.",
+                image: "/images/products/agriculture-robot.jpg"
             }
         ]
     },
     {
-        id: "defense",
-        label: "Defense & Security",
-        icon: <Shield size={20} />,
-        products: [
-            {
-                name: "SensorScout (Indian Army)",
-                description: "Available in Man Pack and Car Pack versions, providing sensor-fusion navigation for soldiers and armored vehicles in GPS-denied environments.",
-                image: "/images/products/sensorscout.jpg"
-            },
-            {
-                name: "Kamikaze Drone (Indian Army)",
-                description: "A remote-control precision strike drone with a 3 kg payload and a 1.5 km line-of-sight operational range.",
-                image: "/images/products/kamikaze-drone.jpg"
-            },
-            {
-                name: "Riskiest Ship Assessment (Indian Navy)",
-                description: "An AI assistant that utilizes Radar and AIS data for real-time ship risk analysis.",
-                image: "/images/products/riskiest-ship-assessment.jpg"
-            }
-        ]
-    },
-    {
-        id: "industrial",
-        label: "Industrial Automation & Power",
+        id: "power",
+        label: "Power Industry Robots",
         icon: <Zap size={20} />,
         products: [
             {
-                name: "Grounding & Universal Robots",
-                description: "Automated switchyard robots with a 9m extender, encrypted Bluetooth control, and the ability to clean insulators remotely.",
+                name: "Tata Power Grounding Robot",
+                description: "Switchyard automation robot that automates grounding for GOD systems. Features a 9m extender, auto-adjustment, and hands-free encrypted bluetooth operation.",
                 image: "/images/products/grounding-universal-robots.jpg"
             },
             {
-                name: "RIRO",
-                description: "An autonomous robot for rack-in/rack-out tasks on Siemens breakers, featuring SCADA integration and a self-charging system.",
+                name: "Tata Power Universal Robot",
+                description: "Advanced robot that performs grounding operations, cleans insulators, and detects potentials remotely. Features a broad base for stability and a 9-meter reach.",
+                image: "/images/products/universal-robot.jpg"
+            },
+            {
+                name: "Tata Power RiRO",
+                description: "Autonomous robot engineered for Siemens Breakers that performs rack-in/rack-out tasks without human intervention. Fully integrated with SCADA.",
                 image: "/images/products/riro.jpg"
             },
             {
-                name: "Battery Lifting Robot",
-                description: "Capable of lifting 200 kg off-center weights and transporting 150 kg payloads via a trolley robot.",
+                name: "Tata Power Battery Lifting",
+                description: "System consisting of a lifting mechanism and trolley robot, developed specifically to securely move and transport Exide battery models.",
                 image: "/images/products/battery-lifting-robot.jpg"
             },
             {
-                name: "Power Alert GSM Module",
-                description: "A three-level water detection system that sends automated alerts via GSM and phone calls.",
+                name: "Tata Power GSM Module",
+                description: "GSM-based alert system providing early warning for water levels. Sends automated text alerts and calls the user for abnormalities like motor shutdowns.",
                 image: "/images/products/power-alert-gsm-module.jpg"
             }
         ]
     },
     {
-        id: "commercial",
-        label: "Commercial & R&D",
-        icon: <Lightbulb size={20} />,
+        id: "defence",
+        label: "Products for Defence",
+        icon: <Shield size={20} />,
         products: [
             {
-                name: "ADO Advertisement Bot",
-                description: "An AI-powered, fully automated humanoid that mimics human emotions to deliver interactive advertising experiences.",
-                image: "/images/products/ado-advertisement-bot.jpg"
+                name: "Riskiest Ship Assessment",
+                description: "Developed with the Indian Navy for real-time ship risk analysis. Uses Radar & AIS data to compute CPA & TCPA, letting AI dynamically identify the highest-risk ship.",
+                image: "/images/products/riskiest-ship-assessment.jpg"
             },
             {
-                name: "BARC Robotic Arm",
-                description: "A precise robotic arm for assembly and welding tasks, suitable for heavy-duty industrial applications.",
-                image: "/images/products/barc-robotic-arm.jpg"
+                name: "Indian Army Sensor Scout",
+                description: "Man-pack system using sensor-fusion technology to ensure uninterrupted navigation and accurate trajectory estimation in GPS-denied environments.",
+                image: "/images/products/sensorscout.jpg"
             },
             {
-                name: "Hindustan Unilever Handwash Rig",
-                description: "An automated rig equipped with sensors to replicate handwashing for R&D and quality control testing.",
-                image: "/images/products/hul-handwash-rig.jpg"
+                name: "Car Pack-Steel-Sight",
+                description: "Designed for tracked and wheeled armoured vehicles. Uses offline map integration and sensor fusion for live navigation under jamming and harsh battlefield conditions.",
+                image: "/images/products/carpack-steel-signt.jpg"
             },
             {
-                name: "AGV & Agriculture Robots",
-                description: "Autonomous Guided Vehicles with LIDAR navigation, alongside customizable agricultural robots for seed sowing, spraying, and weed cutting.",
-                image: "/images/products/agv-agriculture-robots.jpg"
+                name: "Kamikaze Drone",
+                description: "Remote control precision strike drone that attacks by crashing. Max capacity 3kg high-explosive warhead, featuring a 1.5 km line-of-sight range with live feedback.",
+                image: "/images/products/kamikaze-drone.jpg"
             }
         ]
     }

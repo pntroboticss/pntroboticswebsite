@@ -6,7 +6,8 @@ import HomeHeroSlider from "@/components/HomeHeroSlider";
 import TrustedClients from "@/components/TrustedClients";
 import CompanyOverview from "@/components/CompanyOverview";
 import HomeIdeaBanner from "@/components/HomeIdeaBanner";
-// import EngineeringExcellence from "@/components/EngineeringExcellence";
+import EngineeringExcellence from "@/components/EngineeringExcellence";
+import StatsSection from "@/components/StatsSection";
 import Testimonials from "@/components/Testimonials";
 
 export const metadata: Metadata = {
@@ -27,10 +28,18 @@ export default function Home() {
         {/* 1. Hero Section Slider */}
         <HomeHeroSlider />
         
-        {/* 2. About Us & Achievements */}
+        {/* 2. Key Metrics & Stats */}
+        <div className="relative z-10 -mt-12 mb-12">
+            <StatsSection />
+        </div>
+
+        {/* 3. About Us & Achievements */}
         <CompanyOverview />
         
-        {/* 3. Trusted Clientele */}
+        {/* 4. Deep Dive into Technical Prowess */}
+        <EngineeringExcellence />
+
+        {/* 5. Trusted Clientele */}
         <TrustedClients />
         
         {/* 4. Testimonials */}

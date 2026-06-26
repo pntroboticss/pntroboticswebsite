@@ -6,7 +6,7 @@ import SectorHeroHeader from "@/components/SectorHeroHeader";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Defence & Security Products | PNT Robotics",
+  title: "Products for Defence | PNT Robotics",
 };
 
 export default function DefenceProductsPage() {
@@ -16,12 +16,12 @@ export default function DefenceProductsPage() {
       <Navbar />
       
       <SectorHeroHeader 
-        title="Defence & Security"
+        title="Products for Defence"
         description="Advanced robotic solutions designed for national security, precision operations, and situational awareness in critical environments."
         accentColor="red"
       />
 
-      <ProductPortfolio fixedSectorId="defense" />
+      <ProductPortfolio fixedSectorId="defence" />
       <Footer />
     </div>
   );
