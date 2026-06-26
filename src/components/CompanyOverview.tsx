@@ -2,6 +2,7 @@
 
 import { CheckCircle2, Award, Tv, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const SPECIALTIES = [
     "Artificial Intelligence (AI)", "Robotics", "Machine Learning", 
@@ -97,7 +98,7 @@ export default function CompanyOverview() {
                             whileHover={{ scale: 1.05, zIndex: 30 }}
                             className="absolute top-0 left-0 w-[60%] h-[70%] rounded-3xl overflow-hidden shadow-2xl z-20 border border-white/20"
                         >
-                            <img src="/images/humanoid-robot-lab.png" alt="Humanoid Robot Lab" className="w-full h-full object-cover" />
+                            <Image src="/images/humanoid-robot-lab.png" alt="Humanoid Robot Lab" fill className="object-cover" />
                         </motion.div>
 
                         {/* Photo 2 (Top Right Accent) */}
@@ -106,7 +107,7 @@ export default function CompanyOverview() {
                             whileHover={{ scale: 1.05, zIndex: 30 }}
                             className="absolute top-10 right-0 w-[45%] h-[45%] rounded-3xl overflow-hidden shadow-xl z-10 border border-white/20"
                         >
-                            <img src="/images/slider/robobuild2.jpg" alt="Building Robot" className="w-full h-full object-cover" />
+                            <Image src="/images/slider/robobuild2.jpg" alt="Building Robot" fill className="object-cover" />
                         </motion.div>
 
                         {/* Photo 3 (Bottom Right Overlap) */}
@@ -115,7 +116,7 @@ export default function CompanyOverview() {
                             whileHover={{ scale: 1.05, zIndex: 30 }}
                             className="absolute bottom-0 right-10 w-[55%] h-[45%] rounded-3xl overflow-hidden shadow-2xl z-30 border border-white/20"
                         >
-                            <img src="/images/slider/agv.jpeg" alt="AGV Robot" className="w-full h-full object-cover" />
+                            <Image src="/images/slider/agv.jpeg" alt="AGV Robot" fill className="object-cover" />
                         </motion.div>
 
                         {/* Shark Tank Floating Badge */}
@@ -124,7 +125,9 @@ export default function CompanyOverview() {
                             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                             className="absolute -left-6 top-1/2 -translate-y-1/2 z-40 bg-white dark:bg-slate-900 px-6 py-4 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 flex flex-col items-center gap-2"
                         >
-                            <img src="/images/shark-tank-logo.png" alt="Shark Tank" className="h-10 object-contain" />
+                            <div className="relative h-10 w-24">
+                                <Image src="/images/shark-tank-logo.png" alt="Shark Tank" fill className="object-contain" />
+                            </div>
                             <span className="font-bold text-xs text-slate-800 dark:text-slate-200 uppercase tracking-wider">Funded Startup</span>
                         </motion.div>
                     </div>
