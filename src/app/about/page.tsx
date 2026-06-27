@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SectorHeroHeader from "@/components/SectorHeroHeader";
-import NetworkBackground from "@/components/NetworkBackground";
+import AboutHero from "@/components/AboutHero";
+import VisionMission from "@/components/VisionMission";
 import StatsSection from "@/components/StatsSection";
 import CompanyOverview from "@/components/CompanyOverview";
 import EngineeringExcellence from "@/components/EngineeringExcellence";
@@ -15,32 +15,31 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="flex flex-col min-h-screen bg-transparent transition-colors duration-500 pt-20">
-      {/* Background Effect */}
-      <NetworkBackground />
+    <main className="flex flex-col min-h-screen bg-transparent transition-colors duration-500 pt-20 bg-slate-950">
       
       {/* Navigation */}
       <Navbar />
       
-      {/* 1. Stunning Hero Section */}
-      <SectorHeroHeader 
-        title="About PNT Robotics"
-        description="We are recognized leaders in robotics and automation, dedicated to solving complex real-world operational challenges with cutting-edge AI and hardware systems."
-        accentColor="cyan"
-      />
+      {/* 1. Stunning Custom Hero Section */}
+      <AboutHero />
 
-      {/* 2. Key Metrics & Stats */}
-      <div className="relative -mt-10 z-10 mb-16">
+      {/* 2. Key Metrics & Stats (Floating over the transition) */}
+      <div className="relative -mt-32 z-20 mb-8 max-w-7xl mx-auto px-4 w-full">
         <StatsSection />
       </div>
 
       {/* 3. Core Company Overview & Achievements (Shark Tank etc.) */}
-      <CompanyOverview />
+      <div className="relative z-10 bg-slate-50 dark:bg-slate-950 -mt-24 pt-24">
+          <CompanyOverview />
+      </div>
 
-      {/* 4. Deep Dive into Technical Prowess */}
+      {/* 4. Vision & Mission Cards */}
+      <VisionMission />
+
+      {/* 5. Deep Dive into Technical Prowess */}
       <EngineeringExcellence />
 
-      {/* 5. Big Call to Action at the bottom */}
+      {/* 6. Big Call to Action at the bottom */}
       <CallToAction />
 
       {/* Footer */}
