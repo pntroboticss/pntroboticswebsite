@@ -119,12 +119,12 @@ export default function HomeHeroSlider() {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-              className={`relative ${slides[current].contentImage ? "w-fit inline-block" : "w-full max-w-xl md:max-w-2xl"} bg-black/40 backdrop-blur-lg p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl`}
+              className={`relative ${slides[current].contentImage ? "w-fit inline-block p-6 md:p-8" : "w-full max-w-xl md:max-w-2xl p-8 md:p-12"} bg-black/40 backdrop-blur-lg rounded-3xl border border-white/10 shadow-2xl`}
             >
               {slides[current].contentImage ? (
                 // If there is a contentImage, tightly wrap it
-                <div className="flex flex-col gap-6 items-center w-full max-w-sm">
-                  <div className="relative w-full h-[50vh] md:h-[60vh] max-h-[600px] rounded-xl overflow-hidden shadow-lg">
+                <div className="flex flex-col gap-4 items-center w-full max-w-xs">
+                  <div className="relative w-full h-[35vh] md:h-[40vh] max-h-[350px] rounded-xl overflow-hidden shadow-lg">
                     <Image 
                       src={slides[current].contentImage!} 
                       alt="Screenshot" 
