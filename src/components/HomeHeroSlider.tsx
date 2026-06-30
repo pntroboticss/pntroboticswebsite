@@ -160,7 +160,7 @@ export default function HomeHeroSlider() {
       </AnimatePresence>
 
       {/* Navigation Controls Grouped at Bottom Center */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
+      <div className="absolute bottom-40 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
         
         {/* Left Arrow */}
         <button 
