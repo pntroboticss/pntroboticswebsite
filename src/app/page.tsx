@@ -9,6 +9,8 @@ import HomeIdeaBanner from "@/components/HomeIdeaBanner";
 import EngineeringExcellence from "@/components/EngineeringExcellence";
 import StatsSection from "@/components/StatsSection";
 import Testimonials from "@/components/Testimonials";
+import ProductPortfolio from "@/components/ProductPortfolio";
+import VisionMission from "@/components/VisionMission";
 
 export const metadata: Metadata = {
   title: "PNT Robotics & Automation Solutions LLP | Engineering the future",
@@ -28,27 +30,37 @@ export default function Home() {
         {/* 1. Hero Section Slider */}
         <HomeHeroSlider />
         
-        {/* 2. Key Metrics & Stats */}
-        <div className="relative z-10 -mt-12 mb-12">
+        {/* 2. Key Metrics & Stats (Floating overlap) */}
+        <div className="relative z-20 -mt-32 mb-12 px-4 max-w-7xl mx-auto w-full">
             <StatsSection />
         </div>
 
-        {/* 3. About Us & Achievements */}
-        <CompanyOverview />
+        {/* 3. Product Portfolio */}
+        <div className="relative z-10">
+            <ProductPortfolio />
+        </div>
+
+        {/* 4. About Us & Achievements */}
+        <div id="about" className="relative z-10 scroll-mt-24">
+            <CompanyOverview />
+        </div>
         
-        {/* 4. Deep Dive into Technical Prowess */}
+        {/* 5. Vision & Mission */}
+        <VisionMission />
+
+        {/* 6. Deep Dive into Technical Prowess */}
         <EngineeringExcellence />
 
-        {/* 5. Trusted Clientele */}
+        {/* 7. Trusted Clientele */}
         <TrustedClients />
         
-        {/* 4. Testimonials */}
+        {/* 8. Testimonials */}
         <Testimonials />
 
-        {/* 5. Custom Idea Banner */}
+        {/* 9. Custom Idea Banner */}
         <HomeIdeaBanner />
 
-        {/* 6. Footer & Contact */}
+        {/* 10. Footer & Contact */}
         <Footer />
         
       </div>
