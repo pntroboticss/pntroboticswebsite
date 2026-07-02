@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
+import CareersAnimatedSections from "@/components/CareersAnimatedSections";
 
 export const metadata: Metadata = {
   title: "Careers | PNT Robotics",
@@ -28,7 +29,7 @@ export default async function CareersPage() {
       <main className="flex-1 pb-16">
 
         {/* Hero Section */}
-        <section className="relative min-h-[60vh] flex items-center pt-20 overflow-hidden mb-16 bg-transparent border-b border-slate-800/50 shadow-2xl">
+        <section className="relative min-h-[60vh] flex items-center pt-20 overflow-x-hidden mb-16 bg-transparent">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/20 dark:bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="container mx-auto px-4 sm:px-6 z-10 flex flex-col items-center text-center justify-center h-full gap-6 pb-12">
@@ -52,7 +53,7 @@ export default async function CareersPage() {
         </section>
 
         {/* Application Status Checker CTA */}
-        <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-3">
+        <div className="py-6">
           <div className="container mx-auto px-4 max-w-6xl flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left">
             <p className="text-slate-600 dark:text-slate-400 text-sm">
               📋 Already applied? <span className="text-slate-900 dark:text-slate-300 font-medium">Track your application status in seconds.</span>
@@ -66,118 +67,8 @@ export default async function CareersPage() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 max-w-6xl">
-
-          {/* Benefits Section */}
-          <section className="mb-24">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Why Join PNT Robotics?</h2>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {BENEFITS.map((benefit, idx) => (
-                <div key={idx} className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-shadow">
-                  <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-slate-800 flex items-center justify-center text-2xl mb-4 border border-purple-100 dark:border-slate-700">
-                    {benefit.icon}
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{benefit.title}</h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{benefit.desc}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Open Positions Section */}
-          <section className="mb-12">
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Open Positions</h2>
-              <span className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 py-1 px-3 rounded-full text-sm font-bold">
-                {OPEN_POSITIONS?.length || 0} Roles
-              </span>
-            </div>
-
-            <div className="grid gap-4">
-              {OPEN_POSITIONS?.map((pos, idx) => (
-                <div key={pos.id || idx} className="group bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{pos.title}</h3>
-                    <div className="flex flex-wrap items-center gap-3 mb-3">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 py-1 px-2.5 rounded-lg">
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        {pos.type}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 py-1 px-2.5 rounded-lg">
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                        {pos.location}
-                      </span>
-                    </div>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl line-clamp-2">{pos.description}</p>
-                  </div>
-
-                  <div className="shrink-0">
-                    <Link href={`/careers/${pos.id}`} className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-colors w-full sm:w-auto">
-                      Apply Now
-                    </Link>
-                  </div>
-                </div>
-              ))}
-
-              {(!OPEN_POSITIONS || OPEN_POSITIONS.length === 0) && (
-                <div className="text-center py-16 text-slate-500 dark:text-slate-400 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl">
-                  <p className="font-bold text-lg mb-1">No openings at the moment</p>
-                  <p className="text-sm">Check back soon or apply for an internship below!</p>
-                </div>
-              )}
-            </div>
-          </section>
-
-          {/* ===== INTERNSHIP BANNER ===== */}
-          <section className="mb-24">
-            <div className="relative overflow-hidden rounded-[2rem] border border-amber-200 dark:border-amber-800/40 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-slate-900 shadow-xl">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-400/10 rounded-full blur-2xl pointer-events-none" />
-
-              <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 p-8 md:p-12">
-                <div className="shrink-0 flex flex-col items-center gap-3">
-                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-4xl shadow-lg shadow-amber-500/30">
-                    🎓
-                  </div>
-                </div>
-
-                <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2">
-                    Internship Openings
-                  </h2>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm">
-                    Interested in working with us? Apply for an internship at PNT Robotics.
-                  </p>
-                </div>
-
-                <div className="shrink-0">
-                  <Link
-                    href="/careers/internship"
-                    className="inline-flex flex-col items-center justify-center px-8 py-4 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-black text-lg shadow-xl shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-105 transition-all duration-200"
-                  >
-                    Apply Now
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* CTA Section */}
-          <section className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-[2.5rem] p-10 sm:p-16 text-center text-white relative overflow-hidden mb-8">
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
-            <div className="relative z-10 max-w-2xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl font-black mb-4">Don't see a perfect fit?</h2>
-              <p className="text-blue-100 text-lg mb-8">
-                We're always looking for exceptionally talented individuals. Send us your resume and tell us how you can contribute to our mission.
-              </p>
-              <a href="mailto:hr@pntsolution.in?subject=Spontaneous%20Application" className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-white text-blue-600 font-bold hover:bg-slate-50 hover:scale-105 transition-all shadow-xl shadow-black/10">
-                Send Spontaneous Application
-              </a>
-            </div>
-          </section>
-
+        <div className="container mx-auto px-4 max-w-6xl mt-12">
+          <CareersAnimatedSections openPositions={OPEN_POSITIONS} />
         </div>
       </main>
 
