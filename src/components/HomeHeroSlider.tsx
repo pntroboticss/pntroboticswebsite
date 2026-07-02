@@ -1,18 +1,74 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Note: These are now empty placeholders. The actual videos should be uploaded via the Admin Panel.
+const HERO_VIDEOS = [
+  "",
+  "",
+  "",
+  "",
+  "",
+  ""
+];
 
 export default function HomeHeroSlider() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [liveVideos, setLiveVideos] = useState<string[]>(HERO_VIDEOS);
+
+  useEffect(() => {
+    // Fetch custom videos from Supabase
+    const fetchVideos = async () => {
+      const { data, error } = await supabase
+        .from("site_highlights")
+        .select("media_url, slot_index")
+        .eq("section", "hero_videos")
+        .order("slot_index", { ascending: true });
+        
+      if (!error && data && data.length > 0) {
+        // Construct the array. If a slot is missing in DB, fallback to the default HERO_VIDEOS for that slot.
+        const mergedVideos = [...HERO_VIDEOS];
+        data.forEach(item => {
+          if (item.slot_index >= 1 && item.slot_index <= 6) {
+            mergedVideos[item.slot_index - 1] = item.media_url;
+          }
+        });
+        setLiveVideos(mergedVideos);
+      }
+    };
+    fetchVideos();
+  }, []);
+
+  // Auto-play the next video when the source changes
+  useEffect(() => {
+    if (liveVideos[currentVideoIndex]) {
+      if (videoRef.current) {
+        videoRef.current.load();
+        videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
+      }
+    } else {
+      // If the slot is empty, wait 3 seconds and skip to the next
+      const timer = setTimeout(() => {
+        handleVideoEnd();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentVideoIndex, liveVideos]);
+
+  const handleVideoEnd = () => {
+    setCurrentVideoIndex((prev) => (prev + 1) % liveVideos.length);
+  };
 
   useGSAP(() => {
     const tl = gsap.timeline();
@@ -41,15 +97,21 @@ export default function HomeHeroSlider() {
     <div ref={containerRef} className="relative w-full h-screen bg-slate-950 overflow-hidden text-white">
 
       <div className="absolute inset-0 z-0">
-        <video
-          ref={videoRef}
-          src="/videos/sharktank.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover opacity-0"
-        />
+        {liveVideos[currentVideoIndex] ? (
+          <video
+            ref={videoRef}
+            src={liveVideos[currentVideoIndex]}
+            autoPlay
+            muted
+            playsInline
+            onEnded={handleVideoEnd}
+            className="w-full h-full object-cover opacity-0 transition-opacity duration-1000"
+          />
+        ) : (
+          <div className="w-full h-full bg-slate-900 flex items-center justify-center">
+            <span className="text-slate-700 uppercase tracking-widest font-bold">Waiting for Video {currentVideoIndex + 1}</span>
+          </div>
+        )}
         <div className="absolute inset-0 bg-black/50" />
 
         {/* Hero Content */}

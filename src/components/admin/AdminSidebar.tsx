@@ -33,6 +33,7 @@ const NAV_GROUPS: NavGroup[] = [
         label: "Media",
         items: [
             { name: "Testimonials", href: "/admin/testimonials", icon: Star },
+            { name: "Highlights", href: "/admin/highlights", icon: ImageIcon },
         ],
     },
 ];
