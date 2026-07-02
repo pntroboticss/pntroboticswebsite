@@ -53,17 +53,17 @@ export default function HomeHeroSlider() {
         <div className="absolute inset-0 bg-black/50" />
 
         {/* Hero Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 md:px-6 z-10 mt-12 md:mt-0">
           <div ref={textRef} className="max-w-4xl opacity-0">
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white to-slate-400">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-4 md:mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white to-slate-400 leading-tight">
               Precision Engineered.<br />Built for the Future.
             </h1>
-            <p className="text-xl md:text-2xl text-slate-300 font-light mb-10 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl lg:text-2xl text-slate-300 font-light mb-8 md:mb-10 max-w-2xl mx-auto px-4 md:px-0">
               Nationally recognized robotics and automation solutions for defense, manufacturing, and R&D.
             </p>
           </div>
 
-          <Link href="/products" ref={ctaRef} className="opacity-0 group relative px-8 py-4 bg-cyan-600 rounded-full font-bold text-lg tracking-wider overflow-hidden hover:scale-105 transition-transform duration-300">
+          <Link href="/products" ref={ctaRef} className="opacity-0 group relative px-6 md:px-8 py-3 md:py-4 bg-cyan-600 rounded-full font-bold text-base md:text-lg tracking-wider overflow-hidden hover:scale-105 transition-transform duration-300">
             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
             <span className="relative z-10 flex items-center gap-2">
               INITIATE SYSTEM <span className="text-cyan-200">→</span>

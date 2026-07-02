@@ -160,32 +160,17 @@ export default function CompanyOverview() {
     };
 
     return (
-        <section ref={sectionRef} id="about" className="relative w-full min-h-screen py-24 md:py-32 bg-slate-50 dark:bg-slate-950 transition-colors duration-500 overflow-hidden flex flex-col lg:flex-row items-center">
+        <section ref={sectionRef} id="about" className="relative w-full min-h-screen py-24 md:py-32 bg-slate-50 dark:bg-slate-950 transition-colors duration-500 overflow-hidden flex items-center">
 
             {/* Ambient Glowing Orbs */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-400/10 dark:bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/3 z-0" />
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none translate-y-1/3 -translate-x-1/3 z-0" />
 
-            {/* MOBILE ONLY TITLE (Sits above carousel) */}
-            <div className="lg:hidden container mx-auto px-4 relative z-20 pointer-events-auto flex flex-col items-center text-center mt-8 mb-4">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-400 font-semibold text-sm mb-4 border border-cyan-200 dark:border-cyan-800/50 shadow-sm">
-                    <ShieldCheck className="w-4 h-4" />
-                    Recognized Leaders
-                </div>
-                <h2 className="text-3xl md:text-5xl font-black mb-2 tracking-tight text-slate-900 dark:text-white leading-tight drop-shadow-lg">
-                    Building the <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-500">
-                        Machines of Tomorrow
-                    </span>
-                </h2>
-            </div>
-
-            {/* FULL WIDTH CAROUSEL LAYER (z-10) */}
-            {/* MOBIL RESPONSIVENESS FIX: 'relative' on mobile to flow naturally between title and text. 'absolute' on lg to sweep across. */}
-            <div className="relative lg:absolute inset-0 w-full h-[450px] lg:h-full flex justify-center items-center perspective-[1200px] pointer-events-none z-10 my-4 lg:my-0">
+            {/* FULL WIDTH CAROUSEL BACKGROUND LAYER (z-10) */}
+            <div className="absolute inset-0 w-full h-full flex justify-center items-center perspective-[1200px] pointer-events-none z-10">
                 <div
                     ref={carouselRef}
-                    className="relative w-full max-w-[280px] h-[380px] md:max-w-[450px] md:h-[550px] touch-none pointer-events-auto cursor-grab active:cursor-grabbing translate-x-0 lg:translate-x-[15vw]"
+                    className="relative w-full max-w-[450px] h-[550px] touch-none pointer-events-auto cursor-grab active:cursor-grabbing translate-x-0 lg:translate-x-[15vw]"
                     onPointerDown={handlePointerDown}
                     onPointerMove={handlePointerMove}
                     onPointerUp={handlePointerUp}
@@ -213,30 +198,29 @@ export default function CompanyOverview() {
 
             {/* TEXT LAYER ON TOP LEFT (z-20) */}
             <div className="container mx-auto px-4 lg:px-8 relative z-20 pointer-events-none">
-                <div className="w-full lg:w-1/2 pointer-events-auto flex flex-col items-center lg:items-start text-center lg:text-left">
+                <div className="w-full lg:w-1/2 pointer-events-auto">
 
-                    {/* DESKTOP ONLY TITLE (Hidden on mobile where it's at the top) */}
-                    <div className="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-400 font-semibold text-sm mb-6 md:mb-8 border border-cyan-200 dark:border-cyan-800/50 shadow-sm">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-400 font-semibold text-sm mb-8 border border-cyan-200 dark:border-cyan-800/50 shadow-sm">
                         <ShieldCheck className="w-4 h-4" />
                         Recognized Leaders
                     </div>
 
-                    <h2 className="hidden lg:block text-4xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-6 tracking-tight text-slate-900 dark:text-white leading-tight drop-shadow-lg">
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight text-slate-900 dark:text-white leading-tight drop-shadow-lg">
                         Building the <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-500">
                             Machines of Tomorrow
                         </span>
                     </h2>
 
-                    <p className="text-base md:text-lg text-slate-700 dark:text-slate-300 mb-6 md:mb-8 leading-relaxed drop-shadow-md max-w-xl">
+                    <p className="text-lg text-slate-700 dark:text-slate-300 mb-8 leading-relaxed drop-shadow-md max-w-xl">
                         At PNT Robotics, we architect entire nervous systems for the industrial age. Specializing in autonomous robots, custom machinery, and deep-tech integrations.
                     </p>
 
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 mb-8 md:mb-10 max-w-xl w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 max-w-xl">
                         {SPECIALTIES.map((item, idx) => (
-                            <div key={idx} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm justify-center lg:justify-start">
-                                <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-cyan-500 flex-shrink-0" />
-                                <span className="text-slate-700 dark:text-slate-300 font-medium text-[10px] sm:text-xs md:text-sm text-center lg:text-left leading-tight">{item}</span>
+                            <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <CheckCircle2 className="w-5 h-5 text-cyan-500 flex-shrink-0" />
+                                <span className="text-slate-700 dark:text-slate-300 font-medium text-sm">{item}</span>
                             </div>
                         ))}
                     </div>
