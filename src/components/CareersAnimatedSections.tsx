@@ -105,12 +105,10 @@ export default function CareersAnimatedSections({ openPositions }: { openPositio
 
   return (
     <div className="relative">
-
       {/* ─── Ambient background orbs ─── */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-[20%] left-[-10%] w-[40rem] h-[40rem] bg-cyan-500/5 rounded-full blur-[120px]" />
-        <div className="absolute top-[60%] right-[-10%] w-[35rem] h-[35rem] bg-blue-500/5 rounded-full blur-[120px]" />
-        <div className="absolute top-[40%] left-[50%] w-[30rem] h-[30rem] bg-violet-500/5 rounded-full blur-[120px]" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+        <div className="absolute top-[10%] left-[-5%] w-[30rem] h-[30rem] bg-cyan-500/5 rounded-full blur-[120px]" />
+        <div className="absolute top-[50%] right-[-5%] w-[25rem] h-[25rem] bg-blue-500/5 rounded-full blur-[120px]" />
       </div>
 
       {/* ═══════════════════════════════
