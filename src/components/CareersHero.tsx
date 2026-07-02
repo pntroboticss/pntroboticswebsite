@@ -30,23 +30,37 @@ export default function CareersHero() {
 
       {/* ── Background ── */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-white dark:bg-[#0a0d12]" />
+        {/* Deep navy base — professional dark tone always */}
+        <div className="absolute inset-0 bg-[#06080f]" />
 
-        {/* Accent shapes */}
-        <div className="absolute -top-40 right-0 w-[600px] h-[600px] bg-blue-600/5 dark:bg-blue-500/8 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-slate-200/60 dark:bg-slate-800/30 rounded-full blur-[100px] pointer-events-none" />
-
-        {/* Dot grid */}
+        {/* Visible grid */}
         <div
-          className="absolute inset-0 opacity-[0.35] dark:opacity-[0.15]"
+          className="absolute inset-0 opacity-[0.18]"
           style={{
-            backgroundImage: `radial-gradient(circle, #cbd5e1 1px, transparent 1px)`,
-            backgroundSize: "40px 40px",
+            backgroundImage: `linear-gradient(rgba(99,179,237,0.4) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(99,179,237,0.4) 1px, transparent 1px)`,
+            backgroundSize: "64px 64px",
           }}
         />
 
+        {/* Primary glow — top right, vivid blue */}
+        <motion.div
+          animate={{ opacity: [0.45, 0.7, 0.45], scale: [1, 1.08, 1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-32 right-[-10%] w-[700px] h-[700px] rounded-full bg-blue-600/30 blur-[120px] pointer-events-none"
+        />
+
+        {/* Secondary glow — bottom left, subtle */}
+        <motion.div
+          animate={{ opacity: [0.25, 0.45, 0.25], scale: [1.05, 1, 1.05] }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute bottom-[-20%] left-[-5%] w-[500px] h-[500px] rounded-full bg-indigo-600/20 blur-[100px] pointer-events-none"
+        />
+
         {/* Top border accent */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#06080f] to-transparent pointer-events-none" />
       </div>
 
       {/* ── Content ── */}
@@ -81,7 +95,7 @@ export default function CareersHero() {
           variants={container}
           initial="hidden"
           animate="visible"
-          className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.08] perspective-[800px]"
+          className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08]"
         >
           {WORDS.map((w, i) => (
             <motion.span key={i} variants={word} className="inline-block mr-[0.25em] last:mr-0">
@@ -117,7 +131,7 @@ export default function CareersHero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-lg text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed"
+          className="text-lg text-slate-300 max-w-xl leading-relaxed"
         >
           We build autonomous systems for defence, industry, and healthcare.
           Join a team solving problems that matter.
@@ -128,7 +142,7 @@ export default function CareersHero() {
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.6 } } }}
-          className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-slate-500 dark:text-slate-400"
+          className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-slate-400"
         >
           {PERKS.map((item) => (
             <motion.span
@@ -167,7 +181,7 @@ export default function CareersHero() {
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
             <Link
               href="/careers/status"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:border-blue-400 dark:hover:border-blue-600 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border border-white/20 text-white/80 font-semibold text-sm hover:border-white/40 hover:bg-white/5 hover:text-white transition-all duration-200"
             >
               Track Application
             </Link>
