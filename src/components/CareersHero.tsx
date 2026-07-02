@@ -1,88 +1,118 @@
 "use client";
 
 import { motion, useScroll, useTransform, Variants } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
-/* ─── Canvas Particle Network ─── */
-function ParticleCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animId: number;
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
-
-    const NUM = 60;
-    const MAX_DIST = 160;
-    const particles = Array.from({ length: NUM }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      r: 1.5 + Math.random() * 1.5,
-    }));
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-        // Dot
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(99,179,237,0.7)";
-        ctx.fill();
-      }
-
-      // Lines
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < MAX_DIST) {
-            const alpha = (1 - dist / MAX_DIST) * 0.35;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(99,179,237,${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
-          }
-        }
-      }
-
-      animId = requestAnimationFrame(draw);
-    };
-
-    draw();
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
+/* ─────────────────────────────────────────
+   Aurora Mesh Background
+   Multiple large gradient blobs that drift
+   and breathe — Apple / Stripe style
+───────────────────────────────────────── */
+function AuroraMesh() {
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full opacity-60"
-    />
+    <div className="absolute inset-0 overflow-hidden">
+      {/* Base */}
+      <div className="absolute inset-0 bg-[#05070e]" />
+
+      {/* Blob 1 — vivid blue, top center */}
+      <motion.div
+        animate={{
+          x: [0, 80, -40, 0],
+          y: [0, -60, 40, 0],
+          scale: [1, 1.15, 0.95, 1],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-[-20%] left-[15%] w-[700px] h-[700px] rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(37,99,235,0.55) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+      />
+
+      {/* Blob 2 — cyan, top right */}
+      <motion.div
+        animate={{
+          x: [0, -60, 30, 0],
+          y: [0, 50, -30, 0],
+          scale: [1, 0.9, 1.1, 1],
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(6,182,212,0.40) 0%, transparent 70%)",
+          filter: "blur(90px)",
+        }}
+      />
+
+      {/* Blob 3 — violet, bottom left */}
+      <motion.div
+        animate={{
+          x: [0, 60, -20, 0],
+          y: [0, -40, 60, 0],
+          scale: [1.05, 1, 1.12, 1.05],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+        className="absolute bottom-[-20%] left-[-10%] w-[580px] h-[580px] rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%)",
+          filter: "blur(90px)",
+        }}
+      />
+
+      {/* Blob 4 — indigo, center */}
+      <motion.div
+        animate={{
+          x: [0, -50, 70, 0],
+          y: [0, 60, -50, 0],
+          scale: [0.9, 1.1, 0.95, 0.9],
+        }}
+        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 8 }}
+        className="absolute top-[30%] left-[35%] w-[500px] h-[500px] rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(79,70,229,0.30) 0%, transparent 70%)",
+          filter: "blur(100px)",
+        }}
+      />
+
+      {/* Blob 5 — teal, bottom right */}
+      <motion.div
+        animate={{
+          x: [0, -70, 30, 0],
+          y: [0, -50, 40, 0],
+          scale: [1, 1.15, 0.9, 1],
+        }}
+        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+        className="absolute bottom-[-10%] right-[5%] w-[450px] h-[450px] rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(20,184,166,0.25) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+      />
+
+      {/* Noise overlay for texture */}
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundSize: "128px 128px",
+        }}
+      />
+
+      {/* Vignette — keeps edges dark so text stays readable */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse at center, transparent 30%, rgba(5,7,14,0.7) 100%)",
+        }}
+      />
+
+      {/* Top border line */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-400/50 to-transparent" />
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#05070e] to-transparent" />
+    </div>
   );
 }
 
@@ -94,7 +124,7 @@ const container: Variants = {
   visible: { transition: { staggerChildren: 0.09 } },
 };
 
-const word: Variants = {
+const wordVar: Variants = {
   hidden: { opacity: 0, y: 30, rotateX: -15 },
   visible: {
     opacity: 1, y: 0, rotateX: 0,
@@ -108,7 +138,7 @@ const PERKS = [
   "Flexible work arrangements",
 ];
 
-/* ─── Hero ─── */
+/* ─── Main Export ─── */
 export default function CareersHero() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -118,35 +148,12 @@ export default function CareersHero() {
   return (
     <section ref={ref} className="relative min-h-[88vh] flex flex-col items-center justify-center pt-24 pb-20 overflow-hidden">
 
-      {/* ══ BACKGROUND ══ */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        {/* Deep navy */}
-        <div className="absolute inset-0 bg-[#05070d]" />
-
-        {/* Particle network canvas */}
-        <ParticleCanvas />
-
-        {/* Radial glow — top right */}
-        <motion.div
-          animate={{ opacity: [0.4, 0.65, 0.4], scale: [1, 1.1, 1] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-40 right-[-8%] w-[700px] h-[700px] rounded-full bg-blue-600/25 blur-[130px] pointer-events-none"
-        />
-
-        {/* Radial glow — bottom left */}
-        <motion.div
-          animate={{ opacity: [0.2, 0.4, 0.2], scale: [1.1, 1, 1.1] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-          className="absolute bottom-[-15%] left-[-8%] w-[500px] h-[500px] rounded-full bg-indigo-600/20 blur-[100px] pointer-events-none"
-        />
-
-        {/* Top blue border */}
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-400/70 to-transparent" />
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#05070d] to-transparent pointer-events-none" />
+      {/* Aurora mesh background */}
+      <div className="absolute inset-0 -z-10">
+        <AuroraMesh />
       </div>
 
-      {/* ══ CONTENT (parallax) ══ */}
+      {/* ── Content (parallax on scroll) ── */}
       <motion.div
         style={{ y, opacity }}
         className="w-full max-w-4xl mx-auto px-6 flex flex-col items-center text-center gap-8 z-10"
@@ -156,24 +163,24 @@ export default function CareersHero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.15em] text-blue-400"
+          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.15em] text-blue-300"
         >
           <motion.span
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-8 h-px bg-blue-400 origin-left"
+            className="w-8 h-px bg-blue-300 origin-left"
           />
           Careers at PNT Robotics
           <motion.span
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-8 h-px bg-blue-400 origin-right"
+            className="w-8 h-px bg-blue-300 origin-right"
           />
         </motion.div>
 
-        {/* Headline — word stagger */}
+        {/* Headline */}
         <motion.h1
           variants={container}
           initial="hidden"
@@ -181,9 +188,11 @@ export default function CareersHero() {
           className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08]"
         >
           {WORDS.map((w, i) => (
-            <motion.span key={i} variants={word} className="inline-block mr-[0.25em] last:mr-0">
+            <motion.span key={i} variants={wordVar} className="inline-block mr-[0.25em] last:mr-0">
               {w === "Robotics" ? (
-                <span className="text-blue-400">{w}</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400">
+                  {w}
+                </span>
               ) : w === "Future" ? (
                 <span className="relative">
                   {w}
@@ -191,7 +200,7 @@ export default function CareersHero() {
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
                     transition={{ duration: 0.6, delay: 0.8 }}
-                    className="absolute -bottom-1 left-0 right-0 h-[3px] bg-blue-500/40 rounded-full origin-left"
+                    className="absolute -bottom-1 left-0 right-0 h-[3px] bg-gradient-to-r from-cyan-400/50 to-blue-500/50 rounded-full origin-left"
                   />
                 </span>
               ) : w}
@@ -204,7 +213,7 @@ export default function CareersHero() {
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.6, delay: 0.7 }}
-          className="w-12 h-0.5 bg-blue-500 origin-center"
+          className="w-12 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 origin-center"
         />
 
         {/* Subtext */}
@@ -212,7 +221,7 @@ export default function CareersHero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-lg text-slate-300 max-w-xl leading-relaxed"
+          className="text-lg text-slate-300/90 max-w-xl leading-relaxed"
         >
           We build autonomous systems for defence, industry, and healthcare.
           Join a team solving problems that matter.
@@ -222,10 +231,7 @@ export default function CareersHero() {
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.1, delayChildren: 0.65 } },
-          }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.65 } } }}
           className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-slate-400"
         >
           {PERKS.map((item) => (
@@ -237,7 +243,7 @@ export default function CareersHero() {
               }}
               className="flex items-center gap-2"
             >
-              <CheckCircle className="w-4 h-4 text-blue-400 shrink-0" strokeWidth={2} />
+              <CheckCircle className="w-4 h-4 text-cyan-400 shrink-0" strokeWidth={2} />
               {item}
             </motion.span>
           ))}
@@ -268,7 +274,7 @@ export default function CareersHero() {
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
             <Link
               href="/careers/status"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border border-white/15 text-white/70 font-semibold text-sm hover:border-white/30 hover:bg-white/5 hover:text-white transition-all duration-200"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg border border-white/15 text-white/70 font-semibold text-sm hover:border-white/30 hover:bg-white/5 hover:text-white transition-all duration-200 backdrop-blur-sm"
             >
               Track Application
             </Link>
@@ -286,7 +292,7 @@ export default function CareersHero() {
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="w-[1px] h-14 bg-gradient-to-b from-blue-400/60 to-transparent mx-auto"
+          className="w-[1px] h-14 bg-gradient-to-b from-cyan-400/60 to-transparent mx-auto"
         />
       </motion.div>
     </section>
