@@ -119,6 +119,14 @@ export default function Navbar() {
     useEffect(() => { setMounted(true); }, []);
     useEffect(() => { setMobileOpen(false); }, [pathname]);
 
+    useEffect(() => {
+        if (mobileOpen) {
+            window.dispatchEvent(new CustomEvent("mobileMenuOpen"));
+        } else {
+            window.dispatchEvent(new CustomEvent("mobileMenuClose"));
+        }
+    }, [mobileOpen]);
+
     const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
     return (

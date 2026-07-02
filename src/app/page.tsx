@@ -22,35 +22,35 @@ export default function Home() {
   return (
     <main className="relative min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-slate-50 overflow-x-hidden transition-colors duration-500">
       <div className="relative flex flex-col min-h-screen w-full z-10">
-        
+
         <Navbar />
 
         {/* 1. Hero Section Slider */}
         <HomeHeroSlider />
-        
-        {/* 2. Key Metrics & Stats */}
-        <div className="relative z-10 -mt-12 mb-12">
-            <StatsSection />
-        </div>
 
-        {/* 3. About Us & Achievements */}
-        <CompanyOverview />
-        
-        {/* 4. Deep Dive into Technical Prowess */}
-        <EngineeringExcellence />
-
-        {/* 5. Trusted Clientele */}
-        <TrustedClients />
-        
-        {/* 4. Testimonials */}
-        <Testimonials />
-
-        {/* 5. Custom Idea Banner */}
+        {/* 2. Custom Idea Banner */}
         <HomeIdeaBanner />
 
-        {/* 6. Footer & Contact */}
+        {/* 3. Key Metrics & Stats */}
+        <div className="relative z-10 my-12">
+          <StatsSection />
+        </div>
+
+        {/* 4. Trusted Clientele */}
+        <TrustedClients />
+
+        {/* 5. About Us & Achievements */}
+        <CompanyOverview />
+
+        {/* 6. Deep Dive into Technical Prowess */}
+        <EngineeringExcellence />
+
+        {/* 7. Testimonials */}
+        <Testimonials />
+
+        {/* 8. Footer & Contact */}
         <Footer />
-        
+
       </div>
     </main>
   );
