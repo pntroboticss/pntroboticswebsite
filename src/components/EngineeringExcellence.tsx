@@ -52,7 +52,7 @@ export default function EngineeringExcellence() {
             <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-cyan-500/5 dark:bg-cyan-400/5 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
-                <motion.div 
+                <motion.div
                     initial="hidden"
                     whileInView="show"
                     viewport={{ once: true, margin: "-100px" }}
@@ -68,52 +68,52 @@ export default function EngineeringExcellence() {
                         </p>
                     </motion.div>
 
-                        <motion.h3 variants={fadeInUp} className="text-2xl md:text-3xl font-bold mb-10 flex items-center gap-3 text-slate-900 dark:text-white">
-                            <Cpu className="w-8 h-8 text-blue-500" />
-                            Products & Services
-                        </motion.h3>
+                    <motion.h3 variants={fadeInUp} className="text-2xl md:text-3xl font-bold mb-10 flex items-center gap-3 text-slate-900 dark:text-white">
+                        <Cpu className="w-8 h-8 text-blue-500" />
+                        Products & Services
+                    </motion.h3>
 
-                        <div className="space-y-12">
-                            {excellenceItems.map((item, idx) => (
-                                <motion.div key={idx} variants={fadeInUp} className="w-full">
-                                    <Hover3DWrapper>
-                                        <div className="relative bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-[2rem] p-8 md:p-12 border border-slate-200 dark:border-slate-700/50 shadow-xl overflow-hidden group transition-colors duration-500">
-                                    <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 dark:opacity-20 mix-blend-overlay pointer-events-none" />
-                                    <div className={`absolute top-1/2 right-10 w-96 h-96 ${item.glowClass} rounded-full blur-[100px] -translate-y-1/2 pointer-events-none`} />
+                    <div className="space-y-12">
+                        {excellenceItems.map((item, idx) => (
+                            <motion.div key={idx} variants={fadeInUp} className="w-full">
+                                <Hover3DWrapper>
+                                    <div className="relative bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-[2rem] p-8 md:p-12 border border-slate-200 dark:border-slate-700/50 shadow-xl overflow-hidden group transition-colors duration-500">
+                                        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 dark:opacity-20 mix-blend-overlay pointer-events-none" />
+                                        <div className={`absolute top-1/2 right-10 w-96 h-96 ${item.glowClass} rounded-full blur-[100px] -translate-y-1/2 pointer-events-none`} />
 
-                                    <div className="relative z-10 grid md:grid-cols-2 gap-10 items-center">
-                                        <div className={idx % 2 !== 0 ? 'md:order-2' : ''}>
-                                            <div className={`w-14 h-14 rounded-2xl border ${item.iconBgClass} flex items-center justify-center mb-6`}>
-                                                <item.icon className={`w-7 h-7 ${item.iconTextClass}`} />
+                                        <div className="relative z-10 grid md:grid-cols-2 gap-10 items-center">
+                                            <div className={idx % 2 !== 0 ? 'md:order-2' : ''}>
+                                                <div className={`w-14 h-14 rounded-2xl border ${item.iconBgClass} flex items-center justify-center mb-6`}>
+                                                    <item.icon className={`w-7 h-7 ${item.iconTextClass}`} />
+                                                </div>
+
+                                                <h4 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">{item.title}</h4>
+                                                <p className="text-slate-800 dark:text-slate-200 mb-8 leading-relaxed">
+                                                    {item.description}
+                                                </p>
                                             </div>
-                                            
-                                            <h4 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">{item.title}</h4>
-                                            <p className="text-slate-800 dark:text-slate-200 mb-8 leading-relaxed">
-                                                {item.description}
-                                            </p>
+
+                                            {/* Image or Placeholder */}
+                                            {item.imagePath ? (
+                                                <div className={`w-full h-64 md:h-full min-h-[250px] rounded-2xl overflow-hidden shadow-lg ${idx % 2 !== 0 ? 'md:order-1' : ''} ${item.hoverBorderClass} border-2 border-transparent transition-colors`}>
+                                                    <img
+                                                        src={item.imagePath}
+                                                        alt={item.title}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className={`w-full h-64 md:h-full min-h-[250px] rounded-2xl bg-slate-100 dark:bg-slate-800/50 border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 transition-colors backdrop-blur-sm ${idx % 2 !== 0 ? 'md:order-1' : ''} ${item.hoverBorderClass}`}>
+                                                    <div className="mb-2 text-2xl">📷</div>
+                                                    <span className="text-sm font-semibold">{item.imagePlaceholder}</span>
+                                                </div>
+                                            )}
                                         </div>
-
-                                        {/* Image or Placeholder */}
-                                        {item.imagePath ? (
-                                            <div className={`w-full h-64 md:h-full min-h-[250px] rounded-2xl overflow-hidden shadow-lg ${idx % 2 !== 0 ? 'md:order-1' : ''} ${item.hoverBorderClass} border-2 border-transparent transition-colors`}>
-                                                <img 
-                                                    src={item.imagePath} 
-                                                    alt={item.title} 
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div className={`w-full h-64 md:h-full min-h-[250px] rounded-2xl bg-slate-100 dark:bg-slate-800/50 border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 transition-colors backdrop-blur-sm ${idx % 2 !== 0 ? 'md:order-1' : ''} ${item.hoverBorderClass}`}>
-                                                <div className="mb-2 text-2xl">📷</div>
-                                                <span className="text-sm font-semibold">{item.imagePlaceholder}</span>
-                                            </div>
-                                        )}
                                     </div>
-                                        </div>
-                                    </Hover3DWrapper>
-                                </motion.div>
-                            ))}
-                        </div>
+                                </Hover3DWrapper>
+                            </motion.div>
+                        ))}
+                    </div>
                 </motion.div>
             </div>
         </section>
