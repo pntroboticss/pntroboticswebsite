@@ -9,8 +9,6 @@ import HomeIdeaBanner from "@/components/HomeIdeaBanner";
 import EngineeringExcellence from "@/components/EngineeringExcellence";
 import StatsSection from "@/components/StatsSection";
 import Testimonials from "@/components/Testimonials";
-import ProductPortfolio from "@/components/ProductPortfolio";
-import VisionMission from "@/components/VisionMission";
 
 export const metadata: Metadata = {
   title: "PNT Robotics & Automation Solutions LLP | Engineering the future",
@@ -24,45 +22,35 @@ export default function Home() {
   return (
     <main className="relative min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-slate-50 overflow-x-hidden transition-colors duration-500">
       <div className="relative flex flex-col min-h-screen w-full z-10">
-        
+
         <Navbar />
 
         {/* 1. Hero Section Slider */}
         <HomeHeroSlider />
-        
-        {/* 2. Key Metrics & Stats (Floating overlap) */}
-        <div className="relative z-20 -mt-32 mb-12 px-4 max-w-7xl mx-auto w-full">
-            <StatsSection />
+
+        {/* 2. Custom Idea Banner */}
+        <HomeIdeaBanner />
+
+        {/* 3. Key Metrics & Stats */}
+        <div className="relative z-10 my-12">
+          <StatsSection />
         </div>
 
-        {/* 3. Product Portfolio */}
-        <div className="relative z-10">
-            <ProductPortfolio />
-        </div>
+        {/* 4. Trusted Clientele */}
+        <TrustedClients />
 
-        {/* 4. About Us & Achievements */}
-        <div id="about" className="relative z-10 scroll-mt-24">
-            <CompanyOverview />
-        </div>
-        
-        {/* 5. Vision & Mission */}
-        <VisionMission />
+        {/* 5. About Us & Achievements */}
+        <CompanyOverview />
 
         {/* 6. Deep Dive into Technical Prowess */}
         <EngineeringExcellence />
 
-        {/* 7. Trusted Clientele */}
-        <TrustedClients />
-        
-        {/* 8. Testimonials */}
+        {/* 7. Testimonials */}
         <Testimonials />
 
-        {/* 9. Custom Idea Banner */}
-        <HomeIdeaBanner />
-
-        {/* 10. Footer & Contact */}
+        {/* 8. Footer & Contact */}
         <Footer />
-        
+
       </div>
     </main>
   );

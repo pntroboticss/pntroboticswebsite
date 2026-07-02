@@ -17,7 +17,7 @@ export default function Testimonials() {
                 .select("*")
                 .eq("is_active", true)
                 .order("created_at", { ascending: false });
-                
+
             if (!error && data && data.length > 0) {
                 setTestimonials(data);
             } else {
@@ -65,11 +65,11 @@ export default function Testimonials() {
     // Auto-rotate if more than 3 testimonials
     useEffect(() => {
         if (testimonials.length <= 3) return;
-        
+
         const interval = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % testimonials.length);
         }, 5000);
-        
+
         return () => clearInterval(interval);
     }, [testimonials.length]);
 
@@ -77,7 +77,7 @@ export default function Testimonials() {
     const getVisibleTestimonials = () => {
         if (testimonials.length === 0) return [];
         if (testimonials.length <= 3) return testimonials;
-        
+
         const extended = [...testimonials, ...testimonials];
         return extended.slice(currentIndex, currentIndex + 3);
     };
@@ -91,7 +91,7 @@ export default function Testimonials() {
         <section className="py-24 relative bg-transparent transition-colors duration-500 overflow-hidden">
             <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center mb-16">
-                    <motion.h2 
+                    <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -100,7 +100,7 @@ export default function Testimonials() {
                     >
                         Client <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300">Testimonials</span>
                     </motion.h2>
-                    <motion.p 
+                    <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -132,10 +132,10 @@ export default function Testimonials() {
                                 </div>
                                 <div className="relative z-10 flex items-center gap-4 mt-auto">
                                     {testimonial.photo_url ? (
-                                        <img 
-                                            src={testimonial.photo_url} 
-                                            alt={testimonial.author} 
-                                            className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700" 
+                                        <img
+                                            src={testimonial.photo_url}
+                                            alt={testimonial.author}
+                                            className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
                                         />
                                     ) : (
                                         <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-bold text-xl border-2 border-slate-200 dark:border-slate-700">
@@ -170,10 +170,10 @@ export default function Testimonials() {
                             </p>
                             <div className="flex items-center gap-4 relative z-10 mt-auto">
                                 {testimonials[currentIndex]?.photo_url ? (
-                                    <img 
-                                        src={testimonials[currentIndex]?.photo_url} 
-                                        alt={testimonials[currentIndex]?.author} 
-                                        className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700" 
+                                    <img
+                                        src={testimonials[currentIndex]?.photo_url}
+                                        alt={testimonials[currentIndex]?.author}
+                                        className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
                                     />
                                 ) : (
                                     <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-bold text-xl border-2 border-slate-200 dark:border-slate-700">
