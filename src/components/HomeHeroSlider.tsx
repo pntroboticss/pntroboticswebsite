@@ -108,7 +108,7 @@ export default function HomeHeroSlider() {
             className="w-full h-full object-cover opacity-0 transition-opacity duration-1000"
           />
         ) : (
-          <div className="w-full h-full bg-slate-900 flex items-center justify-center">
+          <div ref={videoRef as any} className="w-full h-full bg-slate-900 flex items-center justify-center">
             <span className="text-slate-700 uppercase tracking-widest font-bold">Waiting for Video {currentVideoIndex + 1}</span>
           </div>
         )}
