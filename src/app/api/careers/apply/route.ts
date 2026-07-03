@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       phone,
       resume_url,
       answers
-    }]);
+    }]).select();
 
     if (dbError) {
       console.error("DB Insert Error:", dbError);
