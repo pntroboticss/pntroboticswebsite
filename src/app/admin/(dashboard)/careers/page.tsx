@@ -119,7 +119,16 @@ export default function CareersAdmin() {
       if (jobsData) setJobs(jobsData);
 
       const { data: appsData } = await supabase.from("job_applications").select("*, job:job_postings(*)").order("created_at", { ascending: false });
-      if (appsData) setApplications(appsData);
+      if (appsData) {
+        const parsedApps = appsData.map(app => {
+          let parsedAnswers = app.answers;
+          if (typeof parsedAnswers === 'string') {
+            try { parsedAnswers = JSON.parse(parsedAnswers); } catch (e) {}
+          }
+          return { ...app, answers: parsedAnswers };
+        });
+        setApplications(parsedApps);
+      }
     } catch (e) {
       console.error(e);
     } finally {
