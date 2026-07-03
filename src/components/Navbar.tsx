@@ -139,6 +139,7 @@ export default function Navbar() {
                             src="/PNT Robo logo.png"
                             alt="PNT Robotics Logo"
                             fill
+                            sizes="(max-width: 768px) 192px, 256px"
                             className="object-contain object-left transition-all duration-500 dark:invert dark:hue-rotate-180"
                             priority
                         />

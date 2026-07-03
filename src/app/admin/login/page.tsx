@@ -99,6 +99,7 @@ export default function AdminLogin() {
                             src="/PNT Robo logo.png" 
                             alt="PNT Robotics Logo" 
                             fill
+                            sizes="80px"
                             className="object-contain p-2"
                         />
                     </div>
