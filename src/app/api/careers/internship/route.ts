@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       resume_url,
       answers: { ...answers, application_type: "internship" },
       status: "Pending"
-    }]).select();
+    }]);
 
     if (dbError) {
       console.error("DB Insert Error:", dbError);
