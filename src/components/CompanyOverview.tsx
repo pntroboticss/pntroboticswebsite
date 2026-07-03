@@ -6,6 +6,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { supabase } from "@/lib/supabase";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,13 +17,14 @@ const SPECIALTIES = [
     "Remotely Operated Vehicles"
 ];
 
+// Note: These are now empty placeholders. The actual images should be uploaded via the Admin Panel.
 const CAROUSEL_IMAGES = [
-    { id: 1, src: "/images/humanoid-robot-lab.png", alt: "Humanoid Robot Lab" },
-    { id: 2, src: "/images/slider/robobuild2.jpg", alt: "Building Robot" },
-    { id: 3, src: "/images/slider/agv.jpeg", alt: "AGV Robot" },
-    { id: 4, src: "/images/humanoid-robot-lab.png", alt: "Humanoid Robot Lab 2" },
-    { id: 5, src: "/images/slider/robobuild2.jpg", alt: "Building Robot 2" },
-    { id: 6, src: "/images/slider/agv.jpeg", alt: "AGV Robot 2" }
+    { id: 1, src: "", alt: "Slot 1" },
+    { id: 2, src: "", alt: "Slot 2" },
+    { id: 3, src: "", alt: "Slot 3" },
+    { id: 4, src: "", alt: "Slot 4" },
+    { id: 5, src: "", alt: "Slot 5" },
+    { id: 6, src: "", alt: "Slot 6" }
 ];
 
 export default function CompanyOverview() {
@@ -30,9 +32,34 @@ export default function CompanyOverview() {
     const carouselRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [hasIntroPlayed, setHasIntroPlayed] = useState(false);
+    const [liveImages, setLiveImages] = useState(CAROUSEL_IMAGES);
+
+    useEffect(() => {
+        const fetchImages = async () => {
+            const { data, error } = await supabase
+                .from("site_highlights")
+                .select("media_url, slot_index")
+                .eq("section", "machine_images")
+                .order("slot_index", { ascending: true });
+            
+            if (!error && data && data.length > 0) {
+                const mergedImages = [...CAROUSEL_IMAGES];
+                data.forEach(item => {
+                    if (item.slot_index >= 1 && item.slot_index <= 6) {
+                        mergedImages[item.slot_index - 1] = { 
+                            ...mergedImages[item.slot_index - 1], 
+                            src: item.media_url 
+                        };
+                    }
+                });
+                setLiveImages(mergedImages);
+            }
+        };
+        fetchImages();
+    }, []);
 
     const updateCarousel = (newIndex: number) => {
-        const wrappedIndex = gsap.utils.wrap(0, CAROUSEL_IMAGES.length, newIndex);
+        const wrappedIndex = gsap.utils.wrap(0, liveImages.length, newIndex);
         setActiveIndex(wrappedIndex);
     };
 
@@ -41,10 +68,10 @@ export default function CompanyOverview() {
         if (!hasIntroPlayed) return;
 
         const interval = setInterval(() => {
-            setActiveIndex(prev => gsap.utils.wrap(0, CAROUSEL_IMAGES.length, prev + 1));
+            setActiveIndex(prev => gsap.utils.wrap(0, liveImages.length, prev + 1));
         }, 3000);
         return () => clearInterval(interval);
-    }, [hasIntroPlayed]);
+    }, [hasIntroPlayed, liveImages.length]);
 
     useGSAP(() => {
         if (!carouselRef.current) return;
@@ -176,19 +203,26 @@ export default function CompanyOverview() {
                     onPointerUp={handlePointerUp}
                     onPointerLeave={handlePointerUp}
                 >
-                    {CAROUSEL_IMAGES.map((img, i) => (
+                    {liveImages.map((img, i) => (
                         <div
                             key={i}
                             onClick={() => updateCarousel(i)}
-                            className="carousel-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-3xl overflow-hidden shadow-2xl border-2 border-white/50 dark:border-slate-800/80 cursor-pointer"
+                            className="carousel-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-3xl overflow-hidden shadow-2xl border-2 border-white/50 dark:border-slate-800/80 cursor-pointer bg-slate-900"
                             style={{ transformOrigin: "center bottom" }}
                         >
-                            <Image
-                                src={img.src}
-                                alt={img.alt}
-                                fill
-                                className="object-cover pointer-events-none"
-                            />
+                            {img.src ? (
+                                <Image
+                                    src={img.src}
+                                    alt={img.alt}
+                                    fill
+                                    className="object-cover pointer-events-none"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center text-slate-700">
+                                    <span className="font-bold uppercase tracking-widest text-sm">Image {img.id}</span>
+                                    <span className="text-xs mt-1">(Upload in Admin)</span>
+                                </div>
+                            )}
                             {/* Dark overlay for inactive items */}
                             <div className={`absolute inset-0 bg-black/40 transition-opacity duration-500 pointer-events-none ${activeIndex === i && hasIntroPlayed ? 'opacity-0' : 'opacity-100'}`} />
                         </div>
