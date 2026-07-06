@@ -35,8 +35,8 @@ export default function AdminHighlights() {
         if (!file) return;
 
         // Basic validation
-        if (section === 'hero_videos' && !file.type.startsWith('video/')) {
-            alert("Please select a valid video file.");
+        if (section === 'hero_videos' && !file.type.startsWith('video/') && !file.type.startsWith('image/')) {
+            alert("Please select a valid video or image file.");
             return;
         }
         if (section === 'machine_images' && !file.type.startsWith('image/')) {
@@ -125,7 +125,11 @@ export default function AdminHighlights() {
                                         <div className="w-full h-full flex flex-col items-center gap-4">
                                             <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 flex-shrink-0">
                                                 {section === 'hero_videos' ? (
-                                                    <video src={item.media_url} className="w-full h-full object-cover" controls preload="metadata" />
+                                                    item.media_url.match(/\.(mp4|webm|ogg|mov)$/i) ? (
+                                                        <video src={item.media_url} className="w-full h-full object-cover" controls preload="metadata" />
+                                                    ) : (
+                                                        <Image src={item.media_url} alt={`Slot ${slotIndex}`} fill className="object-cover" />
+                                                    )
                                                 ) : (
                                                     <Image src={item.media_url} alt={`Slot ${slotIndex}`} fill className="object-cover" />
                                                 )}
@@ -133,14 +137,14 @@ export default function AdminHighlights() {
                                             <label className="cursor-pointer w-full flex flex-col items-center justify-center gap-1 py-2 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-colors font-medium text-sm">
                                                 <div className="flex items-center gap-2">
                                                     <RefreshCw className="w-4 h-4" />
-                                                    Replace {section === 'hero_videos' ? 'Video' : 'Image'}
+                                                    Replace {section === 'hero_videos' ? 'Media' : 'Image'}
                                                 </div>
                                                 <span className="text-xs text-slate-400 dark:text-slate-400 font-normal">
                                                     (Max size: 50MB)
                                                 </span>
                                                 <input 
                                                     type="file" 
-                                                    accept={section === 'hero_videos' ? 'video/*' : 'image/*'} 
+                                                    accept={section === 'hero_videos' ? 'video/*,image/*' : 'image/*'} 
                                                     className="hidden" 
                                                     onChange={(e) => handleFileUpload(e, section, slotIndex)}
                                                 />
@@ -150,14 +154,14 @@ export default function AdminHighlights() {
                                         <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full min-h-[150px] border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group">
                                             <Upload className="w-8 h-8 text-slate-400 group-hover:text-blue-500 mb-2 transition-colors" />
                                             <span className="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-blue-500 transition-colors">
-                                                Upload {section === 'hero_videos' ? 'Video' : 'Image'}
+                                                Upload {section === 'hero_videos' ? 'Media' : 'Image'}
                                             </span>
                                             <span className="text-xs text-slate-400 mt-1">
                                                 (Max size: 50MB)
                                             </span>
                                             <input 
                                                 type="file" 
-                                                accept={section === 'hero_videos' ? 'video/*' : 'image/*'} 
+                                                accept={section === 'hero_videos' ? 'video/*,image/*' : 'image/*'} 
                                                 className="hidden" 
                                                 onChange={(e) => handleFileUpload(e, section, slotIndex)}
                                             />
@@ -187,7 +191,7 @@ export default function AdminHighlights() {
                 <p className="text-slate-500 dark:text-slate-400 mt-2">Manage the main media playing on the homepage.</p>
             </div>
 
-            {renderSlots('hero_videos', 'Hero Section Videos', 'These 6 videos play consecutively at the very top of the homepage.', 6)}
+            {renderSlots('hero_videos', 'Hero Section Media', 'These 6 media items (videos or images) play consecutively at the very top of the homepage.', 6)}
             {renderSlots('machine_images', 'Machines For Tomorrow Images', 'These 6 images cycle in the 3D carousel.', 6)}
         </div>
     );

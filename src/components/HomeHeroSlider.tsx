@@ -54,10 +54,20 @@ export default function HomeHeroSlider() {
 
   // Auto-play the next video when the source changes
   useEffect(() => {
-    if (liveVideos[currentVideoIndex]) {
-      if (videoRef.current) {
-        videoRef.current.load();
-        videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
+    const currentMedia = liveVideos[currentVideoIndex];
+    if (currentMedia) {
+      // Check if it's a video
+      if (currentMedia.match(/\.(mp4|webm|ogg|mov)$/i)) {
+        if (videoRef.current) {
+          videoRef.current.load();
+          videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
+        }
+      } else {
+        // It's an image. Display for 5 seconds, then move to next.
+        const timer = setTimeout(() => {
+          handleVideoEnd();
+        }, 5000);
+        return () => clearTimeout(timer);
       }
     } else {
       // If the slot is empty, wait 3 seconds and skip to the next
@@ -101,18 +111,26 @@ export default function HomeHeroSlider() {
       <div className="absolute inset-0 z-0">
         <div ref={mediaWrapperRef} className="absolute inset-0 w-full h-full opacity-0">
           {liveVideos[currentVideoIndex] ? (
-            <video
-              ref={videoRef}
-              src={liveVideos[currentVideoIndex]}
-              autoPlay
-              muted
-              playsInline
-              onEnded={handleVideoEnd}
-              className="w-full h-full object-cover transition-opacity duration-1000"
-            />
+            liveVideos[currentVideoIndex].match(/\.(mp4|webm|ogg|mov)$/i) ? (
+              <video
+                ref={videoRef}
+                src={liveVideos[currentVideoIndex]}
+                autoPlay
+                muted
+                playsInline
+                onEnded={handleVideoEnd}
+                className="w-full h-full object-cover transition-opacity duration-1000"
+              />
+            ) : (
+              <img
+                src={liveVideos[currentVideoIndex]}
+                alt="Hero Highlight"
+                className="w-full h-full object-cover transition-opacity duration-1000"
+              />
+            )
           ) : (
             <div className="w-full h-full bg-slate-900 flex items-center justify-center">
-              <span className="text-slate-700 uppercase tracking-widest font-bold">Waiting for Video {currentVideoIndex + 1}</span>
+              <span className="text-slate-700 uppercase tracking-widest font-bold">Waiting for Media {currentVideoIndex + 1}</span>
             </div>
           )}
         </div>
