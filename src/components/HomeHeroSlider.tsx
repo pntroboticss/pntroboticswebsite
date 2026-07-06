@@ -27,6 +27,8 @@ export default function HomeHeroSlider() {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [liveVideos, setLiveVideos] = useState<string[]>(HERO_VIDEOS);
 
+  const mediaWrapperRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     // Fetch custom videos from Supabase
     const fetchVideos = async () => {
@@ -74,12 +76,12 @@ export default function HomeHeroSlider() {
     const tl = gsap.timeline();
 
     // 1. Reveal Video, Text & CTA Immediately (No Boot Screen)
-    tl.fromTo(videoRef.current, { scale: 1.1, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, ease: "power2.out" })
+    tl.fromTo(mediaWrapperRef.current, { scale: 1.1, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, ease: "power2.out" })
       .fromTo(textRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out" }, "-=1")
       .fromTo(ctaRef.current, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 1, ease: "elastic.out(1, 0.3)" }, "-=0.5");
 
     // 2. On Scroll Parallax
-    gsap.to(videoRef.current, {
+    gsap.to(mediaWrapperRef.current, {
       yPercent: 30,
       scale: 1.05,
       ease: "none",
@@ -97,22 +99,24 @@ export default function HomeHeroSlider() {
     <div ref={containerRef} className="relative w-full h-screen bg-slate-950 overflow-hidden text-white">
 
       <div className="absolute inset-0 z-0">
-        {liveVideos[currentVideoIndex] ? (
-          <video
-            ref={videoRef}
-            src={liveVideos[currentVideoIndex]}
-            autoPlay
-            muted
-            playsInline
-            onEnded={handleVideoEnd}
-            className="w-full h-full object-cover opacity-0 transition-opacity duration-1000"
-          />
-        ) : (
-          <div ref={videoRef as any} className="w-full h-full bg-slate-900 flex items-center justify-center">
-            <span className="text-slate-700 uppercase tracking-widest font-bold">Waiting for Video {currentVideoIndex + 1}</span>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-black/50" />
+        <div ref={mediaWrapperRef} className="absolute inset-0 w-full h-full opacity-0">
+          {liveVideos[currentVideoIndex] ? (
+            <video
+              ref={videoRef}
+              src={liveVideos[currentVideoIndex]}
+              autoPlay
+              muted
+              playsInline
+              onEnded={handleVideoEnd}
+              className="w-full h-full object-cover transition-opacity duration-1000"
+            />
+          ) : (
+            <div className="w-full h-full bg-slate-900 flex items-center justify-center">
+              <span className="text-slate-700 uppercase tracking-widest font-bold">Waiting for Video {currentVideoIndex + 1}</span>
+            </div>
+          )}
+        </div>
+        <div className="absolute inset-0 bg-black/50 z-10" />
 
         {/* Hero Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 md:px-6 z-10 mt-12 md:mt-0">
