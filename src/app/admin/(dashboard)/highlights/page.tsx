@@ -130,9 +130,14 @@ export default function AdminHighlights() {
                                                     <Image src={item.media_url} alt={`Slot ${slotIndex}`} fill className="object-cover" />
                                                 )}
                                             </div>
-                                            <label className="cursor-pointer w-full flex items-center justify-center gap-2 py-2 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-colors font-medium text-sm">
-                                                <RefreshCw className="w-4 h-4" />
-                                                Replace {section === 'hero_videos' ? 'Video' : 'Image'}
+                                            <label className="cursor-pointer w-full flex flex-col items-center justify-center gap-1 py-2 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-colors font-medium text-sm">
+                                                <div className="flex items-center gap-2">
+                                                    <RefreshCw className="w-4 h-4" />
+                                                    Replace {section === 'hero_videos' ? 'Video' : 'Image'}
+                                                </div>
+                                                <span className="text-xs text-slate-400 dark:text-slate-400 font-normal">
+                                                    (Max size: 50MB)
+                                                </span>
                                                 <input 
                                                     type="file" 
                                                     accept={section === 'hero_videos' ? 'video/*' : 'image/*'} 
@@ -146,6 +151,9 @@ export default function AdminHighlights() {
                                             <Upload className="w-8 h-8 text-slate-400 group-hover:text-blue-500 mb-2 transition-colors" />
                                             <span className="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-blue-500 transition-colors">
                                                 Upload {section === 'hero_videos' ? 'Video' : 'Image'}
+                                            </span>
+                                            <span className="text-xs text-slate-400 mt-1">
+                                                (Max size: 50MB)
                                             </span>
                                             <input 
                                                 type="file" 
