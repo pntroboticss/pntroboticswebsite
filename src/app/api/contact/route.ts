@@ -8,7 +8,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { name, email, subject, message } = body;
+        const { name, email, subject, message, _honeypot } = body;
+
+        // Honeypot check for bots
+        if (_honeypot) {
+            console.log("Bot detected via honeypot in contact form.");
+            // Silently return success so bots don't know they were caught
+            return NextResponse.json({ success: true, message: "Message received successfully." }, { status: 200 });
+        }
 
         // 1. Insert into Supabase
         const { error: dbError } = await supabase

@@ -8,6 +8,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(req: Request) {
     try {
         const formData = await req.formData();
+
+        // Honeypot check
+        const honeypot = formData.get("_honeypot") as string;
+        if (honeypot) {
+            console.log("Bot detected via honeypot in custom project form.");
+            return NextResponse.json({ success: true, message: "Custom project request received successfully." }, { status: 200 });
+        }
         
         // Extract fields
         const name = formData.get("name") as string;

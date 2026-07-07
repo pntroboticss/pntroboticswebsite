@@ -131,6 +131,7 @@ export default function InternshipForm() {
   const [areaOfInterest, setAreaOfInterest] = useState("");
   const [customInterest, setCustomInterest] = useState("");
   const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [honeypot, setHoneypot] = useState("");
 
   const addExperience = () => setExperiences([...experiences, { company: "", role: "", duration: "", work: "" }]);
   const removeExperience = (idx: number) => setExperiences(experiences.filter((_, i) => i !== idx));
@@ -184,7 +185,8 @@ export default function InternshipForm() {
           email,
           phone,
           resume_url: publicUrlData.publicUrl,
-          answers
+          answers,
+          _honeypot: honeypot
         })
       });
 
@@ -238,6 +240,20 @@ export default function InternshipForm() {
         </div>
 
         <form onSubmit={handleFormSubmit} className="p-8 md:p-12 space-y-14">
+
+          {/* Honeypot Field - Hidden from humans, filled by bots */}
+          <div className="hidden" aria-hidden="true">
+              <label htmlFor="int_honeypot">Leave this field empty</label>
+              <input
+                  type="text"
+                  id="int_honeypot"
+                  name="_honeypot"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+              />
+          </div>
 
           {/* Section 1 - Personal */}
           <div className="space-y-6">

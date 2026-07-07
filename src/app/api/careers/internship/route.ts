@@ -9,7 +9,13 @@ const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "hr@pntsolution.in";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, phone, resume_url, answers } = body;
+    const { name, email, phone, resume_url, answers, _honeypot } = body;
+
+    // Honeypot check for bots
+    if (_honeypot) {
+        console.log("Bot detected via honeypot in internships form.");
+        return NextResponse.json({ success: true }, { status: 200 });
+    }
 
     if (!email || !name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });

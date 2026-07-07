@@ -32,14 +32,15 @@ export default function CustomProjectModal({ isOpen, onClose }: CustomProjectMod
         quantity: "",
         budget: "",
         timeFrame: "",
-        ndaRequired: "No"
+        ndaRequired: "No",
+        _honeypot: ""
     });
 
     const resetForm = () => {
         setFormData({
             name: "", email: "", entityType: "", stageOfDevelopment: "", intendedUse: "",
             industryType: "", projectType: "", targetAudience: "", useCase: "", requirements: "", quantity: "", budget: "",
-            timeFrame: "", ndaRequired: "No"
+            timeFrame: "", ndaRequired: "No", _honeypot: ""
         });
         setFile(null);
         setFileError("");
@@ -210,6 +211,20 @@ export default function CustomProjectModal({ isOpen, onClose }: CustomProjectMod
                                         onSubmit={handleSubmit}
                                         className="space-y-8"
                                     >
+                                        {/* Honeypot Field - Hidden from humans, filled by bots */}
+                                        <div className="hidden" aria-hidden="true">
+                                            <label htmlFor="cp_honeypot">Leave this field empty</label>
+                                            <input
+                                                type="text"
+                                                id="cp_honeypot"
+                                                name="_honeypot"
+                                                value={formData._honeypot}
+                                                onChange={handleChange}
+                                                tabIndex={-1}
+                                                autoComplete="off"
+                                            />
+                                        </div>
+
                                         {/* SECTION 1: Contact Basics */}
                                         <div>
                                             <h4 className="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 mb-4">1. Contact & Entity</h4>

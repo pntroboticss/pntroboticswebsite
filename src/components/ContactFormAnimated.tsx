@@ -9,7 +9,7 @@ export default function ContactFormAnimated() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
-    const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+    const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "", _honeypot: "" });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,7 +24,7 @@ export default function ContactFormAnimated() {
 
             if (res.ok) {
                 setIsSuccess(true);
-                setFormData({ name: "", email: "", subject: "", message: "" });
+                setFormData({ name: "", email: "", subject: "", message: "", _honeypot: "" });
                 // Reset success state after 5 seconds
                 setTimeout(() => setIsSuccess(false), 5000);
             } else {
@@ -163,6 +163,20 @@ export default function ContactFormAnimated() {
                                         onSubmit={handleSubmit}
                                         className="space-y-6"
                                     >
+                                        {/* Honeypot Field - Hidden from humans, filled by bots */}
+                                        <div className="hidden" aria-hidden="true">
+                                            <label htmlFor="_honeypot">Leave this field empty</label>
+                                            <input
+                                                type="text"
+                                                id="_honeypot"
+                                                name="_honeypot"
+                                                value={formData._honeypot}
+                                                onChange={handleChange}
+                                                tabIndex={-1}
+                                                autoComplete="off"
+                                            />
+                                        </div>
+
                                         <div className="grid md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
                                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Your Name</label>

@@ -66,6 +66,7 @@ export default function ApplicationForm({ job }: { job: any }) {
 
   const [fieldOfInterest, setFieldOfInterest] = useState("");
   const [hobbies, setHobbies] = useState("");
+  const [honeypot, setHoneypot] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +105,8 @@ export default function ApplicationForm({ job }: { job: any }) {
           email,
           phone,
           resume_url: resumeUrl,
-          answers
+          answers,
+          _honeypot: honeypot
         })
       });
 
@@ -165,6 +167,20 @@ export default function ApplicationForm({ job }: { job: any }) {
         <form onSubmit={handleSubmit} className="p-8 md:p-12 space-y-12">
           {/* Section 1 */}
           <div className="space-y-6">
+            {/* Honeypot Field - Hidden from humans, filled by bots */}
+            <div className="hidden" aria-hidden="true">
+                <label htmlFor="app_honeypot">Leave this field empty</label>
+                <input
+                    type="text"
+                    id="app_honeypot"
+                    name="_honeypot"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                />
+            </div>
+
             <h3 className="text-lg font-black text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">1. Personal Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input label="First Name" required value={name} onChange={(e:any) => setName(e.target.value)} />
