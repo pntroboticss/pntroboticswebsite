@@ -13,7 +13,45 @@ export default function AdminLogin() {
     const [successMsg, setSuccessMsg] = useState("");
     const [loading, setLoading] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
+    const [loginAttempts, setLoginAttempts] = useState(0);
+    const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
+    const [countdown, setCountdown] = useState<string>("");
     const router = useRouter();
+
+    useEffect(() => {
+        // Initialize rate limit from localStorage
+        const storedAttempts = parseInt(localStorage.getItem("admin_login_attempts") || "0");
+        const storedLockout = parseInt(localStorage.getItem("admin_login_lockout") || "0");
+        
+        if (storedLockout && storedLockout > Date.now()) {
+            setLockoutUntil(storedLockout);
+        } else if (storedLockout) {
+            localStorage.removeItem("admin_login_lockout");
+            localStorage.setItem("admin_login_attempts", "0");
+        } else {
+            setLoginAttempts(storedAttempts);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!lockoutUntil) return;
+        const interval = setInterval(() => {
+            const now = Date.now();
+            if (now >= lockoutUntil) {
+                setLockoutUntil(null);
+                localStorage.removeItem("admin_login_lockout");
+                localStorage.setItem("admin_login_attempts", "0");
+                setLoginAttempts(0);
+                clearInterval(interval);
+            } else {
+                const diff = lockoutUntil - now;
+                const minutes = Math.floor(diff / 60000);
+                const seconds = Math.floor((diff % 60000) / 1000);
+                setCountdown(`${minutes}m ${seconds}s`);
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [lockoutUntil]);
 
     useEffect(() => {
         // Redirect to dashboard if already logged in
@@ -26,6 +64,12 @@ export default function AdminLogin() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (lockoutUntil) {
+            setError(`Account locked due to too many failed attempts. Try again in ${countdown}.`);
+            return;
+        }
+
         setError("");
         setSuccessMsg("");
         setLoading(true);
@@ -55,19 +99,32 @@ export default function AdminLogin() {
                 });
                 if (signInError) throw signInError;
                 
+                // Reset on success
+                localStorage.setItem("admin_login_attempts", "0");
                 router.push("/admin");
             }
         } catch (err: any) {
             console.error("Auth Error:", err);
             
-            // Provide helpful feedback for common Supabase errors
-            if (err.message.includes("rate limit")) {
+            // Handle Login Failures specifically
+            if (!isSignUp && err.message.includes("Invalid login")) {
+                const newAttempts = loginAttempts + 1;
+                setLoginAttempts(newAttempts);
+                localStorage.setItem("admin_login_attempts", newAttempts.toString());
+                
+                if (newAttempts >= 5) {
+                    const lockTime = Date.now() + 15 * 60 * 1000; // 15 mins
+                    setLockoutUntil(lockTime);
+                    localStorage.setItem("admin_login_lockout", lockTime.toString());
+                    setError("Too many failed attempts. Account locked for 15 minutes.");
+                } else {
+                    setError(`Invalid email or password. Attempt ${newAttempts} of 5.`);
+                }
+            } else if (err.message.includes("rate limit")) {
                 setError("Too many attempts. If you already created an account, try signing in now (switched automatically). Otherwise, wait an hour.");
                 setIsSignUp(false); // Automatically switch to sign in
             } else if (err.message.includes("Email not confirmed")) {
                 setError("Please confirm your email address. (Or disable 'Confirm Email' in your Supabase Auth settings).");
-            } else if (err.message.includes("Invalid login")) {
-                setError("Invalid email or password.");
             } else {
                 setError(err.message || "An unexpected error occurred.");
             }
@@ -177,7 +234,7 @@ export default function AdminLogin() {
 
                         <button
                             type="submit"
-                            disabled={loading || !email || !password}
+                            disabled={loading || !email || !password || !!lockoutUntil}
                             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
                         >
                             {/* Button subtle highlight effect */}
