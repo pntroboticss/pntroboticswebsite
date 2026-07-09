@@ -21,7 +21,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);
             if (!session) {
-                router.push("/admin/login");
+                router.replace("/admin/login");
             }
             setLoading(false);
         });
@@ -30,7 +30,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
             if (!session && pathname !== "/admin/login") {
-                router.push("/admin/login");
+                router.replace("/admin/login");
             }
         });
 

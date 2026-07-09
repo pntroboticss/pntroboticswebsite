@@ -16,10 +16,10 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="flex flex-col min-h-screen bg-transparent transition-colors duration-500 pt-20 bg-slate-950">
-      
+
       {/* Navigation */}
       <Navbar />
-      
+
       {/* 1. Stunning Custom Hero Section */}
       <AboutHero />
 
@@ -30,7 +30,7 @@ export default function AboutPage() {
 
       {/* 3. Core Company Overview & Achievements (Shark Tank etc.) */}
       <div className="relative z-10 bg-slate-50 dark:bg-slate-950 -mt-24 pt-24">
-          <CompanyOverview />
+        <CompanyOverview />
       </div>
 
       {/* 4. Vision & Mission Cards */}

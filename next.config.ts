@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -15,6 +16,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
         pathname: '/dycht8a6s/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'bhtkeozfdujcrdhsbjca.supabase.co',
       },
     ],
   },

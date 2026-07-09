@@ -44,7 +44,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
-        router.push("/admin/login");
+        router.replace("/admin/login");
     };
 
     return (
