@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { ShieldCheck, Mail, Lock, ArrowLeft, Loader2, UserPlus, LogIn } from "lucide-react";
+import { ShieldCheck, Mail, Lock, ArrowLeft, Loader2, LogIn } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,7 +12,6 @@ export default function AdminLogin() {
     const [error, setError] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
     const [loading, setLoading] = useState(false);
-    const [isSignUp, setIsSignUp] = useState(false);
     const [loginAttempts, setLoginAttempts] = useState(0);
     const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
     const [countdown, setCountdown] = useState<string>("");
@@ -75,39 +74,21 @@ export default function AdminLogin() {
         setLoading(true);
 
         try {
-            if (isSignUp) {
-                // Handle Registration
-                const { data, error: signUpError } = await supabase.auth.signUp({
-                    email,
-                    password,
-                });
-                if (signUpError) throw signUpError;
-
-                if (data?.session) {
-                    // Auto-login succeeded
-                    router.push("/admin");
-                } else {
-                    // Requires email verification
-                    setSuccessMsg("Account created! If your Supabase requires email confirmation, please check your inbox. Otherwise, you can try signing in now.");
-                    setIsSignUp(false);
-                }
-            } else {
-                // Handle Login
-                const { error: signInError } = await supabase.auth.signInWithPassword({
-                    email,
-                    password,
-                });
-                if (signInError) throw signInError;
-                
-                // Reset on success
-                localStorage.setItem("admin_login_attempts", "0");
-                router.push("/admin");
-            }
+            // Handle Login
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+            if (signInError) throw signInError;
+            
+            // Reset on success
+            localStorage.setItem("admin_login_attempts", "0");
+            router.push("/admin");
         } catch (err: any) {
             console.error("Auth Error:", err);
             
             // Handle Login Failures specifically
-            if (!isSignUp && err.message.includes("Invalid login")) {
+            if (err.message.includes("Invalid login")) {
                 const newAttempts = loginAttempts + 1;
                 setLoginAttempts(newAttempts);
                 localStorage.setItem("admin_login_attempts", newAttempts.toString());
@@ -121,8 +102,7 @@ export default function AdminLogin() {
                     setError(`Invalid email or password. Attempt ${newAttempts} of 5.`);
                 }
             } else if (err.message.includes("rate limit")) {
-                setError("Too many attempts. If you already created an account, try signing in now (switched automatically). Otherwise, wait an hour.");
-                setIsSignUp(false); // Automatically switch to sign in
+                setError("Too many attempts. Please try again later.");
             } else if (err.message.includes("Email not confirmed")) {
                 setError("Please confirm your email address. (Or disable 'Confirm Email' in your Supabase Auth settings).");
             } else {
@@ -162,10 +142,10 @@ export default function AdminLogin() {
                     </div>
                 </div>
                 <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-white">
-                    {isSignUp ? "Create Admin Account" : "Admin Portal"}
+                    Admin Portal
                 </h2>
                 <p className="mt-2 text-center text-sm text-slate-400">
-                    {isSignUp ? "Register your master access credentials" : "Sign in to manage PNT Robotics"}
+                    Sign in to manage PNT Robotics
                 </p>
             </div>
 
@@ -244,39 +224,13 @@ export default function AdminLogin() {
                                 <Loader2 className="w-5 h-5 animate-spin" />
                             ) : (
                                 <span className="flex items-center gap-2">
-                                    {isSignUp ? <UserPlus className="w-4 h-4" /> : <LogIn className="w-4 h-4" />}
-                                    {isSignUp ? 'Create Account' : 'Sign In'}
+                                    <LogIn className="w-4 h-4" />
+                                    Sign In
                                 </span>
                             )}
                         </button>
                     </form>
 
-                    <div className="mt-8">
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-slate-700" />
-                            </div>
-                            <div className="relative flex justify-center text-sm">
-                                <span className="px-2 bg-slate-800 text-slate-400">
-                                    {isSignUp ? "Already have an account?" : "Need admin access?"}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="mt-6">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setIsSignUp(!isSignUp);
-                                    setError("");
-                                    setSuccessMsg("");
-                                }}
-                                className="w-full inline-flex justify-center py-3 px-4 border border-slate-600 rounded-xl shadow-sm bg-transparent text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white focus:outline-none transition-colors"
-                            >
-                                {isSignUp ? "Switch to Sign In" : "Switch to Create Account"}
-                            </button>
-                        </div>
-                    </div>
                 </div>
                 
                 <p className="text-center mt-8 text-xs text-slate-500 font-medium">

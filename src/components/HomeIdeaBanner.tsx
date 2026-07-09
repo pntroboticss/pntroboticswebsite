@@ -5,12 +5,11 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Lightbulb } from "lucide-react";
-import CustomProjectModal from "./CustomProjectModal";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function HomeIdeaBanner() {
-    const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
     
     const containerRef = useRef<HTMLDivElement>(null);
     const borderSvgRef = useRef<SVGSVGElement>(null);
@@ -97,23 +96,18 @@ export default function HomeIdeaBanner() {
                             </div>
                             
                             <div className="mt-4 md:mt-0 shrink-0">
-                                <button 
-                                    onClick={() => setIsCustomModalOpen(true)}
+                                <Link 
+                                    href="/custom-project"
                                     className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-cyan-600 text-white font-bold tracking-wide hover:bg-cyan-500 hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] transition-all duration-300 hover:scale-[1.05] active:scale-[0.98]"
                                 >
                                     INITIALIZE PROJECT
-                                </button>
+                                </Link>
                             </div>
 
                         </div>
                     </div>
                 </div>
             </div>
-
-            <CustomProjectModal
-                isOpen={isCustomModalOpen}
-                onClose={() => setIsCustomModalOpen(false)}
-            />
         </section>
     );
 }

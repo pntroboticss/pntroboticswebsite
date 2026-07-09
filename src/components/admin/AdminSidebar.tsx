@@ -36,6 +36,12 @@ const NAV_GROUPS: NavGroup[] = [
             { name: "Highlights", href: "/admin/highlights", icon: ImageIcon },
         ],
     },
+    {
+        label: "Portfolio",
+        items: [
+            { name: "Products", href: "/admin/products", icon: Box },
+        ],
+    },
 ];
 
 function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {

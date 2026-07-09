@@ -3,12 +3,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Send, MapPin, Mail, Phone, Loader2, CheckCircle2, Lightbulb } from "lucide-react";
-import CustomProjectModal from "./CustomProjectModal";
+import Link from "next/link";
 
 export default function ContactFormAnimated() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
     const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "", _honeypot: "" });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -103,14 +102,40 @@ export default function ContactFormAnimated() {
                                 </motion.div>
                             ))}
                         </div>
+
+                        {/* Embedded Google Map */}
+                        <motion.div variants={fadeIn} className="mt-10">
+                            <div className="w-full h-64 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 shadow-lg relative group bg-slate-100 dark:bg-slate-800">
+                                <iframe 
+                                    src="https://maps.google.com/maps?q=Plot%20no.%20A115,%20Infinity%20Business%20Park,%20MIDC,%20Dombivli%20East,%20Kalyan,%20Maharashtra%20421203&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+                                    width="100%" 
+                                    height="100%" 
+                                    style={{ border: 0 }} 
+                                    allowFullScreen 
+                                    loading="lazy" 
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700 opacity-90 group-hover:opacity-100 mix-blend-luminosity group-hover:mix-blend-normal"
+                                />
+                            </div>
+                            <div className="mt-4 flex justify-end">
+                                <a 
+                                    href="https://maps.google.com/maps?q=Plot%20no.%20A115,%20Infinity%20Business%20Park,%20MIDC,%20Dombivli%20East,%20Kalyan,%20Maharashtra%20421203" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-semibold text-sm rounded-full hover:bg-blue-100 dark:hover:bg-slate-700 transition-colors"
+                                >
+                                    Open in Google Maps <MapPin className="w-4 h-4" />
+                                </a>
+                            </div>
+                        </motion.div>
                     </div>
 
                     {/* Right side: Form */}
                     <motion.div variants={fadeIn} className="relative flex flex-col gap-8">
                         {/* Custom Project Button */}
-                        <button 
-                            onClick={() => setIsCustomModalOpen(true)}
-                            className="group relative w-full overflow-hidden rounded-[2rem] bg-gradient-to-r from-blue-600 to-purple-600 p-[2px] hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+                        <Link 
+                            href="/custom-project"
+                            className="group relative w-full overflow-hidden rounded-[2rem] bg-gradient-to-r from-blue-600 to-purple-600 p-[2px] hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 block"
                         >
                             <div className="relative flex items-center justify-between gap-4 bg-white dark:bg-slate-900 px-8 py-6 rounded-[2rem] group-hover:bg-blue-50 dark:group-hover:bg-slate-800 transition-all duration-300">
                                 <div className="flex items-center gap-4">
@@ -128,7 +153,7 @@ export default function ContactFormAnimated() {
                                     </span>
                                 </div>
                             </div>
-                        </button>
+                        </Link>
 
                         <div className="relative">
                             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-[2rem] blur-2xl opacity-20 dark:opacity-30 translate-y-4 pointer-events-none" />
@@ -262,11 +287,6 @@ export default function ContactFormAnimated() {
                 </motion.div>
             </motion.div>
         </div>
-
-            <CustomProjectModal 
-                isOpen={isCustomModalOpen} 
-                onClose={() => setIsCustomModalOpen(false)} 
-            />
         </section>
     );
 }
