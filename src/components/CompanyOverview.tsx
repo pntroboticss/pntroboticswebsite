@@ -215,6 +215,7 @@ export default function CompanyOverview() {
                                     src={img.src}
                                     alt={img.alt}
                                     fill
+                                    sizes="(max-width: 768px) 100vw, 450px"
                                     className="object-cover pointer-events-none"
                                 />
                             ) : (
