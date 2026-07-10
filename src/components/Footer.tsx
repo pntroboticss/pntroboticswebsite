@@ -10,7 +10,7 @@ export default async function Footer() {
     };
 
     return (
-        <footer className="w-full py-16 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-900 transition-colors duration-500">
+        <footer className="relative z-10 w-full py-16 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-900 transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-slate-600 dark:text-slate-400">
                 
                 {/* Brand & Socials */}
