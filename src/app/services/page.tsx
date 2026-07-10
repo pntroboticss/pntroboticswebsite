@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   description: "Explore our specialized robotics services, including installation, maintenance, training, and custom engineering.",
 };
 
-// Next.js Revalidate setup (ISR)
-export const revalidate = 3600; // Revalidate every hour
+// Force dynamic rendering so new services show up immediately
+export const dynamic = "force-dynamic";
 
 async function getServices() {
     const { data, error } = await supabase
