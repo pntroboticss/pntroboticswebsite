@@ -14,7 +14,10 @@ export const metadata: Metadata = {
 // Force dynamic rendering so new services show up immediately
 export const dynamic = "force-dynamic";
 
+import { unstable_noStore as noStore } from 'next/cache';
+
 async function getServices() {
+    noStore(); // Completely disable caching for this function
     const { data, error } = await supabase
         .from("services")
         .select("*")
