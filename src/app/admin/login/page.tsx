@@ -246,10 +246,10 @@ export default function AdminLogin() {
                             )}
                         </button>
                     </form>
-
+                    </>)}
                 </div>
-                </>)}
                 
+
                 <p className="text-center mt-8 text-xs text-slate-500 font-medium">
                     Powered by Supabase Auth
                 </p>
