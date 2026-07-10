@@ -43,6 +43,31 @@ const BASE_SECTORS: Sector[] = [
         products: []
     }
 ];
+
+const renderDescription = (text: string) => {
+    // If the text contains bullet points strung together, split them nicely
+    const parts = text.split(/(?=•)/).map(p => p.trim()).filter(Boolean);
+    if (parts.length > 1 && text.includes('•')) {
+        return (
+            <ul className="space-y-3">
+                {parts.map((part, i) => (
+                    <li key={i} className={part.startsWith('•') ? "flex gap-3 items-start" : "mb-2"}>
+                        {part.startsWith('•') ? (
+                            <>
+                                <span className="text-cyan-400 mt-1 shrink-0 text-sm opacity-80">•</span>
+                                <span className="text-white/70 font-light text-base md:text-lg leading-relaxed">{part.substring(1).trim()}</span>
+                            </>
+                        ) : (
+                            <span className="text-white/70 font-light text-base md:text-lg leading-relaxed">{part}</span>
+                        )}
+                    </li>
+                ))}
+            </ul>
+        );
+    }
+    return <p className="text-white/70 font-light text-base md:text-lg leading-relaxed max-w-2xl whitespace-pre-wrap">{text}</p>;
+};
+
 const ProductCard = ({ product, index, handleImageError, imageErrors }: { product: Product, index: number, handleImageError: any, imageErrors: any }) => {
     const cardRef = useRef<HTMLDivElement>(null);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -74,9 +99,8 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
         rotateY.set(0);
     };
 
-    // Asymmetric Bento Layout
-    const isFeatured = index % 3 === 0;
-
+    // Asymmetric Bento Layout (not applicable for Masonry, but keeping index for staggering)
+    
     return (
         <motion.div
             ref={cardRef}
@@ -92,24 +116,22 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.9, delay: (index % 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className={`group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-500 flex flex-col ${isFeatured ? 'md:col-span-2' : ''} min-h-[450px] md:min-h-[500px]`}
+            className={`group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-500 flex flex-col mb-6 lg:mb-8 break-inside-avoid`}
         >
-            {/* Top Image Container */}
-            <div className="relative w-full h-64 md:h-80 bg-white/5 flex items-center justify-center shrink-0 overflow-hidden">
-                {/* Subtle Glow */}
-                <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 to-transparent" />
+            {/* Masonry Image Container - No fixed height */}
+            <div className="relative w-full bg-white/5 overflow-hidden">
+                {/* Subtle Glow Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/40 to-transparent opacity-80 z-10 pointer-events-none" />
                 
                 {product.image_url && !imageErrors[product.id] ? (
-                    <Image 
+                    <img 
                         src={product.image_url} 
                         alt={product.name} 
-                        fill 
-                        className="object-contain p-8 group-hover:scale-110 transition-transform duration-[2s] ease-out drop-shadow-2xl" 
+                        className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out relative z-0" 
                         onError={() => handleImageError(product.id)}
-                        unoptimized
                     />
                 ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white/20 transition-transform duration-[2s] ease-out scale-100 group-hover:scale-105">
+                    <div className="w-full aspect-video flex flex-col items-center justify-center text-white/20 relative z-0">
                         <ImageIcon size={64} strokeWidth={0.5} className="mb-4" />
                         <span className="text-xs font-medium tracking-[0.2em] uppercase">No Render Available</span>
                     </div>
@@ -145,10 +167,8 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
                         {product.name}
                     </h3>
                     
-                    <div className="overflow-hidden">
-                        <p className="text-white/70 font-light text-base md:text-lg leading-relaxed max-w-2xl opacity-80 group-hover:opacity-100 transition-opacity duration-500 whitespace-pre-wrap">
-                            {product.description}
-                        </p>
+                    <div className="overflow-hidden opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                        {renderDescription(product.description)}
                     </div>
 
                     {/* Hover Reveal Action */}
@@ -305,7 +325,7 @@ export default function ProductPortfolio({ fixedSectorId }: { fixedSectorId?: st
                             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                             exit={{ opacity: 0, scale: 0.98, filter: "blur(20px)" }}
                             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                            className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
+                            className="columns-1 md:columns-2 lg:columns-3 gap-6 lg:gap-8 space-y-6 lg:space-y-8"
                         >
                             {activeData?.products.map((product, idx) => (
                                 <ProductCard 
