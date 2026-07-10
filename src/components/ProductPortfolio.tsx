@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion"
 import { Shield, Zap, Lightbulb, ImageIcon, ChevronRight, Cpu, Eye, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
+import NetworkBackground from "./NetworkBackground";
 
 type Product = {
     id: string;
@@ -93,28 +94,27 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
             transition={{ duration: 0.9, delay: (index % 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
             className={`group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-500 flex flex-col ${isFeatured ? 'md:col-span-2' : ''} min-h-[450px] md:min-h-[500px]`}
         >
-            {/* Absolute Background Image (Bleed) */}
-            <div className="absolute inset-0 z-0">
+            {/* Top Image Container */}
+            <div className="relative w-full h-64 md:h-80 bg-white/5 flex items-center justify-center shrink-0 overflow-hidden">
+                {/* Subtle Glow */}
+                <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 to-transparent" />
+                
                 {product.image_url && !imageErrors[product.id] ? (
                     <Image 
                         src={product.image_url} 
                         alt={product.name} 
                         fill 
-                        className="object-cover scale-100 group-hover:scale-110 transition-transform duration-[2s] ease-out opacity-80 group-hover:opacity-100" 
+                        className="object-contain p-8 group-hover:scale-110 transition-transform duration-[2s] ease-out drop-shadow-2xl" 
                         onError={() => handleImageError(product.id)}
                         unoptimized
                     />
                 ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#111214] text-white/20 transition-transform duration-[2s] ease-out scale-100 group-hover:scale-105">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white/20 transition-transform duration-[2s] ease-out scale-100 group-hover:scale-105">
                         <ImageIcon size={64} strokeWidth={0.5} className="mb-4" />
                         <span className="text-xs font-medium tracking-[0.2em] uppercase">No Render Available</span>
                     </div>
                 )}
             </div>
-
-            {/* Heavy Dark Overlay for Legibility */}
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/60 to-black/10 group-hover:from-black group-hover:via-black/40 group-hover:to-transparent transition-colors duration-700" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
             {/* Interactive Mouse-Follow Spotlight */}
             <div
@@ -129,10 +129,10 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400/80 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[1.5s] ease-in-out z-30" />
 
             {/* Content Section Overlay */}
-            <div className={`relative z-30 flex flex-col flex-1 p-8 md:p-12 h-full justify-end`}>
+            <div className={`relative z-30 flex flex-col flex-1 p-8 md:p-12 justify-start`}>
                 
-                {/* Tech Chips (Top Right conceptually, but rendered in flow for mobile) */}
-                <div className="absolute top-8 left-8 md:top-12 md:left-12 flex flex-wrap gap-2">
+                {/* Tech Chips */}
+                <div className="flex flex-wrap gap-2 mb-6">
                     {product.chips.map((chip, cIdx) => (
                         <span key={cIdx} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase bg-white/5 backdrop-blur-md text-white/70 border border-white/10 group-hover:border-cyan-500/50 group-hover:bg-cyan-500/10 group-hover:text-cyan-400 transition-colors duration-500">
                             {chip}
@@ -146,7 +146,7 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
                     </h3>
                     
                     <div className="overflow-hidden">
-                        <p className="text-white/70 font-light text-base md:text-lg leading-relaxed max-w-2xl opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                        <p className="text-white/70 font-light text-base md:text-lg leading-relaxed max-w-2xl opacity-80 group-hover:opacity-100 transition-opacity duration-500 whitespace-pre-wrap">
                             {product.description}
                         </p>
                     </div>
@@ -205,6 +205,10 @@ export default function ProductPortfolio({ fixedSectorId }: { fixedSectorId?: st
     return (
         <section id="portfolio" className="relative w-full py-32 bg-[#0A0A0B] transition-colors duration-700 overflow-hidden">
             
+            <div className="absolute inset-0 z-0">
+                <NetworkBackground />
+            </div>
+
             {/* Engineering Grid & Mesh Background */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none z-0" />
             
