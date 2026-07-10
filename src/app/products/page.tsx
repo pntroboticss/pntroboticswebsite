@@ -1,4 +1,5 @@
 import ProductPortfolio from "@/components/ProductPortfolio";
+import { ProductPortfolioErrorBoundary } from "@/components/ProductPortfolioWrapper";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NetworkBackground from "@/components/NetworkBackground";
@@ -21,7 +22,9 @@ export default function ProductsPage() {
         accentColor="cyan"
       />
 
-      <ProductPortfolio />
+      <ProductPortfolioErrorBoundary>
+        <ProductPortfolio />
+      </ProductPortfolioErrorBoundary>
       <Footer />
     </div>
   );
