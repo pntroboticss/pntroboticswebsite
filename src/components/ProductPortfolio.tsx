@@ -116,7 +116,7 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.9, delay: (index % 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className={`group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-500 flex flex-col mb-6 lg:mb-8 break-inside-avoid`}
+            className={`group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-500 inline-block w-full mb-6 lg:mb-8 break-inside-avoid`}
         >
             {/* Masonry Image Container - No fixed height */}
             <div className="relative w-full bg-white/5 overflow-hidden">
@@ -151,7 +151,7 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400/80 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[1.5s] ease-in-out z-30" />
 
             {/* Content Section Overlay */}
-            <div className={`relative z-30 flex flex-col flex-1 p-8 md:p-12 justify-start`}>
+            <div className={`relative z-30 p-8 md:p-12 justify-start block`}>
                 
                 {/* Tech Chips */}
                 <div className="flex flex-wrap gap-2 mb-6">
