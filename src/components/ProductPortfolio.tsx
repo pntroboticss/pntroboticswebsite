@@ -121,8 +121,7 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
         >
             {/* Masonry Image Container - No fixed height */}
             <div className="relative w-full bg-slate-200/50 dark:bg-white/5 overflow-hidden">
-                {/* Subtle Glow Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-50 dark:from-[#0A0A0B] via-slate-50/40 dark:via-[#0A0A0B]/40 to-transparent opacity-80 z-10 pointer-events-none" />
+
                 
                 {product.image_url && !imageErrors[product.id] ? (
                     <img 
