@@ -56,17 +56,17 @@ const renderDescription = (text: string | null | undefined) => {
                         {part.startsWith('•') ? (
                             <>
                                 <span className="text-cyan-400 mt-1 shrink-0 text-sm opacity-80">•</span>
-                                <span className="text-white/70 font-light text-base md:text-lg leading-relaxed">{part.substring(1).trim()}</span>
+                                <span className="text-slate-600 dark:text-white/70 font-light text-base md:text-lg leading-relaxed">{part.substring(1).trim()}</span>
                             </>
                         ) : (
-                            <span className="text-white/70 font-light text-base md:text-lg leading-relaxed">{part}</span>
+                            <span className="text-slate-600 dark:text-white/70 font-light text-base md:text-lg leading-relaxed">{part}</span>
                         )}
                     </li>
                 ))}
             </ul>
         );
     }
-    return <p className="text-white/70 font-light text-base md:text-lg leading-relaxed max-w-2xl whitespace-pre-wrap">{text}</p>;
+    return <p className="text-slate-600 dark:text-white/70 font-light text-base md:text-lg leading-relaxed max-w-2xl whitespace-pre-wrap">{text}</p>;
 };
 
 const ProductCard = ({ product, index, handleImageError, imageErrors }: { product: Product, index: number, handleImageError: any, imageErrors: any }) => {
@@ -117,12 +117,12 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.9, delay: (index % 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className={`group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-500 inline-block w-full mb-6 lg:mb-8 break-inside-avoid`}
+            className={`group relative overflow-hidden rounded-[2rem] bg-slate-50 dark:bg-[#0A0A0B] border border-slate-200 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] transition-shadow duration-500 inline-block w-full mb-6 lg:mb-8 break-inside-avoid`}
         >
             {/* Masonry Image Container - No fixed height */}
-            <div className="relative w-full bg-white/5 overflow-hidden">
+            <div className="relative w-full bg-slate-200/50 dark:bg-white/5 overflow-hidden">
                 {/* Subtle Glow Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/40 to-transparent opacity-80 z-10 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-50 dark:from-[#0A0A0B] via-slate-50/40 dark:via-[#0A0A0B]/40 to-transparent opacity-80 z-10 pointer-events-none" />
                 
                 {product.image_url && !imageErrors[product.id] ? (
                     <img 
@@ -132,7 +132,7 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
                         onError={() => handleImageError(product.id)}
                     />
                 ) : (
-                    <div className="w-full aspect-video flex flex-col items-center justify-center text-white/20 relative z-0">
+                    <div className="w-full aspect-video flex flex-col items-center justify-center text-slate-300 dark:text-white/20 relative z-0">
                         <ImageIcon size={64} strokeWidth={0.5} className="mb-4" />
                         <span className="text-xs font-medium tracking-[0.2em] uppercase">No Render Available</span>
                     </div>
@@ -157,14 +157,14 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
                 {/* Tech Chips */}
                 <div className="flex flex-wrap gap-2 mb-6">
                     {product.chips.map((chip, cIdx) => (
-                        <span key={cIdx} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase bg-white/5 backdrop-blur-md text-white/70 border border-white/10 group-hover:border-cyan-500/50 group-hover:bg-cyan-500/10 group-hover:text-cyan-400 transition-colors duration-500">
+                        <span key={cIdx} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase bg-slate-200/50 dark:bg-white/5 backdrop-blur-md text-slate-600 dark:text-white/70 border border-slate-200 dark:border-white/10 group-hover:border-cyan-500/50 group-hover:bg-cyan-500/10 group-hover:text-cyan-400 transition-colors duration-500">
                             {chip}
                         </span>
                     ))}
                 </div>
 
                 <div className="mt-auto transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                    <h3 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-white mb-4 group-hover:text-cyan-400 transition-colors duration-500 drop-shadow-xl break-words hyphens-auto">
+                    <h3 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4 group-hover:text-cyan-400 transition-colors duration-500 drop-shadow-xl break-words hyphens-auto">
                         {product.name}
                     </h3>
                     
@@ -174,10 +174,10 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
 
                     {/* Hover Reveal Action */}
                     <div className="mt-8 flex items-center gap-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 delay-100">
-                        <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white group-hover:bg-cyan-500 group-hover:border-cyan-400 transition-colors duration-300">
+                        <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/20 flex items-center justify-center text-slate-900 dark:text-white group-hover:bg-cyan-500 group-hover:border-cyan-400 transition-colors duration-300">
                             <Eye size={18} />
                         </div>
-                        <span className="text-sm font-semibold tracking-widest uppercase text-white/90">Explore Specs</span>
+                        <span className="text-sm font-semibold tracking-widest uppercase text-slate-800 dark:text-white/90">Explore Specs</span>
                     </div>
                 </div>
             </div>
@@ -224,7 +224,7 @@ export default function ProductPortfolio({ fixedSectorId }: { fixedSectorId?: st
     };
 
     return (
-        <section id="portfolio" className="relative w-full py-32 bg-[#0A0A0B] transition-colors duration-700 overflow-hidden">
+        <section id="portfolio" className="relative w-full py-32 bg-slate-50 dark:bg-[#0A0A0B] transition-colors duration-700 overflow-hidden">
             
             <div className="absolute inset-0 z-0">
                 <NetworkBackground />
@@ -254,26 +254,48 @@ export default function ProductPortfolio({ fixedSectorId }: { fixedSectorId?: st
                         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                         className="relative text-center mb-24 flex flex-col items-center"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md text-white/60 font-semibold tracking-widest text-[10px] sm:text-xs uppercase mb-8 border border-white/10">
-                            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-                            Hardware Systems
+                        <div className="mb-24 md:mb-32 max-w-4xl mx-auto">
+                            <motion.div 
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.7 }}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-200/50 dark:bg-white/5 backdrop-blur-md text-slate-500 dark:text-white/60 font-semibold tracking-widest text-[10px] sm:text-xs uppercase mb-8 border border-slate-200 dark:border-white/10"
+                            >
+                                <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+                                Hardware Systems
+                            </motion.div>
+
+                            <motion.h2 
+                                initial={{ opacity: 0, y: 40 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                                className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-900 dark:text-white tracking-tighter mb-8 leading-[0.9] drop-shadow-2xl"
+                            >
+                                Next-Gen <br className="md:hidden" />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600 dark:from-cyan-400 dark:to-blue-600">
+                                    Robotics
+                                </span>
+                            </motion.h2>
+
+                            <motion.p 
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                                className="text-lg md:text-2xl text-slate-500 dark:text-white/50 max-w-3xl mx-auto font-light leading-relaxed tracking-wide"
+                            >
+                                Explore our cutting-edge robotic solutions categorized by the industries we empower. Engineered for absolute precision, built for scale.
+                            </motion.p>
                         </div>
-                        <h2 className="text-6xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter mb-8 leading-[0.9] drop-shadow-2xl">
-                            Next-Gen <br className="md:hidden" />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">
-                                Robotics
-                            </span>
-                        </h2>
-                        <p className="text-lg md:text-2xl text-white/50 max-w-3xl mx-auto font-light leading-relaxed tracking-wide">
-                            Explore our cutting-edge robotic solutions categorized by the industries we empower. Engineered for absolute precision, built for scale.
-                        </p>
                     </motion.div>
                 )}
 
                 {/* Floating Transparent Dock Navigation */}
                 {!fixedSectorId && (
                     <div className="flex justify-center mb-16 relative z-20">
-                        <div className="inline-flex flex-wrap justify-center gap-2 p-2 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-2xl">
+                        <div className="inline-flex flex-wrap justify-center gap-2 p-2 bg-slate-200/50 dark:bg-white/5 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-[2rem] shadow-2xl">
                             {sectors.map((sector) => (
                                 <button
                                     key={sector.id}
@@ -281,7 +303,7 @@ export default function ProductPortfolio({ fixedSectorId }: { fixedSectorId?: st
                                     className={`relative flex items-center gap-2 px-6 py-3.5 rounded-full text-xs sm:text-sm font-bold tracking-widest uppercase transition-all duration-300 ${
                                         activeSector === sector.id
                                             ? "text-black"
-                                            : "text-white/60 hover:text-white"
+                                            : "text-slate-500 dark:text-white/60 hover:text-slate-900 dark:text-white"
                                     }`}
                                 >
                                     {activeSector === sector.id && (
@@ -310,13 +332,13 @@ export default function ProductPortfolio({ fixedSectorId }: { fixedSectorId?: st
                     {isLoading ? (
                         <div className="flex flex-col items-center justify-center min-h-[400px] text-cyan-500">
                             <Loader2 className="w-12 h-12 animate-spin mb-4" />
-                            <p className="text-white/50 font-medium tracking-wide">Loading Database Models...</p>
+                            <p className="text-slate-500 dark:text-white/50 font-medium tracking-wide">Loading Database Models...</p>
                         </div>
                     ) : activeData?.products.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center min-h-[400px] bg-white/5 rounded-3xl border border-white/10 border-dashed">
-                            <Lightbulb className="w-16 h-16 text-white/30 mb-4" />
-                            <h3 className="text-xl font-bold text-white/50">No Products Found</h3>
-                            <p className="text-white/40 mt-2">New {activeData.label} will be showcased here soon.</p>
+                        <div className="flex flex-col items-center justify-center min-h-[400px] bg-slate-200/50 dark:bg-white/5 rounded-3xl border border-slate-200 dark:border-white/10 border-dashed">
+                            <Lightbulb className="w-16 h-16 text-slate-400 dark:text-white/30 mb-4" />
+                            <h3 className="text-xl font-bold text-slate-500 dark:text-white/50">No Products Found</h3>
+                            <p className="text-slate-400 dark:text-white/40 mt-2">New {activeData.label} will be showcased here soon.</p>
                         </div>
                     ) : (
                     <AnimatePresence mode="wait">
