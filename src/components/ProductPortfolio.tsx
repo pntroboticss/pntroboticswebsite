@@ -163,7 +163,7 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
                 </div>
 
                 <div className="mt-auto transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter text-white mb-4 group-hover:text-cyan-400 transition-colors duration-500 drop-shadow-xl">
+                    <h3 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-white mb-4 group-hover:text-cyan-400 transition-colors duration-500 drop-shadow-xl break-words hyphens-auto">
                         {product.name}
                     </h3>
                     
