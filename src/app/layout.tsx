@@ -14,6 +14,7 @@ import { CookieBanner } from "@/components/CookieBanner";
 import MaintenanceOverlay from "@/components/MaintenanceOverlay";
 import ScrollProgress from "@/components/ScrollProgress";
 import SmoothScroller from "@/components/SmoothScroller";
+import InternalNavTracker from "@/components/InternalNavTracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -114,6 +115,7 @@ export default function RootLayout({
       >
         {/* Google Analytics — loaded after page is interactive, zero render-blocking */}
         <GoogleAnalytics />
+        <InternalNavTracker />
 
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <ClientIntroWrapper />

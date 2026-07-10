@@ -11,10 +11,16 @@ import { supabase } from "@/lib/supabase";
 gsap.registerPlugin(ScrollTrigger);
 
 const SPECIALTIES = [
-    "Defense Automation",
-    "Special Purpose Machines",
-    "Industrial IoT (IIoT)",
-    "Remotely Operated Vehicles"
+    "Artificial Intelligence (AI)",
+    "Software Development",
+    "Robotics",
+    "Sensor Fusion",
+    "Machine Learning",
+    "Autonomous Navigation",
+    "Internet of Things (IoT)",
+    "Data Science & Analytics",
+    "Human-Computer Interaction",
+    "Robotic Arm & AGV's"
 ];
 
 // Note: These are now empty placeholders. The actual images should be uploaded via the Admin Panel.
@@ -237,25 +243,37 @@ export default function CompanyOverview() {
 
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-400 font-semibold text-sm mb-8 border border-cyan-200 dark:border-cyan-800/50 shadow-sm">
                         <ShieldCheck className="w-4 h-4" />
-                        Recognized Leaders
+                        About Us
                     </div>
 
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight text-slate-900 dark:text-white leading-tight drop-shadow-lg">
-                        Building the <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-500">
-                            Machines of Tomorrow
+                        Build with <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">
+                            PNT Robotics
                         </span>
                     </h2>
 
-                    <p className="text-lg text-slate-700 dark:text-slate-300 mb-8 leading-relaxed drop-shadow-md max-w-xl">
-                        At PNT Robotics, we architect entire nervous systems for the industrial age. Specializing in autonomous robots, custom machinery, and deep-tech integrations.
-                    </p>
+                    <div className="space-y-4 mb-10 max-w-xl text-slate-800 dark:text-slate-200">
+                        <p className="text-base md:text-lg leading-relaxed font-medium">
+                            We at <strong className="text-black dark:text-white font-bold">PNT Robotics and Automation Solutions</strong> are proud to be recognized as a leading startup in the robotics industry, prominently featured among Maharashtra's top 100 startups.
+                        </p>
+                        <p className="text-sm md:text-base leading-relaxed font-medium">
+                            Our journey includes showcasing our innovative technology on <strong className="text-black dark:text-white font-bold">SHARK TANK INDIA</strong>, where we stood out among 65,000 entries and secured funding from <span className="whitespace-nowrap"><strong className="text-black dark:text-white font-bold">LensKart</strong></span>.
+                        </p>
+                        <p className="text-sm md:text-base leading-relaxed font-medium">
+                            Additionally, we hold memberships in the Government e-Marketplace (GeM) and the Central Public Procurement Portal (CPPP), underlining our commitment to excellence and regulatory compliance.
+                        </p>
+                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 max-w-xl">
+                    <div className="mb-4">
+                        <span className="text-sm font-bold tracking-wider text-slate-800 dark:text-slate-200 uppercase">We specialize in:</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10 max-w-xl">
                         {SPECIALTIES.map((item, idx) => (
-                            <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 shadow-sm">
-                                <CheckCircle2 className="w-5 h-5 text-cyan-500 flex-shrink-0" />
-                                <span className="text-slate-700 dark:text-slate-300 font-medium text-sm">{item}</span>
+                            <div key={idx} className="flex items-center gap-3 p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-800 transition-colors backdrop-blur-sm border border-slate-300/80 dark:border-slate-700/80 shadow-sm">
+                                <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
+                                <span className="text-slate-900 dark:text-slate-100 font-semibold text-sm leading-tight">{item}</span>
                             </div>
                         ))}
                     </div>

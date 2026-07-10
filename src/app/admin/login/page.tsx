@@ -12,6 +12,7 @@ export default function AdminLogin() {
     const [error, setError] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
     const [loading, setLoading] = useState(false);
+    const [isAlreadyLoggedIn, setIsAlreadyLoggedIn] = useState(false);
     const [loginAttempts, setLoginAttempts] = useState(0);
     const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
     const [countdown, setCountdown] = useState<string>("");
@@ -53,10 +54,10 @@ export default function AdminLogin() {
     }, [lockoutUntil]);
 
     useEffect(() => {
-        // Redirect to dashboard if already logged in
+        // Stop the auto-redirect to avoid trapping the back button
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session) {
-                router.push("/admin");
+                setIsAlreadyLoggedIn(true);
             }
         });
     }, [router]);
@@ -142,15 +143,30 @@ export default function AdminLogin() {
                     </div>
                 </div>
                 <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-white">
-                    Admin Portal
+                    {isAlreadyLoggedIn ? "Welcome Back" : "Admin Portal"}
                 </h2>
                 <p className="mt-2 text-center text-sm text-slate-400">
-                    Sign in to manage PNT Robotics
+                    {isAlreadyLoggedIn ? "You are securely signed in" : "Sign in to manage PNT Robotics"}
                 </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
                 <div className="bg-slate-800/80 backdrop-blur-xl py-8 px-4 shadow-2xl sm:rounded-2xl sm:px-10 border border-slate-700/50">
+                    
+                    {isAlreadyLoggedIn ? (
+                        <div className="text-center py-8">
+                            <ShieldCheck className="w-16 h-16 text-green-400 mx-auto mb-4" />
+                            <h3 className="text-xl font-medium text-white mb-6">You are already signed in.</h3>
+                            <button
+                                onClick={() => router.push("/admin")}
+                                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500 transition-all"
+                            >
+                                Continue to Dashboard
+                                <ArrowLeft className="w-4 h-4 rotate-180" />
+                            </button>
+                        </div>
+                    ) : (
+                        <>
                     
                     {error && (
                         <div className="mb-6 p-4 rounded-xl bg-red-900/30 border border-red-500/30 text-red-200 text-sm">
@@ -232,6 +248,7 @@ export default function AdminLogin() {
                     </form>
 
                 </div>
+                </>)}
                 
                 <p className="text-center mt-8 text-xs text-slate-500 font-medium">
                     Powered by Supabase Auth
