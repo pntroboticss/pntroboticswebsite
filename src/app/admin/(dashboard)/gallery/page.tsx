@@ -123,7 +123,8 @@ export default function AdminGallery() {
 
             const itemData = {
                 title,
-                image_url: finalImageUrl
+                image_url: finalImageUrl,
+                category: "general"
             };
 
             if (editId) {

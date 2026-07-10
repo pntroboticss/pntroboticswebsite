@@ -38,14 +38,14 @@ const NAV_ITEMS: NavItemType[] = [
         icon: "💻",
     },
     {
-        label: "Gallery",
-        href: "/gallery",
-        icon: "📸",
-    },
-    {
         label: "About Us",
         href: "/#about",
         icon: "🏢",
+    },
+    {
+        label: "Gallery",
+        href: "/gallery",
+        icon: "📸",
     },
     {
         label: "Careers",
