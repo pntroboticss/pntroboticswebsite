@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function DefenceProductsPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-transparent transition-colors duration-500 pt-20">
+    <div className="dark flex flex-col min-h-screen bg-[#0a0a0a] transition-colors duration-500 pt-20">
       <NetworkBackground />
       <Navbar />
       
