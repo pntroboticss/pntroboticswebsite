@@ -15,6 +15,7 @@ import MaintenanceOverlay from "@/components/MaintenanceOverlay";
 import ScrollProgress from "@/components/ScrollProgress";
 import SmoothScroller from "@/components/SmoothScroller";
 import InternalNavTracker from "@/components/InternalNavTracker";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -134,6 +135,14 @@ export default function RootLayout({
           
           {/* Global Cookie Banner */}
           <CookieBanner />
+          
+          <Toaster 
+            position="bottom-right"
+            toastOptions={{
+              className: 'dark:bg-slate-800 dark:text-white rounded-xl shadow-lg border border-slate-200 dark:border-slate-700',
+              duration: 4000,
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>
