@@ -171,13 +171,7 @@ const ProductCard = ({ product, index, handleImageError, imageErrors }: { produc
                         {renderDescription(product.description)}
                     </div>
 
-                    {/* Hover Reveal Action */}
-                    <div className="mt-8 flex items-center gap-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 delay-100">
-                        <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/20 flex items-center justify-center text-slate-900 dark:text-white group-hover:bg-cyan-500 group-hover:border-cyan-400 transition-colors duration-300">
-                            <Eye size={18} />
-                        </div>
-                        <span className="text-sm font-semibold tracking-widest uppercase text-slate-800 dark:text-white/90">Explore Specs</span>
-                    </div>
+
                 </div>
             </div>
         </motion.div>
