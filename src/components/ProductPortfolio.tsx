@@ -44,7 +44,8 @@ const BASE_SECTORS: Sector[] = [
     }
 ];
 
-const renderDescription = (text: string) => {
+const renderDescription = (text: string | null | undefined) => {
+    if (!text) return null;
     // If the text contains bullet points strung together, split them nicely
     const parts = text.split(/(?=•)/).map(p => p.trim()).filter(Boolean);
     if (parts.length > 1 && text.includes('•')) {
