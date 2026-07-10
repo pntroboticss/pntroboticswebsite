@@ -20,6 +20,7 @@ const NAV_GROUPS: NavGroup[] = [
         items: [
             { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
             { name: "Careers", href: "/admin/careers", icon: Briefcase },
+            { name: "Services", href: "/admin/services", icon: Briefcase },
         ],
     },
     {
