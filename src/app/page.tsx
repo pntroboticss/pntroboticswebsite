@@ -8,6 +8,7 @@ import CompanyOverview from "@/components/CompanyOverview";
 import HomeIdeaBanner from "@/components/HomeIdeaBanner";
 import EngineeringExcellence from "@/components/EngineeringExcellence";
 import StatsSection from "@/components/StatsSection";
+import CertificationsLoop from "@/components/CertificationsLoop";
 import Testimonials from "@/components/Testimonials";
 
 export const metadata: Metadata = {
@@ -45,10 +46,13 @@ export default function Home() {
         {/* 6. Deep Dive into Technical Prowess */}
         <EngineeringExcellence />
 
-        {/* 7. Testimonials */}
+        {/* 7. Certifications */}
+        <CertificationsLoop />
+
+        {/* 8. Testimonials */}
         <Testimonials />
 
-        {/* 8. Footer & Contact */}
+        {/* 9. Footer & Contact */}
         <Footer />
 
       </div>
