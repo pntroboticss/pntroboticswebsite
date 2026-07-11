@@ -14,7 +14,6 @@ type StatItem = {
 export default function StatsSection() {
     const [stats, setStats] = useState<StatItem[]>([
         { label: "Years of Excellence", value: 10, suffix: "+" },
-        { label: "Custom Robots Built", value: 50, suffix: "+" },
         { label: "Automation Systems", value: 100, suffix: "+" },
         { label: "Happy Clients", value: 200, suffix: "+" },
     ]);
@@ -30,7 +29,6 @@ export default function StatsSection() {
             if (data && !error) {
                 setStats([
                     { label: "Years of Excellence", value: data.years_of_excellence, suffix: "+" },
-                    { label: "Custom Robots Built", value: data.custom_robots, suffix: "+" },
                     { label: "Automation Systems", value: data.automation_systems, suffix: "+" },
                     { label: "Happy Clients", value: data.happy_clients, suffix: "+" },
                 ]);
@@ -44,7 +42,7 @@ export default function StatsSection() {
         <section className="relative py-16 bg-transparent transition-colors duration-500">
             <div className="container mx-auto px-4 relative z-10">
                 <div className="max-w-6xl mx-auto bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border border-white/50 dark:border-slate-800/50 rounded-3xl p-8 md:p-12 shadow-2xl">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
                         {stats.map((stat, idx) => (
                             <motion.div 
                                 key={idx}

@@ -158,20 +158,6 @@ export default function AdminStats() {
                             </div>
                         </div>
 
-                        <div className="space-y-3">
-                            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Custom Robots Built</label>
-                            <div className="relative">
-                                <input 
-                                    type="number"
-                                    min="0"
-                                    value={stats?.custom_robots || 0}
-                                    onChange={(e) => handleNumberChange("custom_robots", e.target.value)}
-                                    className="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white text-lg font-bold"
-                                />
-                                <div className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">+</div>
-                            </div>
-                        </div>
-
                     </div>
 
                     <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end">
