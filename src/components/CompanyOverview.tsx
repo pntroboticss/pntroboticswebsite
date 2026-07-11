@@ -35,7 +35,7 @@ export default function CompanyOverview() {
     const carouselRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [hasIntroPlayed, setHasIntroPlayed] = useState(false);
-    const [liveImages, setLiveImages] = useState(CAROUSEL_IMAGES);
+    const [liveImages, setLiveImages] = useState<{id: number, src: string, alt: string}[]>([]);
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -46,16 +46,17 @@ export default function CompanyOverview() {
                 .order("slot_index", { ascending: true });
             
             if (!error && data && data.length > 0) {
-                const mergedImages = [...CAROUSEL_IMAGES];
-                data.forEach(item => {
-                    if (item.slot_index >= 1 && item.slot_index <= 20) {
-                        mergedImages[item.slot_index - 1] = { 
-                            ...mergedImages[item.slot_index - 1], 
-                            src: item.media_url 
-                        };
-                    }
-                });
-                setLiveImages(mergedImages);
+                const uploadedImages = data
+                    .filter(item => item.slot_index >= 1 && item.slot_index <= 20)
+                    .sort((a, b) => a.slot_index - b.slot_index)
+                    .map(item => ({
+                        id: item.slot_index,
+                        src: item.media_url,
+                        alt: `Slot ${item.slot_index}`
+                    }));
+                setLiveImages(uploadedImages);
+            } else {
+                setLiveImages([]);
             }
         };
         fetchImages();
@@ -79,6 +80,8 @@ export default function CompanyOverview() {
     useGSAP(() => {
         if (!carouselRef.current) return;
         const cards = gsap.utils.toArray<HTMLElement>(".carousel-card", carouselRef.current);
+        if (cards.length === 0) return;
+        
         const spacingX = typeof window !== 'undefined' ? window.innerWidth * 0.25 : 400;
 
         if (!hasIntroPlayed) {
