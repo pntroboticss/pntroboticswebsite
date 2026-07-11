@@ -75,17 +75,15 @@ export default function CertificationsLoop() {
                 >
                     {loopItems.map((cert, i) => (
                         <div key={`${cert.id}-${i}`} className="flex flex-col items-center group">
-                            <div className="relative h-32 md:h-40 w-48 md:w-64 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-md flex items-center justify-center transition-transform duration-300 hover:scale-105 hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-900/50 cursor-pointer overflow-hidden p-4">
-                                <Image
+                            <div className="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md flex items-center justify-center transition-transform duration-300 hover:scale-105 hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-900/50 cursor-pointer p-3 md:p-4">
+                                <img
                                     src={cert.image_url}
                                     alt={cert.title || "Certification"}
-                                    fill
-                                    sizes="(max-width: 768px) 192px, 256px"
-                                    className="object-contain p-2"
+                                    className="h-56 md:h-80 w-auto object-contain rounded-xl"
                                 />
                             </div>
                             {cert.title && (
-                                <span className="mt-4 text-sm font-semibold text-slate-600 dark:text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                <span className="mt-5 text-sm md:text-base font-semibold text-slate-600 dark:text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
                                     {cert.title}
                                 </span>
                             )}
