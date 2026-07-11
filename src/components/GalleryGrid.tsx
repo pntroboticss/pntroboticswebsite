@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, ZoomIn } from "lucide-react";
 
 type GalleryItem = {
     id: string;
@@ -11,34 +11,8 @@ type GalleryItem = {
     image_url: string;
 };
 
-// Helper to generate a deterministic pseudo-random number based on a string ID
-const getDeterministicHeight = (id: string) => {
-    let hash = 0;
-    for (let i = 0; i < id.length; i++) {
-        hash = id.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    // Return a percentage between 75% and 150%
-    return 75 + (Math.abs(hash) % 75);
-};
-
 export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
     const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end start"]
-    });
-
-    // Create 3 parallax scroll speeds for columns to make it extremely dynamic
-    const y1 = useTransform(scrollYProgress, [0, 1], [0, -150]);
-    const y2 = useTransform(scrollYProgress, [0, 1], [0, 200]);
-    const y3 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-
-    // Spring physics for smooth parallax
-    const smoothY1 = useSpring(y1, { stiffness: 100, damping: 30 });
-    const smoothY2 = useSpring(y2, { stiffness: 100, damping: 30 });
-    const smoothY3 = useSpring(y3, { stiffness: 100, damping: 30 });
 
     if (!items || items.length === 0) {
         return (
@@ -51,63 +25,44 @@ export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
         );
     }
 
-    // Split items into 3 columns for the parallax layout
-    const col1 = items.filter((_, i) => i % 3 === 0);
-    const col2 = items.filter((_, i) => i % 3 === 1);
-    const col3 = items.filter((_, i) => i % 3 === 2);
-
-    const renderColumn = (colItems: GalleryItem[], colIndex: number, yTransform: any) => (
-        <motion.div style={{ y: yTransform }} className="flex flex-col gap-6 w-full">
-            {colItems.map((item, index) => (
-                <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, margin: "-10%" }}
-                    transition={{ delay: index * 0.1, duration: 0.6, type: "spring", bounce: 0.4 }}
-                    className="relative group cursor-pointer overflow-hidden rounded-3xl bg-slate-200 dark:bg-slate-800 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-500"
-                    onClick={() => setSelectedImage(item)}
-                >
-                    <div 
-                        className="relative w-full" 
-                        style={{ paddingBottom: `${getDeterministicHeight(item.id)}%` }}
+    return (
+        <div className="w-full max-w-7xl mx-auto px-4 py-24 relative z-10">
+            {/* Symmetrical Grid Layout */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-start">
+                {items.map((item, index) => (
+                    <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-10%" }}
+                        transition={{ delay: (index % 10) * 0.05, duration: 0.5 }}
+                        className="relative group cursor-pointer overflow-hidden rounded-2xl bg-white dark:bg-slate-900 shadow-md hover:shadow-2xl hover:shadow-indigo-500/20 border border-slate-200 dark:border-slate-800 transition-all duration-500 aspect-square"
+                        onClick={() => setSelectedImage(item)}
                     >
                         <Image 
                             src={item.image_url} 
                             alt={item.title || "Gallery Image"} 
                             fill
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
                         />
-                    </div>
-                    
-                    {/* Glassmorphism Hover Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/90 via-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 backdrop-blur-[2px]">
-                        {item.title && (
-                            <motion.p 
-                                initial={{ y: 20, opacity: 0 }}
-                                whileInView={{ y: 0, opacity: 1 }}
-                                className="text-white font-bold text-xl translate-y-4 group-hover:translate-y-0 transition-transform duration-500"
-                            >
-                                {item.title}
-                            </motion.p>
-                        )}
-                        <div className="w-8 h-1 bg-cyan-400 mt-3 rounded-full transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 delay-100" />
-                    </div>
-                </motion.div>
-            ))}
-        </motion.div>
-    );
-
-    return (
-        <div className="w-full max-w-7xl mx-auto px-4 py-24 relative z-10" ref={containerRef}>
-            {/* 3-Column Parallax Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                {renderColumn(col1, 0, smoothY1)}
-                <div className="md:mt-24">
-                    {renderColumn(col2, 1, smoothY2)}
-                </div>
-                {renderColumn(col3, 2, smoothY3)}
+                        
+                        {/* Glassmorphism Hover Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 backdrop-blur-[2px]">
+                            {item.title && (
+                                <motion.p 
+                                    className="text-white font-bold text-xl translate-y-4 group-hover:translate-y-0 transition-transform duration-500 line-clamp-2"
+                                >
+                                    {item.title}
+                                </motion.p>
+                            )}
+                            <div className="flex items-center gap-2 mt-3 text-cyan-400 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75 opacity-0 group-hover:opacity-100">
+                                <ZoomIn className="w-5 h-5" />
+                                <span className="text-sm font-semibold uppercase tracking-wider">View Image</span>
+                            </div>
+                        </div>
+                    </motion.div>
+                ))}
             </div>
 
             {/* Lightbox */}
@@ -117,7 +72,7 @@ export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-xl p-4 md:p-12"
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 backdrop-blur-xl p-4 md:p-12"
                         onClick={() => setSelectedImage(null)}
                     >
                         <button 
