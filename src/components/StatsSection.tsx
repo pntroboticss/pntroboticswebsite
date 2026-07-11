@@ -1,16 +1,45 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import AnimatedCounter from "./AnimatedCounter";
+import { supabase } from "@/lib/supabase";
 
-const stats = [
-    { label: "Years of Excellence", value: 10, suffix: "+" },
-    { label: "Custom Robots Built", value: 50, suffix: "+" },
-    { label: "Automation Systems", value: 100, suffix: "+" },
-    { label: "Happy Clients", value: 200, suffix: "+" },
-];
+type StatItem = {
+    label: string;
+    value: number;
+    suffix: string;
+};
 
 export default function StatsSection() {
+    const [stats, setStats] = useState<StatItem[]>([
+        { label: "Years of Excellence", value: 10, suffix: "+" },
+        { label: "Custom Robots Built", value: 50, suffix: "+" },
+        { label: "Automation Systems", value: 100, suffix: "+" },
+        { label: "Happy Clients", value: 200, suffix: "+" },
+    ]);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            const { data, error } = await supabase
+                .from("homepage_stats")
+                .select("*")
+                .limit(1)
+                .single();
+
+            if (data && !error) {
+                setStats([
+                    { label: "Years of Excellence", value: data.years_of_excellence, suffix: "+" },
+                    { label: "Custom Robots Built", value: data.custom_robots, suffix: "+" },
+                    { label: "Automation Systems", value: data.automation_systems, suffix: "+" },
+                    { label: "Happy Clients", value: data.happy_clients, suffix: "+" },
+                ]);
+            }
+        };
+
+        fetchStats();
+    }, []);
+
     return (
         <section className="relative py-16 bg-transparent transition-colors duration-500">
             <div className="container mx-auto px-4 relative z-10">

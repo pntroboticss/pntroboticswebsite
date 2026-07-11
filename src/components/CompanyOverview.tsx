@@ -24,14 +24,11 @@ const SPECIALTIES = [
 ];
 
 // Note: These are now empty placeholders. The actual images should be uploaded via the Admin Panel.
-const CAROUSEL_IMAGES = [
-    { id: 1, src: "", alt: "Slot 1" },
-    { id: 2, src: "", alt: "Slot 2" },
-    { id: 3, src: "", alt: "Slot 3" },
-    { id: 4, src: "", alt: "Slot 4" },
-    { id: 5, src: "", alt: "Slot 5" },
-    { id: 6, src: "", alt: "Slot 6" }
-];
+const CAROUSEL_IMAGES = Array.from({ length: 20 }, (_, i) => ({
+    id: i + 1,
+    src: "",
+    alt: `Slot ${i + 1}`
+}));
 
 export default function CompanyOverview() {
     const sectionRef = useRef<HTMLElement>(null);
@@ -51,7 +48,7 @@ export default function CompanyOverview() {
             if (!error && data && data.length > 0) {
                 const mergedImages = [...CAROUSEL_IMAGES];
                 data.forEach(item => {
-                    if (item.slot_index >= 1 && item.slot_index <= 6) {
+                    if (item.slot_index >= 1 && item.slot_index <= 20) {
                         mergedImages[item.slot_index - 1] = { 
                             ...mergedImages[item.slot_index - 1], 
                             src: item.media_url 

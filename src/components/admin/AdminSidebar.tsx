@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
     LayoutDashboard, ImageIcon, Briefcase, GraduationCap,
     FileText, Settings, LogOut, Users, MessageSquare, Inbox,
-    Ticket, Video, HelpCircle, ExternalLink, X, Box, Rocket, Star, type LucideIcon
+    Ticket, Video, HelpCircle, ExternalLink, X, Box, Rocket, Star, Activity, type LucideIcon
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useSidebar } from "./SidebarContext";
@@ -19,6 +19,7 @@ const NAV_GROUPS: NavGroup[] = [
         label: "General",
         items: [
             { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+            { name: "Site Stats", href: "/admin/stats", icon: Activity },
             { name: "Careers", href: "/admin/careers", icon: Briefcase },
             { name: "Services", href: "/admin/services", icon: Briefcase },
         ],

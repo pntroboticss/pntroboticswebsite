@@ -44,6 +44,14 @@ export default function AdminHighlights() {
             return;
         }
 
+        const maxSizeBytes = section === 'machine_images' ? 6 * 1024 * 1024 : 50 * 1024 * 1024;
+        const maxSizeLabel = section === 'machine_images' ? '6MB' : '50MB';
+
+        if (file.size > maxSizeBytes) {
+            alert(`File size must be less than ${maxSizeLabel}. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB.`);
+            return;
+        }
+
         const slotId = `${section}-${slot_index}`;
         setUploadingSlot(slotId);
 
@@ -140,7 +148,7 @@ export default function AdminHighlights() {
                                                     Replace {section === 'hero_videos' ? 'Media' : 'Image'}
                                                 </div>
                                                 <span className="text-xs text-slate-400 dark:text-slate-400 font-normal">
-                                                    (Max size: 50MB)
+                                                    (Max size: {section === 'hero_videos' ? '50MB' : '6MB'})
                                                 </span>
                                                 <input 
                                                     type="file" 
@@ -157,7 +165,7 @@ export default function AdminHighlights() {
                                                 Upload {section === 'hero_videos' ? 'Media' : 'Image'}
                                             </span>
                                             <span className="text-xs text-slate-400 mt-1">
-                                                (Max size: 50MB)
+                                                (Max size: {section === 'hero_videos' ? '50MB' : '6MB'})
                                             </span>
                                             <input 
                                                 type="file" 
@@ -192,7 +200,7 @@ export default function AdminHighlights() {
             </div>
 
             {renderSlots('hero_videos', 'Hero Section Media', 'These 6 media items (videos or images) play consecutively at the very top of the homepage.', 6)}
-            {renderSlots('machine_images', 'Machines For Tomorrow Images', 'These 6 images cycle in the 3D carousel.', 6)}
+            {renderSlots('machine_images', 'Machines For Tomorrow Images', 'These up to 20 images cycle in the 3D carousel.', 20)}
         </div>
     );
 }
