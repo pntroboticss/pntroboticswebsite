@@ -190,11 +190,21 @@ export default function ProductPortfolio({ fixedSectorId }: { fixedSectorId?: st
 
     const fetchProducts = async () => {
         setIsLoading(true);
-        const { data, error } = await supabase
+        let { data, error } = await supabase
             .from("products")
             .select("*")
             .eq("is_active", true)
             .order("created_at", { ascending: false });
+
+        if (error) {
+            // Fallback if is_active column does not exist in the table
+            const fallbackRes = await supabase
+                .from("products")
+                .select("*")
+                .order("created_at", { ascending: false });
+            data = fallbackRes.data;
+            error = fallbackRes.error;
+        }
 
         if (!error && data) {
             // Reconstruct sectors with fetched products
